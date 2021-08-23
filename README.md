@@ -14,3 +14,5 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter, view our
 [online documentation](https://flutter.dev/docs), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+Figma desing file : https://www.figma.com/file/WQid0X9Z9DXXN9LCHqnSMf/Crypto-alert?node-id=0%3A1
