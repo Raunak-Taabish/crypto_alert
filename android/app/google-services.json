@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1082885842697",
+    "project_id": "raunak-taabish",
+    "storage_bucket": "raunak-taabish.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1082885842697:android:20376187deb032c189d5d8",
+        "android_client_info": {
+          "package_name": "com.example.crypto_alert"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1082885842697-ipeqddtts0fp5dl5smo850k9uruacels.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBhedLEtU6AjqIqrhyMGqh0KRlo3rNWggU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1082885842697-ipeqddtts0fp5dl5smo850k9uruacels.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
