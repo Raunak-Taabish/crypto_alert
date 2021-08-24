@@ -5,10 +5,9 @@ import 'package:flutter/scheduler.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-
-//import './main.dart';
 import './Register.dart';
 import 'package:crypto_alert/screens/home.dart';
+
 class Login extends StatefulWidget {
   @override
   _LoginState createState() => _LoginState();
@@ -46,224 +45,187 @@ class _LoginState extends State<Login> {
           child: Scaffold(
             key: _scaffoldKey,
             // backgroundColor:  Colors.transparent,
-            backgroundColor: Colors.blueGrey[900],
+            backgroundColor: Color(0xFF151515),
             // backgroundColor: Colors.black45,
             body: SingleChildScrollView(
               child: Form(
                 key: _formKey,
-                child: Column(
-                  children: <Widget>[
-                    Padding(
-                      //padding: const EdgeInsets.only(left:15.0,right: 15.0,top:0,bottom: 0),
-                      padding: EdgeInsets.symmetric(horizontal: 15),
-                      child: TextFormField(
+                child: Padding(
+                  padding: const EdgeInsets.all(25.0),
+                  child: Column(
+                    children: <Widget>[
+                      Column(
+                        children: [
+                          Image.asset(
+                            "images/logoname.png",
+                            width: MediaQuery.of(context).size.width / 2,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Text(
+                            'Search  .  Add  .  Follow',
+                            style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        //height: MediaQuery.of(context).size.height / 0,
+                        height: 40,
+                      ),
+                      TextField(
                         controller: _emailidController,
                         keyboardType: TextInputType.emailAddress,
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'Montserrat Alternates'),
                         decoration: InputDecoration(
-                            prefixIcon: Icon(
-                              Icons.mail_outline_rounded,
-                              color: Colors.white70,
-                            ),
-                            filled: true,
-                            fillColor: Colors.black12,
-                            enabledBorder: OutlineInputBorder(
-                              //borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                              borderSide:
-                                  BorderSide(color: Colors.white, width: 0.5),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              //borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                              borderSide:
-                                  BorderSide(color: Colors.white, width: 1.5),
-                            ),
-                            labelText: 'Email',
-                            hintText: ''),
+                          filled: true,
+                          fillColor: Colors.transparent,
+                          labelText: 'Email',
+                          labelStyle: TextStyle(color: Colors.white),
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white),
+                          ),
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 15.0, right: 15.0, top: 10.0, bottom: 30.0),
-                      //padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-                      child: TextFormField(
+                      TextField(
                         controller: _passwordController,
                         obscureText: !_passwordVisible,
                         keyboardType: TextInputType.visiblePassword,
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'Montserrat Alternates'),
                         decoration: InputDecoration(
-                            prefixIcon: Icon(
-                              Icons.lock_outline_rounded,
-                              color: Colors.white70,
-                            ),
-                            suffixIcon: IconButton(
-                                icon: Icon(
-                                  _passwordVisible
-                                      ? Icons.visibility
-                                      : Icons.visibility_off,
-                                  color: Colors.white70,
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    _passwordVisible = !_passwordVisible;
-                                  });
-                                }),
-                            filled: true,
-                            fillColor: Colors.black12,
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(5.0)),
-                              borderSide:
-                                  BorderSide(color: Colors.white, width: 0.5),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(5.0)),
-                              borderSide:
-                                  BorderSide(color: Colors.white, width: 2),
-                            ),
-                            labelText: 'Password',
-                            hintText: ''),
-                      ),
-                    ),
-                    Container(
-                      height: 50,
-                      width: 350,
-                      // decoration: BoxDecoration(
-                      //     color: Colors.deepPurple[900],
-                      //     borderRadius: BorderRadius.circular(30)),
-                      child: ElevatedButton(
-                        onPressed: () {
-                            login();
-                        },
-                        child: Text(
-                          'Login',
-                          //style: TextStyle(color: Colors.white, fontSize: 20,),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.black45,
-                          onPrimary: Colors.white,
-                          shadowColor: Colors.black45,
-                          elevation: 8,
-                          //side: BorderSide(color: Colors.white70),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                            side: BorderSide(
-                              color: Colors.white70,
-                              width: 2,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Visibility(
-                        maintainSize: true,
-                        maintainAnimation: true,
-                        maintainState: true,
-                        visible: visible,
-                        child: ClipRRect(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            child: Container(
-                                width: 320,
-                                margin: EdgeInsets.only(),
-                                child: LinearProgressIndicator(
-                                  minHeight: 2,
-                                  backgroundColor: Colors.blueGrey[800],
-                                  valueColor:
-                                      AlwaysStoppedAnimation(Colors.white),
-                                )))),
-                    Container(
-                      height: 30,
-                      width: 300,
-                      child: TextButton(
-                        onPressed: () {
-                        },
-                        child: Text(
-                          'Forgot Password?',
-                          
-                        ),
-                      ),
-                    ),
-                    Container(
-                      height: 60,
-                      width: 350,
-                      padding: EdgeInsets.only(top: 10),
-                      // decoration: BoxDecoration(
-                      //     color: Colors.deepPurple[900],
-                      //     borderRadius: BorderRadius.circular(30)),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            gvisible = load(gvisible);
-                          });
-                          googleSignIn(context);
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-                          child: Row(
-                            children: <Widget>[
-                              Image(
-                                image: AssetImage("assets/google_logo.png"),
-                                height: 30.0,
+                          suffixIcon: IconButton(
+                              icon: Icon(
+                                _passwordVisible
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                                color: Colors.white70,
                               ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 40, right: 55),
-                                child: Text(
-                                  'Sign in with Google',
-                                ),
-                              )
-                            ],
+                              onPressed: () {
+                                setState(() {
+                                  _passwordVisible = !_passwordVisible;
+                                });
+                              }),
+                          filled: true,
+                          fillColor: Colors.black12,
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white),
                           ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.white,
+                            ),
+                          ),
+                          labelText: 'Password',
+                          labelStyle: TextStyle(color: Colors.white),
                         ),
-                        style: ElevatedButton.styleFrom(
-                          // primary: Colors.black45,
-                          primary: Colors.transparent,
-                          onPrimary: Colors.white,
-                          shadowColor: Colors.black45,
-                          elevation: 8,
-                          //side: BorderSide(color: Colors.white70,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                            side: BorderSide(
-                              color: Colors.white70,
-                              width: 2,
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height / 2.5,
+                        //height: 100,
+                      ),
+                      Container(
+                        child: Column(children: [
+                          Container(
+                            padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                            width: double.infinity,
+                            height: 50,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                // primary: Colors.black45,
+                                primary: Colors.white,
+                                onPrimary: Colors.black,
+                                //side: BorderSide(color: Colors.white70,
+                                elevation: 0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(50.0),
+                                ),
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  gvisible = load(gvisible);
+                                });
+                                googleSignIn(context);
+                              },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Text(
+                                    'Login with ',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: 'Montserrat Alternates',
+                                    ),
+                                  ),
+                                  Image(
+                                    image: AssetImage("images/google_logo.png"),
+                                    height: 20.0,
+                                  ),
+                                  Text(
+                                    'oogle',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: 'Montserrat Alternates',
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Container(
+                            padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                            width: double.infinity,
+                            height: 50,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                // primary: Colors.black45,
+                                primary: Colors.white,
+                                onPrimary: Colors.black,
+                                elevation: 0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(50.0),
+                                ),
+                              ),
+                              onPressed: () {},
+                              child: Text(
+                                "Login",
+                                style: TextStyle(
+                                  fontFamily: 'Montserrat Alternates',
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ]),
+                      ),
+                      Container(
+                        height: 30,
+                        width: 300,
+                        child: TextButton(
+                          onPressed: () {},
+                          child: Text(
+                            'Forgot Password?',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'Montserrat Alternates',
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    Visibility(
-                        maintainSize: true,
-                        maintainAnimation: true,
-                        maintainState: true,
-                        visible: gvisible,
-                        child: ClipRRect(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            child: Container(
-                                width: 320,
-                                margin: EdgeInsets.only(),
-                                child: LinearProgressIndicator(
-                                  minHeight: 2,
-                                  backgroundColor: Colors.blueGrey[800],
-                                  valueColor:
-                                      AlwaysStoppedAnimation(Colors.white),
-                                )))),
-                    Container(
-                      height: 30,
-                      child: TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      Register()));
-                        },
-                        child: Text(
-                          'New User? Create Account',
-                        ),
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -274,7 +236,7 @@ class _LoginState extends State<Login> {
   }
 
   FirebaseAuth auth = FirebaseAuth.instance;
-  DatabaseReference dbRef = 
+  DatabaseReference dbRef =
       FirebaseDatabase.instance.reference().child("users");
 
   Future<void> login() async {
