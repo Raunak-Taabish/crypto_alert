@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "1082885842697",
+    "firebase_url": "https://raunak-taabish-default-rtdb.firebaseio.com",
     "project_id": "raunak-taabish",
     "storage_bucket": "raunak-taabish.appspot.com"
   },
@@ -13,6 +14,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "1082885842697-kjmaes1erovk4d8dgk57iimrpmfcnhae.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.crypto_alert",
+            "certificate_hash": "fa3d840de450d202099921e18ea8f7ec2d9ffa52"
+          }
+        },
         {
           "client_id": "1082885842697-ipeqddtts0fp5dl5smo850k9uruacels.apps.googleusercontent.com",
           "client_type": 3

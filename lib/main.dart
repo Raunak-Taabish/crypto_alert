@@ -47,18 +47,16 @@ class _Splashscreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'swd',
-        home: Expanded(
-          child: AnimatedSplashScreen(
+        // title: 'swd',
+        home: AnimatedSplashScreen(
               duration: 300,
               splash: Image.asset(
-                'images/logo.png',
+                'assets/images/logo.png',
               ),
               nextScreen: Login_Register(),
-              splashTransition: SplashTransition.fadeTransition,
-              //pageTransitionType: PageTransitionType.scale,
+              splashTransition: SplashTransition.sizeTransition,
               backgroundColor: Colors.black),
-        ));
+        );
   }
 }
 

@@ -1,7 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -18,10 +19,10 @@ class _LoginState extends State<Login> {
   static bool visible = false;
   static bool gvisible = false;
 
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  TextEditingController _emailidController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _emailidController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   void initState() {
     super.initState();
@@ -45,7 +46,7 @@ class _LoginState extends State<Login> {
           child: Scaffold(
             key: _scaffoldKey,
             // backgroundColor:  Colors.transparent,
-            backgroundColor: Color(0xFF151515),
+            backgroundColor: const Color(0xFF151515),
             // backgroundColor: Colors.black45,
             body: SingleChildScrollView(
               child: Form(
@@ -57,13 +58,13 @@ class _LoginState extends State<Login> {
                       Column(
                         children: [
                           Image.asset(
-                            "images/logoname.png",
+                            "assets/images/logoname.png",
                             width: MediaQuery.of(context).size.width / 2,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 20,
                           ),
-                          Text(
+                          const Text(
                             'Search  .  Add  .  Follow',
                             style: TextStyle(
                                 fontSize: 10,
@@ -72,17 +73,17 @@ class _LoginState extends State<Login> {
                           ),
                         ],
                       ),
-                      SizedBox(
+                      const SizedBox(
                         //height: MediaQuery.of(context).size.height / 0,
                         height: 40,
                       ),
                       TextField(
                         controller: _emailidController,
                         keyboardType: TextInputType.emailAddress,
-                        style: TextStyle(
+                        style: const TextStyle(
                             color: Colors.white,
                             fontFamily: 'Montserrat Alternates'),
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           filled: true,
                           fillColor: Colors.transparent,
                           labelText: 'Email',
@@ -99,7 +100,7 @@ class _LoginState extends State<Login> {
                         controller: _passwordController,
                         obscureText: !_passwordVisible,
                         keyboardType: TextInputType.visiblePassword,
-                        style: TextStyle(
+                        style: const TextStyle(
                             color: Colors.white,
                             fontFamily: 'Montserrat Alternates'),
                         decoration: InputDecoration(
@@ -167,7 +168,7 @@ class _LoginState extends State<Login> {
                                     ),
                                   ),
                                   Image(
-                                    image: AssetImage("images/google_logo.png"),
+                                    image: AssetImage("assets/images/google_logo.png"),
                                     height: 20.0,
                                   ),
                                   Text(
@@ -198,7 +199,9 @@ class _LoginState extends State<Login> {
                                   borderRadius: BorderRadius.circular(50.0),
                                 ),
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                                login();
+                              },
                               child: Text(
                                 "Login",
                                 style: TextStyle(
@@ -256,6 +259,7 @@ class _LoginState extends State<Login> {
 
         //displayToastMessage('',context);
       } catch (e) {
+        print(e);
         //visible=!visible;
         setState(() {
           visible = load(visible);
@@ -289,10 +293,10 @@ class _LoginState extends State<Login> {
         };
         dbRef.child(currentuser.uid).set(userDataMap);
 
-        _formKey.currentState!.save();
+        // _formKey.currentState!.save();
         Navigator.push(context,
             MaterialPageRoute(builder: (BuildContext context) => Home()));
-        // displayToastMessage('Welcome', context);
+        displayToastMessage('Welcome', context);
       } else {
         setState(() {
           gvisible = load(gvisible);
@@ -303,7 +307,8 @@ class _LoginState extends State<Login> {
       setState(() {
         gvisible = load(gvisible);
       });
-      // displayToastMessage(e.message, context);
+      displayToastMessage('error', context);
+      print('error is this:    $e');
     }
   }
 

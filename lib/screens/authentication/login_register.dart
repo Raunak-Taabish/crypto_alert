@@ -1,6 +1,9 @@
 import 'package:crypto_alert/screens/authentication/login.dart';
 import 'package:crypto_alert/screens/authentication/register.dart';
+import 'package:crypto_alert/screens/home.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class Login_Register extends StatefulWidget {
   Login_Register({Key? key}) : super(key: key);
@@ -10,6 +13,13 @@ class Login_Register extends StatefulWidget {
 }
 
 class _Login_RegisterState extends State<Login_Register> {
+  static bool gvisible = false;
+
+  void initState() {
+    super.initState();
+    gvisible = false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,7 +61,7 @@ class _Login_RegisterState extends State<Login_Register> {
                     Column(
                       children: [
                         Image.asset(
-                          "images/logoname.png",
+                          "assets/images/logoname.png",
                           width: MediaQuery.of(context).size.width / 2,
                         ),
                         SizedBox(
@@ -87,12 +97,14 @@ class _Login_RegisterState extends State<Login_Register> {
                             borderRadius: BorderRadius.circular(50.0),
                           ),
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          googleSignIn(context);
+                        },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             Image(
-                              image: AssetImage("images/google_logo.png"),
+                              image: AssetImage("assets/images/google_logo.png"),
                               height: 20.0,
                             ),
                             Text(
@@ -149,5 +161,50 @@ class _Login_RegisterState extends State<Login_Register> {
         ),
       ),
     );
+  }
+   Future<void> googleSignIn(BuildContext context) async {
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+      // Obtain the auth details from the request
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser!.authentication;
+
+      // Create a new credential
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+      final User? currentuser =
+          (await auth.signInWithCredential(credential)).user;
+      if (currentuser != null) {
+        dbRef.child(currentuser.uid);
+        Map userDataMap = {
+          'name': currentuser.displayName,
+          'email': currentuser.email,
+          'profile': currentuser.photoURL,
+        };
+        dbRef.child(currentuser.uid).set(userDataMap);
+
+        // currentState!.save();
+        Navigator.push(context,
+            MaterialPageRoute(builder: (BuildContext context) => Home()));
+        displayToastMessage('Welcome', context);
+      } else {
+        setState(() {
+          gvisible = load(gvisible);
+        });
+        // displayToastMessage('Some error has occured', context);
+      }
+    } catch (e) {
+      setState(() {
+        gvisible = load(gvisible);
+      });
+      displayToastMessage('error', context);
+      print('error is this:    $e');
+    }
+  }
+    bool load(visible) {
+    return visible = !visible;
   }
 }

@@ -1,4 +1,4 @@
-iimport 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -72,7 +72,7 @@ class _LoginDemoState extends State<_RegisterPage> {
                       Column(
                         children: [
                           Image.asset(
-                            "images/logoname.png",
+                            "assets/images/logoname.png",
                             width: MediaQuery.of(context).size.width / 2,
                           ),
                           SizedBox(
@@ -358,7 +358,7 @@ class _LoginDemoState extends State<_RegisterPage> {
               email: _emailController.text.trim(),
               password: _userPasswordController1.text.trim()))
           .user!;
-      if (currentuser != null) {
+      // ignore: unnecessary_null_comparison
         dbRef.child(currentuser.uid);
         Map userDataMap = {
           'name': _usernameController.text.trim(),
@@ -366,22 +366,15 @@ class _LoginDemoState extends State<_RegisterPage> {
         };
         dbRef.child(currentuser.uid).set(userDataMap);
         _formKey.currentState!.save();
-        // SchedulerBinding.instance.addPostFrameCallback((_) {
-        Navigator.push(context,
+        Navigator.push(
+            context,
             MaterialPageRoute(builder: (BuildContext context) => OnBoarding()));
-        // }
-        // );
         displayToastMessage('Account Created', context);
-      } else {
-        setState(() {
-          load();
-          //   showInSnackBar('Processing...',context);
-        });
-        displayToastMessage('Account has not been created', context);
-      }
+      
     } catch (e) {
       setState(() {
         load();
+        displayToastMessage('Account has not been created', context);
         //   showInSnackBar('Processing...',context);
       });
       // displayToastMessage(e.message, context);
