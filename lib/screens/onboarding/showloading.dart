@@ -29,7 +29,7 @@ class _ShowLoadingState extends State<ShowLoading> {
             return MaterialApp(
               // title: 'swd',
               home: AnimatedSplashScreen(
-                  duration: 300,
+                  duration: 3000,
                   splash: Scaffold(
                     backgroundColor: Colors.transparent,
                     body: Container(
