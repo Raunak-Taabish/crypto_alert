@@ -35,8 +35,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-        fontFamily: 'Montserrat Alternates',
-      ),
+          fontFamily: 'Montserrat Alternates',
+          backgroundColor: Color(0xFF151515)),
       home: _Splashscreen(),
       debugShowCheckedModeBanner: false,
     );
@@ -47,16 +47,16 @@ class _Splashscreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        // title: 'swd',
-        home: AnimatedSplashScreen(
-              duration: 300,
-              splash: Image.asset(
-                'assets/images/logo.png',
-              ),
-              nextScreen: Login_Register(),
-              splashTransition: SplashTransition.sizeTransition,
-              backgroundColor: Colors.black),
-        );
+      // title: 'swd',
+      home: AnimatedSplashScreen(
+          duration: 300,
+          splash: Image.asset(
+            'assets/images/logo.png',
+          ),
+          nextScreen: Login_Register(),
+          splashTransition: SplashTransition.sizeTransition,
+          backgroundColor: Colors.black),
+    );
   }
 }
 

@@ -133,13 +133,13 @@ class _OnBoardingState extends State<OnBoarding> {
                               ),
                               children: <TextSpan>[
                                 TextSpan(
-                                    text: 'Search',
+                                    text: 'Add',
                                     style: TextStyle(
                                       fontWeight: FontWeight.w600,
                                       fontFamily: 'Montserrat Alternates',
                                     )),
                                 TextSpan(
-                                  text: ' the crypto u \n     wanna follow',
+                                  text: ' your crypto to \n     favorites list',
                                 ),
                               ],
                             ),
@@ -208,13 +208,14 @@ class _OnBoardingState extends State<OnBoarding> {
                               ),
                               children: <TextSpan>[
                                 TextSpan(
-                                    text: 'Search',
+                                    text: 'Follow',
                                     style: TextStyle(
                                       fontWeight: FontWeight.w600,
                                       fontFamily: 'Montserrat Alternates',
                                     )),
                                 TextSpan(
-                                  text: ' the crypto u \n     wanna follow',
+                                  text:
+                                      ' your crypto to \n    get latest updates',
                                 ),
                               ],
                             ),

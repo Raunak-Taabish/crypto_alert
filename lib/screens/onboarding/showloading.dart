@@ -28,19 +28,40 @@ class _ShowLoadingState extends State<ShowLoading> {
             name = (snapshot.data?.value).toString();
             return MaterialApp(
               // title: 'swd',
-            color: const Color(0xFF151515),
               home: AnimatedSplashScreen(
-                  duration: 3000,
+                  duration: 300,
                   splash: Scaffold(
-                      backgroundColor: const Color(0xFF151515),
-                      body: Center(
-                          child: Text(
-                        'Hi $name \n Please wait we are setting up',
-                        style: const TextStyle(color: Colors.white),
-                      ))),
+                    backgroundColor: Colors.transparent,
+                    body: Container(
+                      margin: EdgeInsets.only(left: 60),
+                      width: double.infinity,
+                      height: double.infinity,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Hi, $name\n",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'Montserrat Alternates',
+                              //fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          Text(
+                            "Please wait we are\nsetting up",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'Montserrat Alternates',
+                              fontWeight: FontWeight.w600,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
                   nextScreen: Home(),
                   splashTransition: SplashTransition.fadeTransition,
-                  backgroundColor: Colors.black),
+                  backgroundColor: Color(0xFF151515)),
             );
           } else {
             return const Center(child: CircularProgressIndicator());
