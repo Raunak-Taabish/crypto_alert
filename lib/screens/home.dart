@@ -40,7 +40,7 @@ class _HomeState extends State<Home> {
         //   articleUrl: element["url"],
         // );
         // news.add(article);
-      }); 
+      });
       return names;
     }
   }
