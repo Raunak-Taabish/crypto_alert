@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
           fontFamily: 'Montserrat Alternates',
           backgroundColor: Color(0xFF151515)),
       home: _Splashscreen(),
-      debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: true,
     );
   }
 }
@@ -49,12 +49,12 @@ class _Splashscreen extends StatelessWidget {
     return MaterialApp(
       // title: 'swd',
       home: AnimatedSplashScreen(
-          duration: 300,
+          duration: 500,
           splash: Image.asset(
             'assets/images/logo.png',
           ),
-          nextScreen: Login_Register(),
-          splashTransition: SplashTransition.sizeTransition,
+          nextScreen: SecondScreen(),
+          splashTransition: SplashTransition.fadeTransition,
           backgroundColor: Colors.black),
     );
   }
@@ -65,7 +65,7 @@ class SecondScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(home: Login(), initialRoute: initialroute, routes: {
       'homepage': (context) => Home(),
-      'login': (context) => Login(),
+      'login': (context) => Login_Register(),
     });
   }
 }
