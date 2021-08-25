@@ -1,3 +1,4 @@
+import 'package:crypto_alert/screens/home.dart';
 import 'package:flutter/material.dart';
 
 import 'showloading.dart';
@@ -75,6 +76,11 @@ class _OnBoardingState extends State<OnBoarding> {
                         pageController.animateToPage(++flag,
                             duration: const Duration(milliseconds: 500),
                             curve: Curves.easeIn);
+
+                        //   Navigator.push(context,
+                        //       MaterialPageRoute(builder: (context) {
+                        //     return Home();
+                        //   }));
                       });
                     },
                     child: const Icon(

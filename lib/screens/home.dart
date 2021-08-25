@@ -1,9 +1,11 @@
 import 'dart:convert';
+import 'package:crypto_alert/screens/showAlldata.dart';
 import 'package:http/http.dart' as http;
 import 'package:crypto_alert/screens/authentication/login_register.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'showAlldata.dart';
 
 class Home extends StatefulWidget {
   Home({Key? key}) : super(key: key);
@@ -113,64 +115,136 @@ class _HomeState extends State<Home> {
                       ),
                     ),
                   ]),
-              body: PageView(
-                  // children: tabPages,
-                  onPageChanged: onPageChanged,
-                  controller: _pageController,
-                  children: [
-                    ListView.builder(
-                        itemCount: cryptolist.length,
-                        itemBuilder: (BuildContext ctxt, int index) {
-                          return Container(
-                              // alignment: Alignment.center,
-                              height: 50,
-                              // color: Color(),
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      cryptolist[index],
-                                      style: const TextStyle(
-                                          color: Colors.white,
-                                          fontFamily: 'Montserrat Alternates'),
-                                    ),
-                                    Column(
+              body: Padding(
+                padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+                child: PageView(
+                    // children: tabPages,
+                    onPageChanged: onPageChanged,
+                    controller: _pageController,
+                    children: [
+                      ListView.builder(
+                          itemCount: cryptolist.length,
+                          itemBuilder: (BuildContext ctxt, int index) {
+                            return GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return ShowAllData(cryptolist[_pageIndex]);
+                                  }));
+                                });
+                              },
+                              child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Color(0xFF1a1a1a),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10)),
+                                  ),
+                                  // alignment: Alignment.center,
+                                  //height: 50,
+                                  padding: EdgeInsets.fromLTRB(15, 15, 15, 15),
+                                  margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          cryptoprice[index].toStringAsFixed(2),
+                                          cryptolist[index],
                                           style: const TextStyle(
                                               color: Colors.white,
                                               fontFamily:
                                                   'Montserrat Alternates'),
                                         ),
-                                        Text(
-                                          daychange[index].toStringAsFixed(2),
-                                          style: TextStyle(
-                                              color: daychange[index] >= 0
-                                                  ? Colors.green
-                                                  : Colors.red,
-                                              fontFamily:
-                                                  'Montserrat Alternates'),
-                                        ),
-                                      ],
-                                    )
-                                  ]));
-                        }),
-                        Center(child: Text('Page 2'),)
-                  ]),
+                                        Column(
+                                          children: [
+                                            Text(
+                                              cryptoprice[index]
+                                                  .toStringAsFixed(2),
+                                              style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontFamily:
+                                                      'Montserrat Alternates'),
+                                            ),
+                                            Text(
+                                              daychange[index]
+                                                  .toStringAsFixed(2),
+                                              style: TextStyle(
+                                                  color: daychange[index] >= 0
+                                                      ? Colors.green
+                                                      : Colors.red,
+                                                  fontFamily:
+                                                      'Montserrat Alternates'),
+                                            ),
+                                          ],
+                                        )
+                                      ])),
+                            );
+                          }),
+                      Center(
+                        child: Text(
+                          'Page 2',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'Montserrat Alternates'),
+                        ),
+                      ),
+                      Center(
+                        child: Text(
+                          "data",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'Montserrat Alternates'),
+                        ),
+                      )
+                    ]),
+              ),
               //Center(child: Text('Welcome' + name)),
               bottomNavigationBar: BottomNavigationBar(
+                selectedItemColor: Colors.white,
+                backgroundColor: Color(0xFF151515),
                 currentIndex: _pageIndex,
                 onTap: onTabTapped,
                 items: <BottomNavigationBarItem>[
                   BottomNavigationBarItem(
-                    icon: new Icon(Icons.home),
-                    title: new Text("Left"),
+                    icon: new Icon(
+                      Icons.home_rounded,
+                      color: Colors.white,
+                      size: 25,
+                    ),
+                    title: new Text(
+                      "Home",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'Montserrat Alternates'),
+                    ),
                   ),
                   BottomNavigationBarItem(
-                    icon: new Icon(Icons.search),
-                    title: new Text("Right"),
+                    icon: new Icon(
+                      Icons.favorite,
+                      color: Colors.white,
+                      size: 25,
+                    ),
+                    title: new Text(
+                      "Favorite",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'Montserrat Alternates'),
+                    ),
+                  ),
+                  BottomNavigationBarItem(
+                    icon: new Icon(
+                      Icons.menu_book_rounded,
+                      color: Colors.white,
+                      size: 25,
+                    ),
+                    title: new Text(
+                      "News",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'Montserrat Alternates'),
+                    ),
                   ),
                 ],
               ),
