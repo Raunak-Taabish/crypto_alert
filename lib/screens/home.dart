@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-
 import 'package:crypto_alert/screens/authentication/login_register.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -57,32 +56,67 @@ class _HomeState extends State<Home> {
           if (snapshot.hasData) {
             name = (snapshot.data?.value).toString();
             return Scaffold(
-                appBar: AppBar(title: Text('Hello'), actions: [
-                  ElevatedButton(
-                      onPressed: () {
-                        _signOut(context);
-                      },
-                      child: Text('Logout'))
-                ]),
-                body: FutureBuilder(
-                    future: getCryptos(),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        // names=snapshot.data!.value,
-                        return ListView.builder(
-                            itemCount: names.length,
-                            itemBuilder: (BuildContext ctxt, int index) {
-                              return Text(names[index]);
-                            });
-                      } else {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      }
-                    }) //Center(child: Text('Welcome' + name)),
+                backgroundColor: Color(0xFF151515),
+                appBar: AppBar(
+                    backgroundColor: Colors.transparent,
+                    elevation: 0,
+                    title: Image.asset(
+                      "assets/images/logoname.png",
+                      width: MediaQuery.of(context).size.width / 3,
+                    ),
+                    automaticallyImplyLeading: false,
+                    actions: [
+                      ElevatedButton(
+                        onPressed: () {
+                          _signOut(context);
+                        },
+                        child: Text(
+                          'Logout',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'Montserrat Alternates',
+                              fontWeight: FontWeight.w600),
+                        ),
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.transparent),
+                        ),
+                      ),
+                    ]),
+                body: Column(
+                  children: [
+                    FutureBuilder(
+                        future: getCryptos(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            // names=snapshot.data!.value,
+                            return ListView.builder(
+                                itemCount: names.length,
+                                itemBuilder: (BuildContext ctxt, int index) {
+                                  return Text(
+                                    names[index],
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontFamily: 'Montserrat Alternates'),
+                                  );
+                                });
+                          } else {
+                            return const Center(
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                              ),
+                            );
+                          }
+                        }),
+                  ],
+                )
+                //Center(child: Text('Welcome' + name)),
                 );
           } else {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(
+                child: CircularProgressIndicator(
+              color: Colors.white,
+            ));
           }
         });
   }
