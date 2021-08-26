@@ -72,16 +72,22 @@ class _OnBoardingState extends State<OnBoarding> {
                   child: FloatingActionButton(
                     backgroundColor: Colors.white,
                     onPressed: () {
-                      setState(() {
-                        pageController.animateToPage(++flag,
-                            duration: const Duration(milliseconds: 500),
-                            curve: Curves.easeIn);
+                      flag <= 1
+                          ? setState(() {
+                              pageController.animateToPage(++flag,
+                                  duration: const Duration(milliseconds: 500),
+                                  curve: Curves.easeIn);
 
-                        //   Navigator.push(context,
-                        //       MaterialPageRoute(builder: (context) {
-                        //     return Home();
-                        //   }));
-                      });
+                              //   Navigator.push(context,
+                              //       MaterialPageRoute(builder: (context) {
+                              //     return Home();
+                              //   }));
+                            })
+                          : Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      ShowLoading()));
                     },
                     child: const Icon(
                       Icons.arrow_forward_ios,
