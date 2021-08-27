@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:crypto_alert/screens/news/news.dart';
 import 'package:http/http.dart' as http;
 import 'package:crypto_alert/screens/authentication/login_register.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -231,14 +232,15 @@ class _HomeState extends State<Home> {
                               fontFamily: 'Montserrat Alternates'),
                         ),
                       ),
-                      Center(
-                        child: Text(
-                          "data",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'Montserrat Alternates'),
-                        ),
-                      )
+                      News()
+                      // Center(
+                      //   child: Text(
+                      //     "data",
+                      //     style: TextStyle(
+                      //         color: Colors.white,
+                      //         fontFamily: 'Montserrat Alternates'),
+                      //   ),
+                      // )
                     ]),
               ),
               //Center(child: Text('Welcome' + name)),

@@ -32,8 +32,9 @@ class _ViewCrypto_State extends State<View_Crypto> {
     // print(jsonData["data"][0]["name"]);
     if (response.statusCode == 200) {
       jsonData["data"].forEach((element) {
-        closeprice = <SalesData>[SalesData("2019", element["closePrice"])];
-
+        SalesData article =
+            SalesData(year: "2019", sales: element["closePrice"]);
+        closeprice.add(article);
         print(element["closePrice"].toString());
       });
       return closeprice;
@@ -68,14 +69,15 @@ class _ViewCrypto_State extends State<View_Crypto> {
               //         style: TextStyle(color: Colors.black),
               //       );
               //     });
-              return SfCartesianChart(
-                  primaryXAxis: CategoryAxis(),
-                  title: ChartTitle(
-                      text: 'Half yearly sales analysis'), //Chart title.
-                  legend: Legend(isVisible: true), // Enables the legend.
-                  tooltipBehavior:
-                      TooltipBehavior(enable: true), // Enables the tooltip.
-                  series: <LineSeries<SalesData, String>>[
+              return Container(
+                  child: SfCartesianChart(
+                      primaryXAxis: CategoryAxis(),
+                      title: ChartTitle(
+                          text: 'Half yearly sales analysis'), //Chart title.
+                      legend: Legend(isVisible: true), // Enables the legend.
+                      tooltipBehavior:
+                          TooltipBehavior(enable: true), // Enables the tooltip.
+                      series: <LineSeries<SalesData, String>>[
                     LineSeries<SalesData, String>(
                         dataSource: closeprice,
                         xValueMapper: (SalesData sales, _) => sales.year,
@@ -83,7 +85,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
                         dataLabelSettings: const DataLabelSettings(
                             isVisible: true) // Enables the data label.
                         )
-                  ]);
+                  ]));
             } else {
               return const Center(
                 child: CircularProgressIndicator(),
@@ -95,7 +97,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
 }
 
 class SalesData {
-  SalesData(this.year, this.sales);
-  final String year;
-  final double sales;
+  SalesData({required this.year, required this.sales});
+  String year;
+  double sales;
 }
