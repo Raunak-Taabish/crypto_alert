@@ -1,11 +1,11 @@
 import 'dart:convert';
-import 'package:crypto_alert/screens/showAlldata.dart';
 import 'package:http/http.dart' as http;
 import 'package:crypto_alert/screens/authentication/login_register.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'showAlldata.dart';
+import 'view_crypto/view_crypto.dart';
+import 'package:crypto_alert/data/crypto_list.dart';
 
 class Home extends StatefulWidget {
   Home({Key? key}) : super(key: key);
@@ -15,10 +15,13 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  late String id;
   String name = '';
   List cryptolist = [];
   List cryptoprice = [];
   List daychange = [];
+  List cryptosymbols = [];
+  List logoId = [];
   int index = 0;
   int _pageIndex = 0;
   late PageController _pageController;
@@ -57,8 +60,11 @@ class _HomeState extends State<Home> {
           cryptolist.add(element["name"]);
           cryptoprice.add(element["quote"]["USD"]["price"]);
           daychange.add(element["quote"]["USD"]["percent_change_24h"]);
+          cryptosymbols.add(element["symbol"]);
+          logoId.add(element["id"]);
         });
-        print(element["name"]);
+        // print(element["name"]);
+        print(cryptoid.length);
 
         // Article article = Article(
         //   title: element['title'],
@@ -128,9 +134,15 @@ class _HomeState extends State<Home> {
                             return GestureDetector(
                               onTap: () {
                                 setState(() {
+                                  cryptoid.forEach((element) {
+                                    if (element[0] == cryptosymbols[index]) {
+                                      id = element[1];
+                                      print(element[0]);
+                                    }
+                                  });
                                   Navigator.push(context,
                                       MaterialPageRoute(builder: (context) {
-                                    return ShowAllData(cryptolist[_pageIndex]);
+                                    return View_Crypto(id);
                                   }));
                                 });
                               },
@@ -148,35 +160,64 @@ class _HomeState extends State<Home> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                          CrossAxisAlignment.center,
                                       children: [
-                                        Text(
-                                          cryptolist[index],
-                                          style: const TextStyle(
-                                              color: Colors.white,
-                                              fontFamily:
-                                                  'Montserrat Alternates'),
-                                        ),
-                                        Column(
-                                          children: [
-                                            Text(
-                                              cryptoprice[index]
-                                                  .toStringAsFixed(2),
+                                        Row(children: [
+                                          Container(
+                                            height: 35,
+                                            width: 35,
+                                            decoration: BoxDecoration(
+                                                image: DecorationImage(
+                                              image: NetworkImage(
+                                                  "https://github.com/coinwink/cryptocurrency-logos/blob/master/coins/128x128/${logoId[index]}.png?raw=true"),
+                                              fit: BoxFit.fill,
+                                            )),
+                                          ),
+                                          Container(
+                                            padding: EdgeInsets.fromLTRB(
+                                                15, 0, 0, 0),
+                                            child: Text(
+                                              cryptolist[index] +
+                                                  ' (' +
+                                                  cryptosymbols[index] +
+                                                  ')' +
+                                                  cryptolist.length.toString(),
                                               style: const TextStyle(
                                                   color: Colors.white,
                                                   fontFamily:
                                                       'Montserrat Alternates'),
                                             ),
+                                          ),
+                                        ]),
+                                        Column(
+                                          children: [
                                             Text(
-                                              daychange[index]
-                                                  .toStringAsFixed(2),
-                                              style: TextStyle(
-                                                  color: daychange[index] >= 0
-                                                      ? Colors.green
-                                                      : Colors.red,
+                                              '${cryptoprice[index].toStringAsFixed(2)} \$',
+                                              style: const TextStyle(
+                                                  color: Colors.white,
                                                   fontFamily:
                                                       'Montserrat Alternates'),
                                             ),
+                                            Row(children: [
+                                              Icon(
+                                                daychange[index] >= 0
+                                                    ? Icons.arrow_upward
+                                                    : Icons.arrow_downward,
+                                                size: 15,
+                                                color: daychange[index] >= 0
+                                                    ? Colors.green
+                                                    : Colors.red,
+                                              ),
+                                              Text(
+                                                '${daychange[index].toStringAsFixed(2)}%',
+                                                style: TextStyle(
+                                                    color: daychange[index] >= 0
+                                                        ? Colors.green
+                                                        : Colors.red,
+                                                    fontFamily:
+                                                        'Montserrat Alternates'),
+                                              ),
+                                            ]),
                                           ],
                                         )
                                       ])),
@@ -208,12 +249,12 @@ class _HomeState extends State<Home> {
                 onTap: onTabTapped,
                 items: <BottomNavigationBarItem>[
                   BottomNavigationBarItem(
-                    icon: new Icon(
+                    icon:  Icon(
                       Icons.home_rounded,
-                      color: Colors.white,
-                      size: 25,
+                      color: _pageIndex == 0 ? Colors.white : Colors.grey,
+                      size:  _pageIndex == 0 ? 28 : 25,
                     ),
-                    title: new Text(
+                    title:  Text(
                       "Home",
                       style: TextStyle(
                           color: Colors.white,
@@ -221,12 +262,12 @@ class _HomeState extends State<Home> {
                     ),
                   ),
                   BottomNavigationBarItem(
-                    icon: new Icon(
+                    icon:  Icon(
                       Icons.favorite,
-                      color: Colors.white,
-                      size: 25,
+                      color: _pageIndex == 1 ? Colors.white : Colors.grey,
+                      size: _pageIndex == 1 ? 28 : 25,
                     ),
-                    title: new Text(
+                    title: Text(
                       "Favorite",
                       style: TextStyle(
                           color: Colors.white,
@@ -234,12 +275,12 @@ class _HomeState extends State<Home> {
                     ),
                   ),
                   BottomNavigationBarItem(
-                    icon: new Icon(
+                    icon:  Icon(
                       Icons.menu_book_rounded,
-                      color: Colors.white,
-                      size: 25,
+                      color: _pageIndex == 2 ? Colors.white : Colors.grey,
+                      size: _pageIndex == 2 ? 28 : 25,
                     ),
-                    title: new Text(
+                    title: Text(
                       "News",
                       style: TextStyle(
                           color: Colors.white,
