@@ -178,11 +178,10 @@ class _HomeState extends State<Home> {
                                             padding: EdgeInsets.fromLTRB(
                                                 15, 0, 0, 0),
                                             child: Text(
-                                              cryptolist[index] +
-                                                  ' (' +
-                                                  cryptosymbols[index] +
-                                                  ')' +
-                                                  cryptolist.length.toString(),
+                                              cryptolist[index],
+                                              //    + ' (' +
+                                              //     cryptosymbols[index] +
+                                              //     ')', // +cryptolist.length.toString(),
                                               style: const TextStyle(
                                                   color: Colors.white,
                                                   fontFamily:
@@ -251,12 +250,12 @@ class _HomeState extends State<Home> {
                 onTap: onTabTapped,
                 items: <BottomNavigationBarItem>[
                   BottomNavigationBarItem(
-                    icon:  Icon(
+                    icon: Icon(
                       Icons.home_rounded,
                       color: _pageIndex == 0 ? Colors.white : Colors.grey,
-                      size:  _pageIndex == 0 ? 28 : 25,
+                      size: _pageIndex == 0 ? 28 : 25,
                     ),
-                    title:  Text(
+                    title: Text(
                       "Home",
                       style: TextStyle(
                           color: Colors.white,
@@ -264,7 +263,7 @@ class _HomeState extends State<Home> {
                     ),
                   ),
                   BottomNavigationBarItem(
-                    icon:  Icon(
+                    icon: Icon(
                       Icons.favorite,
                       color: _pageIndex == 1 ? Colors.white : Colors.grey,
                       size: _pageIndex == 1 ? 28 : 25,
@@ -277,7 +276,7 @@ class _HomeState extends State<Home> {
                     ),
                   ),
                   BottomNavigationBarItem(
-                    icon:  Icon(
+                    icon: Icon(
                       Icons.menu_book_rounded,
                       color: _pageIndex == 2 ? Colors.white : Colors.grey,
                       size: _pageIndex == 2 ? 28 : 25,

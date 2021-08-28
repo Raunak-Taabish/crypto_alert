@@ -43,6 +43,8 @@ dependencies:
   http: ^0.13.3
   syncfusion_flutter_charts: ^19.2.57
   app_crypto_icons: ^0.0.2+1
+  flutter_bounce: ^1.1.0
+  url_launcher: ^6.0.9
   
 
 dev_dependencies:
@@ -70,7 +72,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
-    - assets/icons/
+    #- assets/icons/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 
