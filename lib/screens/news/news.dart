@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:crypto_alert/constant.dart';
 import 'package:flutter_bounce/flutter_bounce.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:intl/intl.dart';
 
 class News extends StatefulWidget {
   News({Key? key}) : super(key: key);
@@ -20,8 +21,10 @@ class _NewsState extends State<News> {
     DateTime now = new DateTime.now();
     String date = now.toString();
     String apikey = "1375eb2e9fae4898842e2658c0bb4299";
+    DateTime currentdate = DateTime.now();
+    String today=DateFormat('yyyy-MM-dd').format(currentdate);
     String url =
-        "https://newsapi.org/v2/everything?q=Crypto&from=2021-08-26&sortBy=popularity&apiKey=$apikey";
+        "https://newsapi.org/v2/everything?q=Crypto&from=$today&sortBy=popularity&apiKey=$apikey";
     var response = await http.get(Uri.parse(url));
     var jsondata = jsonDecode(response.body);
 
@@ -47,17 +50,6 @@ class _NewsState extends State<News> {
     }
     return news;
   }
-
-  // Align(
-  //                     alignment: Alignment.topLeft,
-  //                     child: Text(
-  //                       "News",
-  //                       style: TextStyle(
-  //                           color: Colors.white,
-  //                           fontSize: 30,
-  //                           fontFamily: 'Montserrat Alternates'),
-  //                     ),
-  //                   ),
 
   @override
   Widget build(BuildContext context) {
@@ -86,14 +78,36 @@ class _NewsState extends State<News> {
                         onPressed: () {},
                         child: Container(
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: Color(0xFF1a1a1a),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           //padding: EdgeInsets.all(10),
                           margin: EdgeInsets.only(bottom: 30),
                           child: Column(
                             children: [
-                              Image.network(news[index].urlToImage),
+                              Container(
+                                height: 250,
+                                  decoration: BoxDecoration(
+                                      // border: Border.all(
+                                      // width: 3, color: Colors.black87, style: BorderStyle.solid),
+                                      image: DecorationImage(
+                                        image: NetworkImage(
+                                          news[index].urlToImage,
+                                        ),
+                                        fit: BoxFit.cover,
+                                        // colorFilter: new ColorFilter.mode(
+                                        //     Colors.black45, BlendMode.darken),
+                                      ),
+                                      color: Colors.black87,
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(10),
+                                          topRight: const Radius.circular(10)))),
+
+                              // BoxDecoration(
+                              //   color: Colors.white,
+                              //   borderRadius: BorderRadius.circular(10),
+                              // ),
+                              // child: Image.network(news[index].urlToImage, fit: BoxFit.cover,)),
                               Padding(
                                 padding: const EdgeInsets.all(15.0),
                                 child: Column(
@@ -112,8 +126,8 @@ class _NewsState extends State<News> {
                                         ),
                                         Text(
                                           ' ' +
-                                              news[index]
-                                                  .publishedAt
+                                              DateFormat('dd-MM-yyyy').format(news[index]
+                                                  .publishedAt)
                                                   .toString(),
                                           style: regularText,
                                         ),
@@ -122,11 +136,7 @@ class _NewsState extends State<News> {
                                     SizedBox(height: 10),
                                     Text(
                                       news[index].description,
-                                      style: regularText,
-                                    ),
-                                    SizedBox(height: 5),
-                                    Text(
-                                      news[index].content,
+                                      maxLines: 3,
                                       style: regularText,
                                     ),
                                   ],

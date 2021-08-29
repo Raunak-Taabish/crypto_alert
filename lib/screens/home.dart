@@ -47,10 +47,14 @@ class _HomeState extends State<Home> {
 
   Future<void> getCryptos() async {
     // List names=[];
+    String key='aec925c7-3059-4a11-8592-b99deb474b47';
+    // var key = '1a7e4376-d437-4aa1-929b-a9e04968d593';
+
     String url =
         "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest";
     var response = await http.get(Uri.parse(url),
-        headers: {"X-CMC_PRO_API_KEY": "1a7e4376-d437-4aa1-929b-a9e04968d593"});
+        headers: {"X-CMC_PRO_API_KEY": key});
+        
     var jsonData = jsonDecode(response.body);
     // print(response.body);
     print(response.statusCode);
@@ -143,7 +147,7 @@ class _HomeState extends State<Home> {
                                   });
                                   Navigator.push(context,
                                       MaterialPageRoute(builder: (context) {
-                                    return View_Crypto(id);
+                                    return View_Crypto(id, cryptolist[index], cryptoprice[index], daychange[index], logoId[index]);
                                   }));
                                 });
                               },
