@@ -22,7 +22,7 @@ class _NewsState extends State<News> {
     String date = now.toString();
     String apikey = "1375eb2e9fae4898842e2658c0bb4299";
     DateTime currentdate = DateTime.now();
-    String today=DateFormat('yyyy-MM-dd').format(currentdate);
+    String today = DateFormat('yyyy-MM-dd').format(currentdate);
     String url =
         "https://newsapi.org/v2/everything?q=Crypto&from=$today&sortBy=popularity&apiKey=$apikey";
     var response = await http.get(Uri.parse(url));
@@ -86,7 +86,7 @@ class _NewsState extends State<News> {
                           child: Column(
                             children: [
                               Container(
-                                height: 250,
+                                  height: 250,
                                   decoration: BoxDecoration(
                                       // border: Border.all(
                                       // width: 3, color: Colors.black87, style: BorderStyle.solid),
@@ -101,7 +101,8 @@ class _NewsState extends State<News> {
                                       color: Colors.black87,
                                       borderRadius: BorderRadius.only(
                                           topLeft: Radius.circular(10),
-                                          topRight: const Radius.circular(10)))),
+                                          topRight:
+                                              const Radius.circular(10)))),
 
                               // BoxDecoration(
                               //   color: Colors.white,
@@ -126,8 +127,9 @@ class _NewsState extends State<News> {
                                         ),
                                         Text(
                                           ' ' +
-                                              DateFormat('dd-MM-yyyy').format(news[index]
-                                                  .publishedAt)
+                                              DateFormat('dd-MM-yyyy')
+                                                  .format(
+                                                      news[index].publishedAt)
                                                   .toString(),
                                           style: regularText,
                                         ),
