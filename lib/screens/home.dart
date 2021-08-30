@@ -47,14 +47,14 @@ class _HomeState extends State<Home> {
 
   Future<void> getCryptos() async {
     // List names=[];
-    String key='aec925c7-3059-4a11-8592-b99deb474b47';
+    String key = 'aec925c7-3059-4a11-8592-b99deb474b47';
     // var key = '1a7e4376-d437-4aa1-929b-a9e04968d593';
 
     String url =
         "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest";
-    var response = await http.get(Uri.parse(url),
-        headers: {"X-CMC_PRO_API_KEY": key});
-        
+    var response =
+        await http.get(Uri.parse(url), headers: {"X-CMC_PRO_API_KEY": key});
+
     var jsonData = jsonDecode(response.body);
     // print(response.body);
     print(response.statusCode);
@@ -147,7 +147,12 @@ class _HomeState extends State<Home> {
                                   });
                                   Navigator.push(context,
                                       MaterialPageRoute(builder: (context) {
-                                    return View_Crypto(id, cryptolist[index], cryptoprice[index], daychange[index], logoId[index]);
+                                    return View_Crypto(
+                                        id,
+                                        cryptolist[index],
+                                        cryptoprice[index],
+                                        daychange[index],
+                                        logoId[index]);
                                   }));
                                 });
                               },
@@ -205,19 +210,20 @@ class _HomeState extends State<Home> {
                                             Row(children: [
                                               Icon(
                                                 daychange[index] >= 0
-                                                    ? Icons.arrow_upward
-                                                    : Icons.arrow_downward,
-                                                size: 15,
+                                                    ? Icons.arrow_drop_up_sharp
+                                                    : Icons
+                                                        .arrow_drop_down_sharp,
+                                                size: 20,
                                                 color: daychange[index] >= 0
-                                                    ? Colors.green
-                                                    : Colors.red,
+                                                    ? Color(0xFF00D293)
+                                                    : Color(0xFFFF493E),
                                               ),
                                               Text(
                                                 '${daychange[index].toStringAsFixed(2)}%',
                                                 style: TextStyle(
                                                     color: daychange[index] >= 0
-                                                        ? Colors.green
-                                                        : Colors.red,
+                                                        ? Color(0xFF00D293)
+                                                        : Color(0xFFFF493E),
                                                     fontFamily:
                                                         'Montserrat Alternates'),
                                               ),
