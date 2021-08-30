@@ -221,7 +221,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
               //   ),
               // ),
               SizedBox(
-                height: 30,
+                height: 20,
               ),
               Container(
                 decoration: BoxDecoration(
@@ -230,7 +230,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
                 ),
                 padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
                 margin: EdgeInsets.fromLTRB(5, 0, 5, 0),
-                height: 280,
+                height: 250,
                 width: MediaQuery.of(context).size.width,
                 child: FutureBuilder(
                     future: getCryptoDetails(),
@@ -283,11 +283,11 @@ class _ViewCrypto_State extends State<View_Crypto> {
                               SplineAreaSeries<SalesData, String>(
                                 cardinalSplineTension: 4,
                                 color: Colors.white,
-                                gradient: const LinearGradient(
+                                gradient:  LinearGradient(
                                     begin: Alignment.topCenter,
                                     end: Alignment.bottomCenter,
-                                    colors: const [
-                                      Color(0xFF00FFB3),
+                                    colors:  [
+                                      widget.daychange >= 0 ? Color(0xFF00FFB3) : Color(0xFFC01010),
                                       Color(0xFF2F9FDB),
                                     ]),
                                 // name: 'Price in \$',
