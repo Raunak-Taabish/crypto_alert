@@ -39,7 +39,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
     //     cryptoname = element[0];
     //   }
     // });
-    futureNews=pullNews();
+    futureNews = pullNews();
   }
 
   List<Article> pull = [];
@@ -175,49 +175,27 @@ class _ViewCrypto_State extends State<View_Crypto> {
           backgroundColor: const Color(0xFF151515),
         ),
         backgroundColor: const Color(0xFF151515),
-        // floatingActionButton: Container(
-        //   margin: EdgeInsets.only(bottom: 0),
-        //   child: Row(
-        //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        //     children: [
-        //       FloatingActionButton.extended(
-        //         backgroundColor: Colors.white,
-        //         onPressed: () {},
-        //         isExtended: true,
-        //         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        //         icon: Image.asset(
-        //           'assets/images/convert.png',
-        //           width: 15,
-        //           height: 15,
-        //         ),
-        //         label: Text(
-        //           'Converter',
-        //           style: blackboldText,
-        //         ),
-        //         shape: RoundedRectangleBorder(
-        //             borderRadius: BorderRadius.all(Radius.circular(12.0))),
-        //       ),
-        //       FloatingActionButton.extended(
-        //         backgroundColor: Colors.white,
-        //         onPressed: () {},
-        //         isExtended: true,
-        //         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        //         icon: Image.asset(
-        //           'assets/images/add.png',
-        //           width: 15,
-        //           height: 15,
-        //         ),
-        //         label: Text(
-        //           'Add Alert',
-        //           style: blackboldText,
-        //         ),
-        //         shape: RoundedRectangleBorder(
-        //             borderRadius: BorderRadius.all(Radius.circular(12.0))),
-        //       ),
-        //     ],
-        //   ),
-        // ),
-        // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: Container(
+          margin: EdgeInsets.only(bottom: 0),
+          child: FloatingActionButton.extended(
+            backgroundColor: Colors.white,
+            onPressed: () {},
+            isExtended: true,
+            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            icon: Image.asset(
+              'assets/images/add.png',
+              width: 15,
+              height: 15,
+            ),
+            label: Text(
+              'Add Alert',
+              style: blackboldText,
+            ),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(12.0))),
+          ),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         body: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -247,15 +225,16 @@ class _ViewCrypto_State extends State<View_Crypto> {
                           color: Colors.white,
                           fontFamily: 'Montserrat Alternates',
                           fontSize: 40,
-                          fontWeight: FontWeight.w600),
+                          fontWeight: FontWeight.w500),
                     ),
                   ),
                   Container(
                     margin: EdgeInsets.fromLTRB(0, 0, 20, 0),
                     decoration: BoxDecoration(
-                        color:
-                            widget.daychange >= 0 ? Colors.green : Colors.red,
-                        borderRadius: BorderRadius.circular(10)),
+                        color: widget.daychange >= 0
+                            ? Color(0xFF00D293)
+                            : Color(0xFFFF493E),
+                        borderRadius: BorderRadius.circular(6)),
                     padding: EdgeInsets.all(5),
                     child: Row(
                       children: [
@@ -273,7 +252,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
                               color: Colors
                                   .white, //widget.daychange >= 0 ? Colors.green : Colors.red,
                               fontFamily: 'Montserrat Alternates',
-                              fontSize: 15,
+                              fontSize: 13,
                               fontWeight: FontWeight.w600),
                         ),
                       ],
@@ -382,25 +361,80 @@ class _ViewCrypto_State extends State<View_Crypto> {
                 ],
               ),
               Container(
+                margin: EdgeInsets.all(30),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Low",
+                          style: TextStyle(
+                              fontSize: 12,
+                              fontFamily: 'Montserrat Alternates',
+                              color: Color(0xFF909090),
+                              fontWeight: FontWeight.w400),
+                        ),
+                        Text(
+                          "High",
+                          style: TextStyle(
+                              fontSize: 12,
+                              fontFamily: 'Montserrat Alternates',
+                              color: Color(0xFF909090),
+                              fontWeight: FontWeight.w400),
+                        ),
+                      ],
+                    ),
+                    Container(
+                      margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                      color: Colors.white,
+                      height: 3,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "0000",
+                          style: TextStyle(
+                              fontSize: 17,
+                              fontFamily: 'Montserrat Alternates',
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500),
+                        ),
+                        Text(
+                          "0000",
+                          style: TextStyle(
+                              fontSize: 17,
+                              fontFamily: 'Montserrat Alternates',
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              Container(
                 margin: EdgeInsets.fromLTRB(30, 20, 30, 0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        alldata('low', '15.36'),
-                        alldata('low', '15.36'),
-                        alldata('low', '15.36'),
+                        alldata('Market cap', '15.36'),
+                        alldata('Open', '15.36'),
+                        alldata('previous close', '15.36'),
                       ],
                     ),
                     SizedBox(
-                      width: 130,
+                      width: 100,
                     ),
                     Column(
                       children: [
-                        alldata('low', '15.36'),
-                        alldata('low', '15.36'),
-                        alldata('low', '15.36'),
+                        alldata('Volume', '15.36'),
+                        alldata('Supply', '15.36'),
+                        alldata('Rank', '15.36'),
                       ],
                     ),
                   ],
@@ -409,40 +443,97 @@ class _ViewCrypto_State extends State<View_Crypto> {
               SizedBox(
                 height: 20,
               ),
+              GestureDetector(
+                onTap: () {},
+                child: Container(
+                  width: 150,
+                  height: 50,
+                  margin: EdgeInsets.fromLTRB(30, 00, 0, 00),
+                  child: FlatButton(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(12.0))),
+                    color: Colors.white,
+                    onPressed: () {},
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          "assets/images/convert.png",
+                          width: 20,
+                          height: 20,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          "Converter",
+                          style: blackboldText,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
               Container(
                 //width: MediaQuery.of(context).size.width / 2.5,
-                margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+                margin: EdgeInsets.fromLTRB(30, 15, 20, 0),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15),
-                  color: Color(0xFF202020),
+                  //color: Color(0xFF202020),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "What is " + widget.cryptoname,
+                      "About " + widget.cryptoname,
                       style: TextStyle(
                           color: Colors.white,
                           fontFamily: 'Montserrat Alternates',
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600),
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500),
                     ),
                     SizedBox(
                       height: 15,
                     ),
                     Text(
-                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla .....",
+                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla .....",
                       style: TextStyle(
                           color: Colors.white,
                           fontFamily: 'Montserrat Alternates',
-                          fontSize: 11),
+                          fontSize: 13),
                     ),
                   ],
                 ),
               ),
               Container(
-                height: 600,
+                margin: EdgeInsets.fromLTRB(30, 20, 0, 20),
+                child: FlatButton(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(6.0))),
+                  color: Colors.white,
+                  onPressed: () {},
+                  child: Text(
+                    "Read",
+                    style: blackboldText,
+                  ),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(left: 30),
+                child: Text(
+                  "${widget.cryptoname} News",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                      fontFamily: 'Montserrat Alternates'),
+                ),
+              ),
+              Container(
+                  height: 600,
                   // width: 200,
                   // height: 100,
                   //width: MediaQuery.of(context).size.width / 2.5,
@@ -489,7 +580,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
               fontSize: 12,
               fontFamily: 'Montserrat Alternates',
               color: Color(0xFF909090),
-              fontWeight: FontWeight.w600),
+              fontWeight: FontWeight.w400),
         ),
         SizedBox(
           height: 5,
@@ -500,7 +591,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
               fontSize: 17,
               fontFamily: 'Montserrat Alternates',
               color: Colors.white,
-              fontWeight: FontWeight.bold),
+              fontWeight: FontWeight.w500),
         ),
         SizedBox(
           height: 20,
