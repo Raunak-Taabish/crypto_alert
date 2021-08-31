@@ -19,8 +19,6 @@ class _NewsState extends State<News> {
   List<Article> news = [];
 
   Future<List> getNews() async {
-    DateTime now = new DateTime.now();
-    String date = now.toString();
     String apikey = "1375eb2e9fae4898842e2658c0bb4299";
     DateTime currentdate = DateTime.now();
     String today = DateFormat('yyyy-MM-dd').format(currentdate);
