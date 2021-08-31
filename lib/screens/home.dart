@@ -6,13 +6,15 @@ import 'package:crypto_alert/screens/menu/menu.dart';
 import 'package:crypto_alert/screens/news/article.dart';
 import 'package:crypto_alert/screens/news/news.dart';
 import 'package:http/http.dart' as http;
-import 'package:crypto_alert/screens/authentication/login_register.dart';
+// import 'package:crypto_alert/screens/authentication/login_register.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'view_crypto/view_crypto.dart';
 import 'package:crypto_alert/data/crypto_list.dart';
 import 'package:intl/intl.dart';
+import 'package:anim_search_bar/anim_search_bar.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 class Home extends StatefulWidget {
   Home({Key? key}) : super(key: key);
@@ -32,6 +34,7 @@ class _HomeState extends State<Home> {
   late Future getCryptoData;
   late Future getnews;
   List<Crypto_Home> crypto = [];
+  TextEditingController textController = TextEditingController();
 
   @override
   void initState() {
@@ -91,8 +94,9 @@ class _HomeState extends State<Home> {
 
   Future<List> getNews() async {
     print('News data is fetched');
-    List<Article> news_dummy=[];
-    String apikey = "1375eb2e9fae4898842e2658c0bb4299";
+    List<Article> news_dummy = [];
+    // String apikey = "1375eb2e9fae4898842e2658c0bb4299";
+    String apikey = "ee7211708b0243d19ad32f561258a604";
     DateTime currentdate = DateTime.now();
     String today = DateFormat('yyyy-MM-dd').format(currentdate);
     String url =
@@ -121,7 +125,7 @@ class _HomeState extends State<Home> {
         });
       });
       setState(() {
-        news=news_dummy;
+        news = news_dummy;
       });
       // return names;
     }
@@ -145,6 +149,26 @@ class _HomeState extends State<Home> {
           width: MediaQuery.of(context).size.width / 3,
         ),
         automaticallyImplyLeading: false,
+        actions: [
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 10),
+            child: AnimSearchBar(
+              rtl: true,
+              color: Color(0xFF1a1a1a),
+              style: TextStyle(color: Colors.white),
+              // suffixIcon: const Icon(Icons., color: Colors.white, size: 30),
+              prefixIcon: const Icon(Icons.search_rounded, color: Colors.white, size: 30),
+                width: MediaQuery.of(context).size.width - 20,
+                textController: textController,
+                helpText: 'Search....',
+                closeSearchOnSuffixTap: true,
+                onSuffixTap: () {
+                  setState(() {
+                    textController.clear();
+                  });
+                }),
+          )
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),

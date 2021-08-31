@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:crypto_alert/constant.dart';
 import 'package:crypto_alert/data/crypto_list.dart';
+import 'package:crypto_alert/data/crypto_statistics.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:crypto_alert/screens/news/news.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:crypto_alert/backbutton.dart';
 import 'package:crypto_alert/screens/news/article.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class View_Crypto extends StatefulWidget {
   final String cryptoid;
@@ -29,6 +31,10 @@ class _ViewCrypto_State extends State<View_Crypto> {
   List<SalesData> closeprice = [];
   late DateTime currentDate;
   late Future futureNews;
+  late String desc;
+  late Future getinfo, getcryptodetails, getcryptostatistics;
+  late String CryptoURL;
+  Crypto_Statistics statistics = Crypto_Statistics();
 
   @override
   void initState() {
@@ -40,12 +46,76 @@ class _ViewCrypto_State extends State<View_Crypto> {
     //   }
     // });
     futureNews = pullNews();
+    getinfo = getCryptoInfo();
+    getcryptodetails = getCryptoGraphData();
+    getcryptostatistics = getCryptoStatistics();
+  }
+
+  Future<Crypto_Statistics> getCryptoStatistics() async {
+    // String key = 'aec925c7-3059-4a11-8592-b99deb474b47';
+    // var key = '1a7e4376-d437-4aa1-929b-a9e04968d593';
+    print('Crypto ID: ${widget.cryptoid}');
+    String url = "https://www.cryptocurrencychart.com/api/coin/view/363";
+
+    var response = await http.get(Uri.parse(url), headers: {
+      "Key": "24a2c305453648b6e86655da8d99c7f8",
+      "Secret": "8f77ce582d37f5507d8407d1b28f1715"
+    });
+
+    var jsonData = jsonDecode(response.body);
+    // print(response.body);
+    // print(response.statusCode);
+    // print(jsonData["data"][0]["name"]);
+    print(widget.logoId);
+    try {
+      statistics = Crypto_Statistics(
+          lowprice: jsonData["coin"]["lowPrice"],
+          highprice: jsonData["coin"]["highPrice"],
+          closeprice: jsonData["coin"]["closePrice"],
+          openprice: jsonData["coin"]["openPrice"],
+          marketcap: jsonData["coin"]["marketCap"],
+          volume: jsonData["coin"]["tradeVolume"],
+          supply: jsonData["coin"]["supply"],
+          rank: jsonData["coin"]["rank"]);
+      return statistics;
+    } catch (e) {
+      return statistics;
+      print(e);
+    }
+  }
+
+  Future<String> getCryptoInfo() async {
+    String key = 'aec925c7-3059-4a11-8592-b99deb474b47';
+    // var key = '1a7e4376-d437-4aa1-929b-a9e04968d593';
+
+    String url =
+        "https://pro-api.coinmarketcap.com/v1/cryptocurrency/info?id=${widget.logoId}";
+    var response =
+        await http.get(Uri.parse(url), headers: {"X-CMC_PRO_API_KEY": key});
+
+    var jsonData = jsonDecode(response.body);
+    // print(response.body);
+    // print(response.statusCode);
+    // print(jsonData["data"][0]["name"]);
+    print(widget.logoId);
+    try {
+      desc = jsonData["data"][widget.logoId.toString()]["description"];
+      CryptoURL =
+          jsonData["data"][widget.logoId.toString()]["urls"]["website"][0];
+      print(CryptoURL);
+      print(desc);
+      return desc;
+    } catch (e) {
+      return '';
+      print(e);
+    }
   }
 
   List<Article> pull = [];
 
   Future<List> pullNews() async {
-    String apikey = "1375eb2e9fae4898842e2658c0bb4299";
+    // String apikey = "1375eb2e9fae4898842e2658c0bb4299";
+    String apikey = "ee7211708b0243d19ad32f561258a604";
     DateTime currentdate = DateTime.now();
     String today = DateFormat('yyyy-MM-dd').format(currentdate);
     String url =
@@ -79,7 +149,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
     return pull;
   }
 
-  Future<List> getCryptoDetails() async {
+  Future<List> getCryptoGraphData() async {
     // List names=[];
     print(widget.cryptoid);
     print(currentDate);
@@ -273,7 +343,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
                 height: 250,
                 width: MediaQuery.of(context).size.width,
                 child: FutureBuilder(
-                    future: getCryptoDetails(),
+                    future: getcryptodetails,
                     builder: (context, AsyncSnapshot snapshot) {
                       if (snapshot.hasData) {
                         closeprice = snapshot.data;
@@ -335,7 +405,10 @@ class _ViewCrypto_State extends State<View_Crypto> {
                                     sales.sales,
                                 animationDuration: 3000,
                                 markerSettings: const MarkerSettings(
-                                    height: 2, width: 2, isVisible: false),
+                                    borderColor: Colors.white,
+                                    height: 2,
+                                    width: 2,
+                                    isVisible: true),
                                 // dataLabelSettings: const DataLabelSettings(
                                 //     isVisible: true), // Enables the data label.
                                 enableTooltip: true,
@@ -357,7 +430,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
                   GestureDetector(onTap: () {}, child: dayChange("7 D")),
                   GestureDetector(onTap: () {}, child: dayChange("1 M")),
                   GestureDetector(onTap: () {}, child: dayChange("1 Y")),
-                  GestureDetector(onTap: () {}, child: dayChange("3 Y")),
+                  GestureDetector(onTap: () {}, child: dayChange("2 Y")),
                 ],
               ),
               Container(
@@ -414,32 +487,54 @@ class _ViewCrypto_State extends State<View_Crypto> {
                   ],
                 ),
               ),
-              Container(
-                margin: EdgeInsets.fromLTRB(30, 20, 30, 0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        alldata('Market cap', '15.36'),
-                        alldata('Open', '15.36'),
-                        alldata('previous close', '15.36'),
-                      ],
-                    ),
-                    SizedBox(
-                      width: 100,
-                    ),
-                    Column(
-                      children: [
-                        alldata('Volume', '15.36'),
-                        alldata('Supply', '15.36'),
-                        alldata('Rank', '15.36'),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
+              FutureBuilder(
+                  future: getcryptostatistics,
+                  builder: (context, snapshot) {
+                    return Container(
+                      margin: EdgeInsets.fromLTRB(30, 20, 30, 0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              alldata(
+                                'Market cap',
+                                statistics.marketcap.toStringAsFixed(2),
+                              ),
+                              alldata(
+                                'Open',
+                                statistics.openprice.toStringAsFixed(2),
+                              ),
+                              alldata(
+                                'Previous close',
+                                statistics.closeprice.toStringAsFixed(2),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            width: 100,
+                          ),
+                          Column(
+                            children: [
+                              alldata(
+                                'Volume',
+                                statistics.volume.toStringAsFixed(2),
+                              ),
+                              alldata(
+                                'Supply',
+                                statistics.supply.toStringAsFixed(2),
+                              ),
+                              alldata(
+                                'Rank',
+                                statistics.rank.toStringAsFixed(2),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    );
+                  }),
               SizedBox(
                 height: 20,
               ),
@@ -498,13 +593,22 @@ class _ViewCrypto_State extends State<View_Crypto> {
                     SizedBox(
                       height: 15,
                     ),
-                    Text(
-                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla .....",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: 'Montserrat Alternates',
-                          fontSize: 13),
-                    ),
+                    FutureBuilder(
+                        future: getCryptoInfo(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return Text(
+                              desc,
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontFamily: 'Montserrat Alternates',
+                                  fontSize: 13),
+                            );
+                          } else {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          }
+                        })
                   ],
                 ),
               ),
@@ -514,9 +618,15 @@ class _ViewCrypto_State extends State<View_Crypto> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(6.0))),
                   color: Colors.white,
-                  onPressed: () {},
+                  onPressed: () async {
+                    if (await canLaunch(CryptoURL)) {
+                      await launch(CryptoURL);
+                    } else {
+                      throw 'Error';
+                    }
+                  },
                   child: Text(
-                    "Read",
+                    "Learn more",
                     style: blackboldText,
                   ),
                 ),
@@ -532,22 +642,23 @@ class _ViewCrypto_State extends State<View_Crypto> {
                       fontFamily: 'Montserrat Alternates'),
                 ),
               ),
-              Container(
-                  height: 600,
-                  // width: 200,
-                  // height: 100,
-                  //width: MediaQuery.of(context).size.width / 2.5,
-                  margin: EdgeInsets.fromLTRB(10, 20, 10, 20),
-                  padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    color: Color(0xFF202020),
-                  ),
-                  child: FutureBuilder(
-                      future: futureNews,
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          return ListView.builder(
+              FutureBuilder(
+                  future: futureNews,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Container(
+                          height: 300,
+                          // width: 200,
+                          // height: 100,
+                          //width: MediaQuery.of(context).size.width / 2.5,
+                          margin: EdgeInsets.fromLTRB(10, 20, 10, 20),
+                          padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            color: Color(0xFF202020),
+                          ),
+                          child: 
+                          ListView.builder(
                               itemCount: pull.length,
                               itemBuilder: (context, index) {
                                 return Container(
@@ -555,13 +666,13 @@ class _ViewCrypto_State extends State<View_Crypto> {
                                   pull[index].title,
                                   style: TextStyle(color: Colors.white),
                                 ));
-                              });
-                        } else {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        }
-                      })),
+                              }));
+                    } else {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                  }),
               SizedBox(
                 height: MediaQuery.of(context).size.height / 8,
               )

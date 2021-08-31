@@ -126,7 +126,7 @@ class _OnBoardingState extends State<OnBoarding> {
           'your crypto to\nfavorites list',
         ),
         pages(
-          'binoculars.png',
+          'inoculars.png',
           'Follow',
           'your crypto to\nget latest updates',
         ),
