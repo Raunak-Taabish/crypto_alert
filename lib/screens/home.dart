@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:crypto_alert/data/crypto_home.dart';
+// import 'package:crypto_alert/data/get_data.dart';
 import 'package:crypto_alert/screens/menu/menu.dart';
+import 'package:crypto_alert/screens/news/article.dart';
 import 'package:crypto_alert/screens/news/news.dart';
 import 'package:http/http.dart' as http;
 import 'package:crypto_alert/screens/authentication/login_register.dart';
@@ -10,6 +12,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'view_crypto/view_crypto.dart';
 import 'package:crypto_alert/data/crypto_list.dart';
+import 'package:intl/intl.dart';
 
 class Home extends StatefulWidget {
   Home({Key? key}) : super(key: key);
@@ -22,17 +25,20 @@ class _HomeState extends State<Home> {
   late Timer timer;
   late String id;
   String name = '';
-  List<Crypto_Home> crypto = [];
   List logo = [];
   int index = 0;
   int _pageIndex = 0;
   late PageController _pageController;
+  late Future getCryptoData;
+  late Future getnews;
+  List<Crypto_Home> crypto = [];
 
   @override
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: _pageIndex);
-    // getCryptos();
+    getCryptoData = getCryptos();
+    getnews = getNews();
   }
 
   void onPageChanged(int page) {
@@ -47,7 +53,9 @@ class _HomeState extends State<Home> {
   }
 
   Future<List<Crypto_Home>> getCryptos() async {
+    print("Crypto data fetched");
     // List names=[];
+    List<Crypto_Home> crypto_dummy = [];
     String key = 'aec925c7-3059-4a11-8592-b99deb474b47';
     // var key = '1a7e4376-d437-4aa1-929b-a9e04968d593';
 
@@ -58,23 +66,69 @@ class _HomeState extends State<Home> {
 
     var jsonData = jsonDecode(response.body);
     // print(response.body);
-    print(response.statusCode);
-    print(jsonData["data"][0]["name"]);
+    // print(response.statusCode);
+    // print(jsonData["data"][0]["name"]);
     if (response.statusCode == 200) {
       jsonData["data"].forEach((element) {
-        // setState(() {
         Crypto_Home crypto_data = Crypto_Home(
             cryptonames: element["name"].toString(),
             cryptoprices: element["quote"]["USD"]["price"],
             cryptosymbols: element["symbol"].toString(),
             daychange: element["quote"]["USD"]["percent_change_24h"],
             logoId: element["id"]);
-        crypto.add(crypto_data);
+        // print(crypto_data.cryptoprices);
+        crypto_dummy.add(crypto_data);
       });
     }
-    return crypto;
+    setState(() {
+      crypto = crypto_dummy;
+    });
+    print(crypto_dummy[0].cryptoprices);
+    return crypto_dummy;
   }
 
+  List<Article> news = [];
+
+  Future<List> getNews() async {
+    print('News data is fetched');
+    List<Article> news_dummy=[];
+    String apikey = "1375eb2e9fae4898842e2658c0bb4299";
+    DateTime currentdate = DateTime.now();
+    String today = DateFormat('yyyy-MM-dd').format(currentdate);
+    String url =
+        "https://newsapi.org/v2/everything?q=Crypto&language=en&from=$today&sortBy=popularity&apiKey=$apikey";
+    var response = await http.get(Uri.parse(url));
+    var jsondata = jsonDecode(response.body);
+
+    if (response.statusCode == 200) {
+      jsondata["articles"].forEach((element) {
+        // setState(() {
+        //   newsname.add(element["articles"][0]["source"]["name"]);
+        // });
+        // print(element["name"]);
+        setState(() {
+          Article article = Article(
+            title: element['title'].toString(), //
+            author: element['author'].toString(),
+            description: element['description'].toString(),
+            urlToImage: element['urlToImage'].toString(),
+            publishedAt: DateTime.parse(element['publishedAt']), //
+            content: element["content"].toString(),
+            articleUrl: element["url"].toString(),
+            source: element["source"]["name"].toString(), //
+          );
+          news_dummy.add(article);
+        });
+      });
+      setState(() {
+        news=news_dummy;
+      });
+      // return names;
+    }
+    return news;
+  }
+
+  // GetData callapi = GetData();
   @override
   Widget build(BuildContext context) {
     final User? user = FirebaseAuth.instance.currentUser;
@@ -107,10 +161,10 @@ class _HomeState extends State<Home> {
                       return RefreshIndicator(
                           onRefresh: getCryptos,
                           child: FutureBuilder(
-                              future: getCryptos(),
-                              builder: (context,
-                                  AsyncSnapshot<List<Crypto_Home>> snapshot) {
+                              future: getCryptoData,
+                              builder: (context, snapshot) {
                                 if (snapshot.hasData) {
+                                  // crypto = snapshot.data as List<Crypto_Home>;
                                   return ListView.builder(
                                       itemCount: crypto.length,
                                       itemBuilder:
@@ -256,7 +310,20 @@ class _HomeState extends State<Home> {
                       color: Colors.white, fontFamily: 'Montserrat Alternates'),
                 ),
               ),
-              News(),
+              RefreshIndicator(
+                onRefresh: getNews,
+                child: FutureBuilder(
+                    future: getnews,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return newspage(news);
+                      } else {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                    }),
+              ),
               MenuPage()
             ]),
       ),
