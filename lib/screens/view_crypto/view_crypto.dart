@@ -1,15 +1,14 @@
 import 'dart:convert';
 import 'package:crypto_alert/constant.dart';
-import 'package:crypto_alert/data/crypto_list.dart';
 import 'package:crypto_alert/data/crypto_statistics.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:crypto_alert/screens/news/news.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:crypto_alert/backbutton.dart';
 import 'package:crypto_alert/screens/news/article.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:intl/intl.dart';
 
 class View_Crypto extends StatefulWidget {
   final String cryptoid;
@@ -34,7 +33,16 @@ class _ViewCrypto_State extends State<View_Crypto> {
   late String desc;
   late Future getinfo, getcryptodetails, getcryptostatistics;
   late String CryptoURL;
-  Crypto_Statistics statistics = Crypto_Statistics();
+  int selectedTab = 0;
+  Crypto_Statistics statistics = Crypto_Statistics(
+      lowprice: 0.0,
+      highprice: 0.0,
+      closeprice: 0.0,
+      openprice: 0.0,
+      marketcap: 0.0,
+      volume: 0.0,
+      supply: 0.0,
+      rank: 0);
 
   @override
   void initState() {
@@ -55,7 +63,8 @@ class _ViewCrypto_State extends State<View_Crypto> {
     // String key = 'aec925c7-3059-4a11-8592-b99deb474b47';
     // var key = '1a7e4376-d437-4aa1-929b-a9e04968d593';
     print('Crypto ID: ${widget.cryptoid}');
-    String url = "https://www.cryptocurrencychart.com/api/coin/view/363";
+    String url =
+        "https://www.cryptocurrencychart.com/api/coin/view/${widget.cryptoid}";
 
     var response = await http.get(Uri.parse(url), headers: {
       "Key": "24a2c305453648b6e86655da8d99c7f8",
@@ -64,23 +73,26 @@ class _ViewCrypto_State extends State<View_Crypto> {
 
     var jsonData = jsonDecode(response.body);
     // print(response.body);
-    // print(response.statusCode);
+    print(response.statusCode);
     // print(jsonData["data"][0]["name"]);
-    print(widget.logoId);
+    // print(widget.logoId);
     try {
-      statistics = Crypto_Statistics(
-          lowprice: jsonData["coin"]["lowPrice"],
-          highprice: jsonData["coin"]["highPrice"],
-          closeprice: jsonData["coin"]["closePrice"],
-          openprice: jsonData["coin"]["openPrice"],
-          marketcap: jsonData["coin"]["marketCap"],
-          volume: jsonData["coin"]["tradeVolume"],
-          supply: jsonData["coin"]["supply"],
-          rank: jsonData["coin"]["rank"]);
+      setState(() {
+        statistics = Crypto_Statistics(
+            lowprice: double.parse(jsonData["coin"]["lowPrice"]),
+            highprice: double.parse(jsonData["coin"]["highPrice"]),
+            closeprice: double.parse(jsonData["coin"]["closePrice"]),
+            openprice: double.parse(jsonData["coin"]["openPrice"]),
+            marketcap: double.parse(jsonData["coin"]["marketCap"]),
+            volume: double.parse(jsonData["coin"]["tradeVolume"]),
+            supply: double.parse(jsonData["coin"]["supply"]),
+            rank: jsonData["coin"]["rank"]);
+      });
+      print('Low price:  ${statistics.lowprice}');
       return statistics;
     } catch (e) {
-      return statistics;
       print(e);
+      return statistics;
     }
   }
 
@@ -97,13 +109,13 @@ class _ViewCrypto_State extends State<View_Crypto> {
     // print(response.body);
     // print(response.statusCode);
     // print(jsonData["data"][0]["name"]);
-    print(widget.logoId);
+    // print(widget.logoId);
     try {
       desc = jsonData["data"][widget.logoId.toString()]["description"];
       CryptoURL =
           jsonData["data"][widget.logoId.toString()]["urls"]["website"][0];
-      print(CryptoURL);
-      print(desc);
+      // print(CryptoURL);
+      // print(desc);
       return desc;
     } catch (e) {
       return '';
@@ -139,7 +151,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
           articleUrl: element["url"].toString(),
           source: element["source"]["name"].toString(), //
         );
-        print(article.title);
+        // print(article.title);
         setState(() {
           pull.add(article);
         });
@@ -151,29 +163,53 @@ class _ViewCrypto_State extends State<View_Crypto> {
 
   Future<List> getCryptoGraphData() async {
     // List names=[];
-    print(widget.cryptoid);
-    print(currentDate);
+    // print(widget.cryptoid);
+    // print(currentDate);
+    DateTime startDate;
     DateTime endDate = currentDate;
-    DateTime startDate =
-        DateTime(currentDate.year, currentDate.month - 1, currentDate.day);
+    switch (selectedTab) {
+      case 1:
+        startDate =
+            DateTime(currentDate.year, currentDate.month - 1, currentDate.day);
+        break;
+      case 2:
+        startDate =
+            DateTime(currentDate.year, currentDate.month - 6, currentDate.day);
+        break;
+      case 3:
+        startDate =
+            DateTime(currentDate.year, currentDate.month-11, currentDate.day);
+        break;
+      default:
+        startDate =
+            DateTime(currentDate.year, currentDate.month, currentDate.day - 7);
+        break;
+    }
+    // String key = "XR3SJVKFPU7XT8FZ";
+    // String url = "https://www.alphavantage.co/query?function=CRYPTO_INTRADAY&symbol=ETH&market=USD&interval=5min&apikey=$key";
     String url =
         "https://www.cryptocurrencychart.com/api/coin/history/${widget.cryptoid}/$startDate/$endDate/closePrice/USD";
     var response = await http.get(Uri.parse(url), headers: {
       "Key": "24a2c305453648b6e86655da8d99c7f8",
       "Secret": "8f77ce582d37f5507d8407d1b28f1715"
     });
+    // var response = await http.get(Uri.parse(url));
     var jsonData = jsonDecode(response.body);
     // print(response.body);
-    print(response.statusCode);
+    // print(response.statusCode);
     // print(jsonData["data"][0]["name"]);
+    
     if (response.statusCode == 200) {
       try {
-        jsonData["data"].forEach((element) {
-          SalesData article = SalesData(
-              year: DateFormat('yyyy-MM-dd').parse(element["date"]),
-              sales: double.parse(element["closePrice"].toString()));
-          closeprice.add(article);
-          // print(element["closePrice"].toString());
+        setState(() {
+          closeprice.clear();
+          jsonData["data"].forEach((element) {
+            SalesData article = SalesData(
+                year: DateFormat('yyyy-MM-dd').parse(element["date"]),
+                sales: double.parse(element["closePrice"].toString()));
+            closeprice.add(article);
+            // print(element["closePrice"].toString());
+          });
         });
       } catch (e) {
         print(e);
@@ -384,7 +420,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
                                 enable: true), // Enables the tooltip.
                             series: <SplineAreaSeries<SalesData, String>>[
                               SplineAreaSeries<SalesData, String>(
-                                cardinalSplineTension: 4,
+                                // cardinalSplineTension: 4,
                                 color: Colors.white,
                                 gradient: LinearGradient(
                                     begin: Alignment.topCenter,
@@ -396,8 +432,8 @@ class _ViewCrypto_State extends State<View_Crypto> {
                                       Color(0xFF2F9FDB),
                                     ]),
                                 // name: 'Price in \$',
-                                emptyPointSettings: EmptyPointSettings(
-                                    mode: EmptyPointMode.average),
+                                // emptyPointSettings: EmptyPointSettings(
+                                //     mode: EmptyPointMode.average),
                                 dataSource: closeprice,
                                 xValueMapper: (SalesData sales, _) =>
                                     DateFormat('d/MMM').format(sales.year),
@@ -408,7 +444,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
                                     borderColor: Colors.white,
                                     height: 2,
                                     width: 2,
-                                    isVisible: true),
+                                    isVisible: false),
                                 // dataLabelSettings: const DataLabelSettings(
                                 //     isVisible: true), // Enables the data label.
                                 enableTooltip: true,
@@ -426,11 +462,38 @@ class _ViewCrypto_State extends State<View_Crypto> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  GestureDetector(onTap: () {}, child: dayChange("24 H")),
-                  GestureDetector(onTap: () {}, child: dayChange("7 D")),
-                  GestureDetector(onTap: () {}, child: dayChange("1 M")),
-                  GestureDetector(onTap: () {}, child: dayChange("1 Y")),
-                  GestureDetector(onTap: () {}, child: dayChange("2 Y")),
+                  GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          selectedTab = 0;
+                          getCryptoGraphData();
+                        });
+                      },
+                      child: dayChange("7 D", 0)),
+                  GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          selectedTab = 1;
+                          getCryptoGraphData();
+                        });
+                      },
+                      child: dayChange("1 M", 1)),
+                  GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          selectedTab = 2;
+                          getCryptoGraphData();
+                        });
+                      },
+                      child: dayChange("6 M", 2)),
+                  GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          selectedTab = 3;
+                          getCryptoGraphData();
+                        });
+                      },
+                      child: dayChange("1 Y", 3)),
                 ],
               ),
               Container(
@@ -467,7 +530,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "0000",
+                          statistics.lowprice.toStringAsFixed(2),
                           style: TextStyle(
                               fontSize: 17,
                               fontFamily: 'Montserrat Alternates',
@@ -475,7 +538,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
                               fontWeight: FontWeight.w500),
                         ),
                         Text(
-                          "0000",
+                          statistics.highprice.toStringAsFixed(2),
                           style: TextStyle(
                               fontSize: 17,
                               fontFamily: 'Montserrat Alternates',
@@ -513,9 +576,10 @@ class _ViewCrypto_State extends State<View_Crypto> {
                             ],
                           ),
                           SizedBox(
-                            width: 100,
+                            width: MediaQuery.of(context).size.width * 0.1,
                           ),
                           Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               alldata(
                                 'Volume',
@@ -527,48 +591,14 @@ class _ViewCrypto_State extends State<View_Crypto> {
                               ),
                               alldata(
                                 'Rank',
-                                statistics.rank.toStringAsFixed(2),
+                                '#${statistics.rank.toString()}',
                               ),
                             ],
                           ),
                         ],
                       ),
                     );
-                  }),
-              SizedBox(
-                height: 20,
-              ),
-              GestureDetector(
-                onTap: () {},
-                child: Container(
-                  width: 150,
-                  height: 50,
-                  margin: EdgeInsets.fromLTRB(30, 00, 0, 00),
-                  child: FlatButton(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(12.0))),
-                    color: Colors.white,
-                    onPressed: () {},
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          "assets/images/convert.png",
-                          width: 20,
-                          height: 20,
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          "Converter",
-                          style: blackboldText,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+                  }),           
               SizedBox(
                 height: 20,
               ),
@@ -657,8 +687,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
                             borderRadius: BorderRadius.circular(15),
                             color: Color(0xFF202020),
                           ),
-                          child: 
-                          ListView.builder(
+                          child: ListView.builder(
                               itemCount: pull.length,
                               itemBuilder: (context, index) {
                                 return Container(
@@ -711,7 +740,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
     );
   }
 
-  Container dayChange(String daychange) {
+  Container dayChange(String daychange, int tab) {
     return Container(
       width: 45,
       height: 30,
@@ -725,9 +754,11 @@ class _ViewCrypto_State extends State<View_Crypto> {
         ),
       ),
       decoration: BoxDecoration(
-        color: Color(0xFF202020),
-        borderRadius: BorderRadius.circular(8),
-      ),
+          color: Color(0xFF202020),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+              width: 1,
+              color: selectedTab == tab ? Colors.white : Colors.transparent)),
     );
   }
 }
