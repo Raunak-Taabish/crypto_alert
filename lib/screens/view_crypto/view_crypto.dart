@@ -26,6 +26,7 @@ class View_Crypto extends StatefulWidget {
 }
 
 class _ViewCrypto_State extends State<View_Crypto> {
+  bool _visible = false;
   List name = [];
   List<SalesData> closeprice = [];
   late DateTime currentDate;
@@ -178,7 +179,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
         break;
       case 3:
         startDate =
-            DateTime(currentDate.year, currentDate.month-11, currentDate.day);
+            DateTime(currentDate.year, currentDate.month - 11, currentDate.day);
         break;
       default:
         startDate =
@@ -198,7 +199,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
     // print(response.body);
     // print(response.statusCode);
     // print(jsonData["data"][0]["name"]);
-    
+
     if (response.statusCode == 200) {
       try {
         setState(() {
@@ -285,7 +286,9 @@ class _ViewCrypto_State extends State<View_Crypto> {
           margin: EdgeInsets.only(bottom: 0),
           child: FloatingActionButton.extended(
             backgroundColor: Colors.white,
-            onPressed: () {},
+            onPressed: () {
+              showdiag(context);
+            },
             isExtended: true,
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             icon: Image.asset(
@@ -554,7 +557,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
                   future: getcryptostatistics,
                   builder: (context, snapshot) {
                     return Container(
-                      margin: EdgeInsets.fromLTRB(30, 20, 30, 0),
+                      margin: EdgeInsets.fromLTRB(30, 20, 0, 0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
@@ -576,7 +579,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
                             ],
                           ),
                           SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.1,
+                            width: MediaQuery.of(context).size.width * 0.08,
                           ),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -598,7 +601,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
                         ],
                       ),
                     );
-                  }),           
+                  }),
               SizedBox(
                 height: 20,
               ),
@@ -662,7 +665,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
                 ),
               ),
               Container(
-                margin: EdgeInsets.only(left: 30),
+                margin: EdgeInsets.fromLTRB(30, 20, 0, 0),
                 child: Text(
                   "${widget.cryptoname} News",
                   style: TextStyle(
@@ -677,25 +680,70 @@ class _ViewCrypto_State extends State<View_Crypto> {
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       return Container(
-                          height: 300,
-                          // width: 200,
-                          // height: 100,
-                          //width: MediaQuery.of(context).size.width / 2.5,
-                          margin: EdgeInsets.fromLTRB(10, 20, 10, 20),
-                          padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                            color: Color(0xFF202020),
-                          ),
-                          child: ListView.builder(
-                              itemCount: pull.length,
-                              itemBuilder: (context, index) {
-                                return Container(
-                                    child: Text(
-                                  pull[index].title,
-                                  style: TextStyle(color: Colors.white),
-                                ));
-                              }));
+                        height: MediaQuery.of(context).size.height / 3,
+                        child: ListView.builder(
+                            //physics: new NeverScrollableScrollPhysics(),
+                            itemCount: pull.length,
+                            itemBuilder: (context, index) {
+                              return Container(
+                                margin: EdgeInsets.all(10),
+                                //color: Colors.amber,
+                                child: Row(
+                                  //crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      width:
+                                          MediaQuery.of(context).size.height *
+                                              0.12,
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.15,
+                                      decoration: BoxDecoration(
+                                        // border: Border.all(
+                                        // width: 3, color: Colors.black87, style: BorderStyle.solid),
+                                        image: DecorationImage(
+                                          image: NetworkImage(
+                                            pull[index].urlToImage,
+                                          ),
+                                          fit: BoxFit.cover,
+                                          // colorFilter: new ColorFilter.mode(
+                                          //     Colors.black45, BlendMode.darken),
+                                        ),
+                                        color: Colors.black87,
+                                        // borderRadius: BorderRadius.only(
+                                        //   topLeft: Radius.circular(10),
+                                        //   topRight: const Radius.circular(10),
+                                        // ),
+                                      ),
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                                      //color: Colors.black,
+                                      width: MediaQuery.of(context).size.width /
+                                          1.48,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            pull[index].title,
+                                            style: TextStyle(
+                                              fontFamily:
+                                                  'Montserrat Alternates',
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.white,
+                                            ),
+                                            maxLines: 2,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }),
+                      );
                     } else {
                       return const Center(
                         child: CircularProgressIndicator(),
@@ -708,6 +756,74 @@ class _ViewCrypto_State extends State<View_Crypto> {
             ],
           ),
         ));
+  }
+
+  void showdiag(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          insetPadding: EdgeInsets.all(10),
+          content: Stack(
+            overflow: Overflow.visible,
+            children: <Widget>[
+              // Positioned(
+              //   right: -10.0,
+              //   top: -10.0,
+              //   child: Ink(
+              //     width: 10,
+              //     height: 10,
+              //     child: InkResponse(
+              //       onTap: () {
+              //         Navigator.of(context).pop();
+              //       },
+              //       child: CircleAvatar(
+              //         child: Icon(Icons.close),
+              //         backgroundColor: Colors.red,
+              //       ),
+              //     ),
+              //   ),
+              // ),
+              Text(
+                "Add alert",
+                style: TextStyle(
+                    color: Colors.black,
+                    fontFamily: "Montserrat Alternates",
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500),
+              ),
+              Container(
+                height: MediaQuery.of(context).size.height * 0.1,
+                child: Row(
+                  children: [
+                    Text(
+                      widget.cryptoname,
+                      style: TextStyle(
+                          fontSize: 15,
+                          color: Colors.black,
+                          fontFamily: 'Montserrat Alternates',
+                          fontWeight: FontWeight.w500),
+                    ),
+                    Container(
+                      margin: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                      //alignment: Alignment.centerLeft,
+                      child: Text(
+                        '\$ ' + '${widget.cryptoprice.toStringAsFixed(2)}',
+                        style: const TextStyle(
+                            color: Colors.black,
+                            fontFamily: 'Montserrat Alternates',
+                            fontSize: 30,
+                            fontWeight: FontWeight.w500),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   Column alldata(String tag, String value) {
