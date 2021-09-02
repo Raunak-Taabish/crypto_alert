@@ -12,6 +12,7 @@ import 'package:crypto_alert/screens/news/article.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:numberpicker/numberpicker.dart';
 
 class View_Crypto extends StatefulWidget {
   final String cryptoid;
@@ -29,6 +30,7 @@ class View_Crypto extends StatefulWidget {
 }
 
 class _ViewCrypto_State extends State<View_Crypto> {
+  var age = 25;
   bool _visible = false;
   bool saved = false;
   List name = [];
@@ -39,6 +41,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
   late Future getinfo, getcryptodetails, getcryptostatistics;
   late String CryptoURL;
   int selectedTab = 0;
+  int currentDoubleValue = 100;
   final User? user = FirebaseAuth.instance.currentUser;
   //final uid = user.uid;
   final databaseReference = FirebaseFirestore.instance;
@@ -156,7 +159,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
       //((result) => {
       // print(value.data.contains(title));
       // for(var doc in snap.docs) {
-        print(snap.docs.toList());
+      print(snap.docs.toList());
       if (snap.docs.isNotEmpty) {
         if (mounted) {
           setState(() => {saved = true});
@@ -338,7 +341,6 @@ class _ViewCrypto_State extends State<View_Crypto> {
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
@@ -382,8 +384,9 @@ class _ViewCrypto_State extends State<View_Crypto> {
               child: Container(
                 width: 30,
                 height: 30,
-                child:
-                    Icon(saved ? Icons.favorite : Icons.favorite_border_sharp),
+                child: Icon(
+                    saved ? Icons.favorite : Icons.favorite_border_sharp,
+                    color: saved ? Colors.red : Colors.white),
                 // child: IconButton(
                 //   icon: Icon(Icons.favorite_border_sharp),
                 //   onPressed: () {
@@ -884,70 +887,90 @@ class _ViewCrypto_State extends State<View_Crypto> {
 
   void showdiag(BuildContext context) {
     showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          insetPadding: EdgeInsets.all(10),
-          content: Stack(
-            overflow: Overflow.visible,
-            children: <Widget>[
-              // Positioned(
-              //   right: -10.0,
-              //   top: -10.0,
-              //   child: Ink(
-              //     width: 10,
-              //     height: 10,
-              //     child: InkResponse(
-              //       onTap: () {
-              //         Navigator.of(context).pop();
-              //       },
-              //       child: CircleAvatar(
-              //         child: Icon(Icons.close),
-              //         backgroundColor: Colors.red,
-              //       ),
-              //     ),
-              //   ),
-              // ),
-              Text(
-                "Add alert",
-                style: TextStyle(
-                    color: Colors.black,
-                    fontFamily: "Montserrat",
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500),
-              ),
-              Container(
-                height: MediaQuery.of(context).size.height * 0.1,
-                child: Row(
-                  children: [
-                    Text(
-                      widget.cryptoname,
-                      style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.black,
-                          fontFamily: 'Montserrat',
-                          fontWeight: FontWeight.w500),
-                    ),
-                    Container(
-                      margin: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                      //alignment: Alignment.centerLeft,
-                      child: Text(
-                        '\$ ' + '${widget.cryptoprice.toStringAsFixed(2)}',
-                        style: const TextStyle(
-                            color: Colors.black,
-                            fontFamily: 'Montserrat',
-                            fontSize: 30,
-                            fontWeight: FontWeight.w500),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
+        context: context,
+        builder: (BuildContext context) {
+          return Container();
+          // return AlertDialog(
+          //     insetPadding: EdgeInsets.all(10),
+          //     content:
+          // content: Container(
+          //   width: 350,
+          //   child: Column(
+          //     //overflow: Overflow.visible,
+          //     children: <Widget>[
+          //       Text(
+          //         "Add alert",
+          //         style: TextStyle(
+          //             color: Colors.black,
+          //             fontFamily: "Montserrat",
+          //             fontSize: 20,
+          //             fontWeight: FontWeight.w500),
+          //       ),
+          //       Container(
+          //         margin: EdgeInsets.only(top: 30),
+          //         color: Colors.amber,
+          //         width: MediaQuery.of(context).size.width /1.4,
+          //         height: MediaQuery.of(context).size.height * 0.1,
+          //         child: Row(
+          //           //mainAxisAlignment:MainAxisAlignment.spaceBetween,
+          //           children: [
+          //             Text(
+          //               widget.cryptoname,
+          //               style: TextStyle(
+          //                   fontSize: 15,
+          //                   color: Colors.black,
+          //                   fontFamily: 'Montserrat',
+          //                   fontWeight: FontWeight.w500),
+          //             ),
+          //             Container(
+          //               margin: EdgeInsets.fromLTRB(20, 0, 0, 0),
+          //               //alignment: Alignment.centerLeft,
+          //               child: Text(
+          //                 '\$ ' + '${widget.cryptoprice.toStringAsFixed(2)}',
+          //                 style: const TextStyle(
+          //                     color: Colors.black,
+          //                     fontFamily: 'Montserrat',
+          //                     fontSize: 40,
+          //                     fontWeight: FontWeight.w500),
+          //               ),
+          //             ),
+          //           ],
+          //         ),
+          //       ),
+          //   Container(
+          // margin: EdgeInsets.only(top: 120),
+          // color: Colors.white,
+          // child: Column(
+          //   mainAxisAlignment: MainAxisAlignment.center,
+          //   children: [
+          // ElevatedButton(
+          //     onPressed: () {
+          //       showMaterialNumberPicker(
+          //         context: context,
+          //         title: 'Pick Your Age',
+          //         maxNumber: 100,
+          //         minNumber: 14,
+          //         selectedNumber: age,
+          //         onChanged: (value) => setState(() => age = value),
+          //       );
+          //     },
+          //     child: Text('Click here'))
+
+          // NumberPicker(
+          //   value: currentDoubleValue,
+          //   minValue: currentDoubleValue-1,
+          //   maxValue: currentDoubleValue+2,
+          //   onChanged: (value) =>
+          //       setState(() => currentDoubleValue = value),
+          // )
+          //             ],
+          //           ),
+          //         )
+          //         //     ],
+          //         //   ),
+          //         // ),
+          // );
+        });
   }
 
   Column alldata(String tag, String value) {

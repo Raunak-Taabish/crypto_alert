@@ -38,9 +38,12 @@ class _HomeState extends State<Home> {
   late Future getnews;
   late Future getFavourites;
   List<Crypto_Home> crypto = [];
+  List<Crypto_Home> crypto_fav = [];
   TextEditingController textController = TextEditingController();
+  final User? user = FirebaseAuth.instance.currentUser;
+  final databaseReference = FirebaseFirestore.instance;
 
-  late Future getfav;
+  late Future getfav, matchfav;
   List snap = [];
 
   @override
@@ -49,6 +52,7 @@ class _HomeState extends State<Home> {
     _pageController = PageController(initialPage: _pageIndex);
     getCryptoData = getCryptos();
     getnews = getNews();
+    getfav = getFavouriteList();
     // getfav = getFavouriteList();
   }
 
@@ -61,6 +65,84 @@ class _HomeState extends State<Home> {
   void onTabTapped(int index) {
     this._pageController.animateToPage(index,
         duration: const Duration(milliseconds: 500), curve: Curves.easeInOut);
+  }
+
+  Future<List> getFavouriteList() async {
+    List fav = [];
+    try {
+      print('Favourites working');
+      // print(widget.crypto[0].cryptonames);
+      // widget.crypto.forEach((element) async {
+
+      var snapshot = await databaseReference
+          .collection("users")
+          .doc(user!.uid)
+          .collection('fav_cryptos') //.doc('Cardano')
+          // .where('crypto_name', isEqualTo: 'Cardano')
+          .get();
+
+      snapshot.docs.forEach((element) {
+        fav.add(element.get('crypto_name'));
+        print(element.get('crypto_name'));
+      });
+      setState(() {
+        snap = fav;
+      });
+
+      matchfav = matchFav(snap);
+      return fav;
+    } catch (e) {
+      print(e.toString());
+      displayToastMessage(e.toString(), context);
+      return [];
+    }
+  }
+
+  Future<List<Crypto_Home>> matchFav(List snap) async {
+    print("Crypto data matched with DB");
+    // List names=[];
+    List<Crypto_Home> crypto_dummy = [];
+    String key = 'aec925c7-3059-4a11-8592-b99deb474b47';
+    // var key = '1a7e4376-d437-4aa1-929b-a9e04968d593';
+
+    String url =
+        "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest";
+    var response =
+        await http.get(Uri.parse(url), headers: {"X-CMC_PRO_API_KEY": key});
+
+    var jsonData = jsonDecode(response.body);
+    // print(response.body);
+    print(response.statusCode);
+    // print(jsonData["data"][0]["name"]);
+    if (response.statusCode == 200) {
+      jsonData["data"].forEach((element) {
+        if (snap.contains(element["name"].toString())) {
+          Crypto_Home crypto_data = Crypto_Home(
+              cryptonames: element["name"].toString(),
+              cryptoprices: element["quote"]["USD"]["price"],
+              cryptosymbols: element["symbol"].toString(),
+              daychange: element["quote"]["USD"]["percent_change_24h"],
+              logoId: element["id"]);
+          // print(crypto_data.cryptoprices);
+          crypto_dummy.add(crypto_data);
+        }
+      });
+    }
+
+    setState(() {
+      if (snap.isNotEmpty) {
+        cryptoid.forEach((element) {
+          if (element[0] == crypto_dummy[index].cryptosymbols) {
+            id = element[1];
+            print(element[0]);
+          }
+        });
+      }
+      crypto_fav = crypto_dummy;
+    });
+
+    // print(crypto_dummy[0].cryptoprices);
+    return crypto_fav;
   }
 
   Future<List<Crypto_Home>> getCryptos() async {
@@ -199,6 +281,8 @@ class _HomeState extends State<Home> {
                                 if (snapshot.hasData) {
                                   // crypto = snapshot.data as List<Crypto_Home>;
                                   return ListView.builder(
+                                      physics: const ScrollPhysics(
+                                          parent: BouncingScrollPhysics()),
                                       itemCount: crypto.length,
                                       itemBuilder:
                                           (BuildContext ctxt, int index) {
@@ -337,8 +421,95 @@ class _HomeState extends State<Home> {
                     }
                   }),
               // Favourites(crypto),
-              Favourites(crypto),
-
+              RefreshIndicator(
+                  onRefresh: getFavouriteList,
+                  child: FutureBuilder(
+                      future: getfav,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          // List snap = snapshot.data as List;
+                          return StreamBuilder(
+                              stream: matchfav
+                                  .asStream(), //matchFav(snap).asStream(),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  // crypto = snapshot.data as List<Crypto_Home>;
+                                  return Column(
+                                    children: [
+                                      Container(
+                                        padding:
+                                            EdgeInsets.fromLTRB(0, 0, 0, 5),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Icon(Icons.arrow_downward,
+                                                color: Colors.grey),
+                                            Text('Pull down to refresh',
+                                                style: TextStyle(
+                                                    color: Colors.grey)),
+                                          ],
+                                        ),
+                                      ),
+                                      Container(
+                                        height:
+                                            MediaQuery.of(context).size.height -
+                                                170,
+                                        child: ListView.builder(
+                                            physics: const ScrollPhysics(
+                                                parent:
+                                                    BouncingScrollPhysics()),
+                                            itemCount: crypto_fav.length,
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              return GestureDetector(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      cryptoid
+                                                          .forEach((element) {
+                                                        if (element[0] ==
+                                                            crypto_fav[index]
+                                                                .cryptosymbols) {
+                                                          id = element[1];
+                                                          print(element[0]);
+                                                        }
+                                                      });
+                                                    });
+                                                    Navigator.push(context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) {
+                                                      return View_Crypto(
+                                                          id,
+                                                          crypto_fav[index]
+                                                              .cryptonames,
+                                                          crypto_fav[index]
+                                                              .cryptoprices,
+                                                          crypto_fav[index]
+                                                              .daychange,
+                                                          crypto_fav[index]
+                                                              .logoId);
+                                                    }));
+                                                  },
+                                                  child: favourites(
+                                                      crypto_fav[index]));
+                                            }),
+                                      ),
+                                    ],
+                                  );
+                                } else {
+                                  return Center(
+                                    child: CircularProgressIndicator(
+                                        color: Colors.white),
+                                  );
+                                }
+                              });
+                        } else {
+                          return Center(
+                            child:
+                                CircularProgressIndicator(color: Colors.white),
+                          );
+                        }
+                      })),
               RefreshIndicator(
                 onRefresh: getNews,
                 child: FutureBuilder(
@@ -382,7 +553,7 @@ class _HomeState extends State<Home> {
               size: _pageIndex == 1 ? 28 : 25,
             ),
             title: Text(
-              "Favorite",
+              "Favourite",
               style: TextStyle(color: Colors.white, fontFamily: 'Montserrat'),
             ),
           ),

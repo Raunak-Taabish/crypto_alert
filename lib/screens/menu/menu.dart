@@ -1,6 +1,7 @@
 import 'package:crypto_alert/screens/authentication/login_register.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:numberpicker/numberpicker.dart';
 
 class MenuPage extends StatefulWidget {
   MenuPage({Key? key}) : super(key: key);
@@ -10,6 +11,7 @@ class MenuPage extends StatefulWidget {
 }
 
 class _MenuPageState extends State<MenuPage> {
+  int val=10;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,7 +34,13 @@ class _MenuPageState extends State<MenuPage> {
             ),
           ]
       ),
-       body: null,
+       body: NumberPicker(
+                      value: val,
+                      minValue: 1,
+                      maxValue: 20,
+                      onChanged: (value) =>
+                          setState(() => val = value),
+                    ),
     );
   }
    Future<void> _signOut(BuildContext context) async {
