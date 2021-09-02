@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-          fontFamily: 'Montserrat Alternates',
+          fontFamily: 'Montserrat',
           backgroundColor: Color(0xFF151515)),
       home: _Splashscreen(),
       debugShowCheckedModeBanner: true,

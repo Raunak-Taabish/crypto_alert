@@ -6,8 +6,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-import './Register.dart';
 import 'package:crypto_alert/screens/home.dart';
+
+import '../../constant.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -82,7 +83,7 @@ class _LoginState extends State<Login> {
                         keyboardType: TextInputType.emailAddress,
                         style: const TextStyle(
                             color: Colors.white,
-                            fontFamily: 'Montserrat Alternates'),
+                            fontFamily: 'Montserrat'),
                         decoration: const InputDecoration(
                           filled: true,
                           fillColor: Colors.transparent,
@@ -102,7 +103,7 @@ class _LoginState extends State<Login> {
                         keyboardType: TextInputType.visiblePassword,
                         style: const TextStyle(
                             color: Colors.white,
-                            fontFamily: 'Montserrat Alternates'),
+                            fontFamily: 'Montserrat'),
                         decoration: InputDecoration(
                           suffixIcon: IconButton(
                               icon: Icon(
@@ -164,7 +165,7 @@ class _LoginState extends State<Login> {
                                     'Login with ',
                                     style: TextStyle(
                                       fontWeight: FontWeight.w600,
-                                      fontFamily: 'Montserrat Alternates',
+                                      fontFamily: 'Montserrat',
                                     ),
                                   ),
                                   Image(
@@ -175,7 +176,7 @@ class _LoginState extends State<Login> {
                                     'oogle',
                                     style: TextStyle(
                                       fontWeight: FontWeight.w600,
-                                      fontFamily: 'Montserrat Alternates',
+                                      fontFamily: 'Montserrat',
                                     ),
                                   )
                                 ],
@@ -205,7 +206,7 @@ class _LoginState extends State<Login> {
                               child: Text(
                                 "Login",
                                 style: TextStyle(
-                                  fontFamily: 'Montserrat Alternates',
+                                  fontFamily: 'Montserrat',
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -222,7 +223,7 @@ class _LoginState extends State<Login> {
                             'Forgot Password?',
                             style: TextStyle(
                               color: Colors.white,
-                              fontFamily: 'Montserrat Alternates',
+                              fontFamily: 'Montserrat',
                             ),
                           ),
                         ),

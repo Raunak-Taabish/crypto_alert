@@ -46,7 +46,7 @@ class _OnBoardingState extends State<OnBoarding> {
                             "$btext",
                             style: TextStyle(
                               color: Colors.white,
-                              fontFamily: 'Montserrat Alternates',
+                              fontFamily: 'Montserrat',
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -54,7 +54,7 @@ class _OnBoardingState extends State<OnBoarding> {
                             "$text",
                             style: TextStyle(
                               color: Colors.white,
-                              fontFamily: 'Montserrat Alternates',
+                              fontFamily: 'Montserrat',
                               //fontWeight: FontWeight.w600,
                             ),
                           )
@@ -168,7 +168,7 @@ class _OnBoardingState extends State<OnBoarding> {
         //                             text: 'Add',
         //                             style: TextStyle(
         //                               fontWeight: FontWeight.w600,
-        //                               fontFamily: 'Montserrat Alternates',
+        //                               fontFamily: 'Montserrat',
         //                             )),
         //                         TextSpan(
         //                           text: ' your crypto to \n     favorites list',
@@ -243,7 +243,7 @@ class _OnBoardingState extends State<OnBoarding> {
         //                             text: 'Follow',
         //                             style: TextStyle(
         //                               fontWeight: FontWeight.w600,
-        //                               fontFamily: 'Montserrat Alternates',
+        //                               fontFamily: 'Montserrat',
         //                             )),
         //                         TextSpan(
         //                           text:

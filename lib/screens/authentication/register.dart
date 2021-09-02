@@ -4,9 +4,17 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:crypto_alert/screens/onboarding/onboarding.dart';
+
+
+
+
+
+
+
 // import 'package:flutter/scheduler.dart';
 
 // import 'main.dart';
+import '../../constant.dart';
 import './Login.dart';
 import 'package:crypto_alert/screens/home.dart';
 
@@ -110,7 +118,7 @@ class _LoginDemoState extends State<_RegisterPage> {
                           labelText: 'Email',
                           labelStyle: TextStyle(
                             color: Colors.white,
-                            fontFamily: 'Montserrat Alternates',
+                            fontFamily: 'Montserrat',
                           ),
                         ),
                       ),
@@ -134,7 +142,7 @@ class _LoginDemoState extends State<_RegisterPage> {
                           labelText: 'Name',
                           labelStyle: TextStyle(
                             color: Colors.white,
-                            fontFamily: 'Montserrat Alternates',
+                            fontFamily: 'Montserrat',
                           ),
                         ),
                       ),
@@ -173,7 +181,7 @@ class _LoginDemoState extends State<_RegisterPage> {
                           labelText: 'New Password',
                           labelStyle: TextStyle(
                             color: Colors.white,
-                            fontFamily: 'Montserrat Alternates',
+                            fontFamily: 'Montserrat',
                           ),
                         ),
                       ),
@@ -211,7 +219,7 @@ class _LoginDemoState extends State<_RegisterPage> {
                           labelText: 'Confirm New Password',
                           labelStyle: TextStyle(
                               color: Colors.white,
-                              fontFamily: 'Montserrat Alternates'),
+                              fontFamily: 'Montserrat'),
                         ),
                       ),
                       SizedBox(
@@ -256,7 +264,7 @@ class _LoginDemoState extends State<_RegisterPage> {
                           child: Text(
                             "Register",
                             style: TextStyle(
-                              fontFamily: 'Montserrat Alternates',
+                              fontFamily: 'Montserrat',
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -386,11 +394,5 @@ class _LoginDemoState extends State<_RegisterPage> {
   }
 }
 
-displayToastMessage(String msg, BuildContext context) {
-  Fluttertoast.showToast(msg: msg);
-}
 
-void showInSnackBar(String value, BuildContext context) {
-  ScaffoldMessenger.of(context)
-      .showSnackBar(new SnackBar(content: new Text(value)));
-}
+

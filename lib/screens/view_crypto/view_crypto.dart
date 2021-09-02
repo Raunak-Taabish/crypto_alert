@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:crypto_alert/constant.dart';
 import 'package:crypto_alert/data/crypto_statistics.dart';
+import 'package:crypto_alert/screens/authentication/register.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +11,7 @@ import 'package:crypto_alert/backbutton.dart';
 import 'package:crypto_alert/screens/news/article.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:intl/intl.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class View_Crypto extends StatefulWidget {
   final String cryptoid;
@@ -27,6 +30,7 @@ class View_Crypto extends StatefulWidget {
 
 class _ViewCrypto_State extends State<View_Crypto> {
   bool _visible = false;
+  bool saved = false;
   List name = [];
   List<SalesData> closeprice = [];
   late DateTime currentDate;
@@ -35,6 +39,9 @@ class _ViewCrypto_State extends State<View_Crypto> {
   late Future getinfo, getcryptodetails, getcryptostatistics;
   late String CryptoURL;
   int selectedTab = 0;
+  final User? user = FirebaseAuth.instance.currentUser;
+  //final uid = user.uid;
+  final databaseReference = FirebaseFirestore.instance;
   Crypto_Statistics statistics = Crypto_Statistics(
       lowprice: 0.0,
       highprice: 0.0,
@@ -54,10 +61,116 @@ class _ViewCrypto_State extends State<View_Crypto> {
     //     cryptoname = element[0];
     //   }
     // });
+    checksaved(context);
     futureNews = pullNews();
     getinfo = getCryptoInfo();
     getcryptodetails = getCryptoGraphData();
     getcryptostatistics = getCryptoStatistics();
+  }
+
+  Future<void> addFav(BuildContext context) async {
+    try {
+      await databaseReference
+          .collection("users")
+          .doc(user!.uid)
+          .collection('fav_cryptos')
+          .doc(widget.cryptoname)
+          .set({
+        'crypto_name': widget.cryptoname.toString(),
+        'crypto_symbol': widget.cryptoid.toString(),
+      });
+      displayToastMessage('Saved', context);
+      if (mounted) {
+        setState(() {
+          // _loading = false;
+          saved = true;
+          // Home n=new Home();n.checksaved(title, context);
+        });
+      }
+      // saved = true;
+      // checksaved(title,context);
+    } catch (e) {
+      print(e.toString());
+      displayToastMessage(e.toString(), context);
+    }
+
+    // DocumentReference ref = await databaseReference.collection("books").add({
+    //   'title': 'Flutter in Action',
+    //   'description': 'Complete Programming Guide to learn Flutter'
+    // });
+    // print(ref.id);
+  }
+
+  Future<void> deleteNews(BuildContext context) async {
+    try {
+      await databaseReference
+          .collection("users")
+          .doc(user!.uid)
+          .collection('fav_cryptos')
+          .doc(widget.cryptoname)
+          .delete();
+      displayToastMessage('Unsaved', context);
+      if (mounted) {
+        setState(() {
+          // _loading = false;
+          saved = false;
+          // newslists.removeWhere((item) => item.title == this.title);
+          // print(newslists);
+          // if (saveview) {
+          //   Navigator.pushReplacement(
+          //       context,
+          //       MaterialPageRoute(
+          //           builder: (BuildContext context) => SavedNews()));
+          //   // Saved sn=new Saved();
+          //   // sn.getSavedNews();
+          // }
+          // Home n=new Home();n.checksaved(title, context);
+        });
+      }
+      // ignore: unrelated_type_equality_checks
+
+      // saved = true;
+      // checksaved(title,context);
+    } catch (e) {
+      displayToastMessage(e.toString(), context);
+    }
+
+    // DocumentReference ref = await databaseReference.collection("books").add({
+    //   'title': 'Flutter in Action',
+    //   'description': 'Complete Programming Guide to learn Flutter'
+    // });
+    // print(ref.id);
+  }
+
+  void checksaved(BuildContext context) async {
+    //add index argument
+
+    try {
+      // ignore: await_only_futures
+      var snap = await databaseReference
+          .collection("users")
+          .doc(user!.uid)
+          .collection('fav_cryptos')
+          .where('crypto_name', isEqualTo: widget.cryptoname)
+          .get();
+      //((result) => {
+      // print(value.data.contains(title));
+      // for(var doc in snap.docs) {
+        print(snap.docs.toList());
+      if (snap.docs.isNotEmpty) {
+        if (mounted) {
+          setState(() => {saved = true});
+        }
+        // print(title);
+      } else {
+        if (mounted) {
+          setState(() => {saved = false});
+        }
+        // print(title+'false');
+      }
+    } catch (e) {
+      displayToastMessage(e.toString(), context);
+    }
   }
 
   Future<Crypto_Statistics> getCryptoStatistics() async {
@@ -132,7 +245,8 @@ class _ViewCrypto_State extends State<View_Crypto> {
     DateTime currentdate = DateTime.now();
     String today = DateFormat('yyyy-MM-dd').format(currentdate);
     String url =
-        "https://newsapi.org/v2/everything?qInTitle=${widget.cryptoname}&pageSize=4&from=$today&sortBy=popularity&apiKey=$apikey";
+        "https://newsapi.org/v2/everything?q=Crypto&language=en&from=$today&sortBy=popularity&pageSize=3&apiKey=$apikey";
+
     var response = await http.get(Uri.parse(url));
     var jsondata = jsonDecode(response.body);
 
@@ -224,6 +338,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
@@ -254,19 +369,21 @@ class _ViewCrypto_State extends State<View_Crypto> {
                       //     cryptosymbols[index] +
                       //     ')', // +cryptolist.length.toString(),
                       style: const TextStyle(
-                          color: Colors.white,
-                          fontFamily: 'Montserrat Alternates'),
+                          color: Colors.white, fontFamily: 'Montserrat'),
                     ),
                   ),
                 ],
               ),
             ),
             GestureDetector(
-              onTap: () {},
+              onTap: () {
+                saved ? deleteNews(context) : addFav(context);
+              },
               child: Container(
                 width: 30,
                 height: 30,
-                child: Icon(Icons.favorite_border_sharp),
+                child:
+                    Icon(saved ? Icons.favorite : Icons.favorite_border_sharp),
                 // child: IconButton(
                 //   icon: Icon(Icons.favorite_border_sharp),
                 //   onPressed: () {
@@ -319,7 +436,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
                   style: TextStyle(
                       fontSize: 15,
                       color: Colors.white,
-                      fontFamily: 'Montserrat Alternates'),
+                      fontFamily: 'Montserrat'),
                 ),
               ),
               Row(
@@ -332,7 +449,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
                       '\$ ' + '${widget.cryptoprice.toStringAsFixed(2)}',
                       style: const TextStyle(
                           color: Colors.white,
-                          fontFamily: 'Montserrat Alternates',
+                          fontFamily: 'Montserrat',
                           fontSize: 40,
                           fontWeight: FontWeight.w500),
                     ),
@@ -360,7 +477,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
                           style: TextStyle(
                               color: Colors
                                   .white, //widget.daychange >= 0 ? Colors.green : Colors.red,
-                              fontFamily: 'Montserrat Alternates',
+                              fontFamily: 'Montserrat',
                               fontSize: 13,
                               fontWeight: FontWeight.w600),
                         ),
@@ -510,7 +627,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
                           "Low",
                           style: TextStyle(
                               fontSize: 12,
-                              fontFamily: 'Montserrat Alternates',
+                              fontFamily: 'Montserrat',
                               color: Color(0xFF909090),
                               fontWeight: FontWeight.w400),
                         ),
@@ -518,7 +635,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
                           "High",
                           style: TextStyle(
                               fontSize: 12,
-                              fontFamily: 'Montserrat Alternates',
+                              fontFamily: 'Montserrat',
                               color: Color(0xFF909090),
                               fontWeight: FontWeight.w400),
                         ),
@@ -536,7 +653,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
                           statistics.lowprice.toStringAsFixed(2),
                           style: TextStyle(
                               fontSize: 17,
-                              fontFamily: 'Montserrat Alternates',
+                              fontFamily: 'Montserrat',
                               color: Colors.white,
                               fontWeight: FontWeight.w500),
                         ),
@@ -544,7 +661,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
                           statistics.highprice.toStringAsFixed(2),
                           style: TextStyle(
                               fontSize: 17,
-                              fontFamily: 'Montserrat Alternates',
+                              fontFamily: 'Montserrat',
                               color: Colors.white,
                               fontWeight: FontWeight.w500),
                         ),
@@ -619,7 +736,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
                       "About " + widget.cryptoname,
                       style: TextStyle(
                           color: Colors.white,
-                          fontFamily: 'Montserrat Alternates',
+                          fontFamily: 'Montserrat',
                           fontSize: 20,
                           fontWeight: FontWeight.w500),
                     ),
@@ -634,7 +751,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
                               desc,
                               style: const TextStyle(
                                   color: Colors.white,
-                                  fontFamily: 'Montserrat Alternates',
+                                  fontFamily: 'Montserrat',
                                   fontSize: 13),
                             );
                           } else {
@@ -672,7 +789,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
                       color: Colors.white,
                       fontSize: 20,
                       fontWeight: FontWeight.w500,
-                      fontFamily: 'Montserrat Alternates'),
+                      fontFamily: 'Montserrat'),
                 ),
               ),
               FutureBuilder(
@@ -680,9 +797,9 @@ class _ViewCrypto_State extends State<View_Crypto> {
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       return Container(
-                        height: MediaQuery.of(context).size.height / 3,
+                        height: MediaQuery.of(context).size.height / 2.25,
                         child: ListView.builder(
-                            //physics: new NeverScrollableScrollPhysics(),
+                            physics: NeverScrollableScrollPhysics(),
                             itemCount: pull.length,
                             itemBuilder: (context, index) {
                               return Container(
@@ -697,44 +814,51 @@ class _ViewCrypto_State extends State<View_Crypto> {
                                               0.12,
                                       height:
                                           MediaQuery.of(context).size.height *
-                                              0.15,
+                                              0.12,
                                       decoration: BoxDecoration(
                                         // border: Border.all(
                                         // width: 3, color: Colors.black87, style: BorderStyle.solid),
                                         image: DecorationImage(
-                                          image: NetworkImage(
-                                            pull[index].urlToImage,
-                                          ),
-                                          fit: BoxFit.cover,
-                                          // colorFilter: new ColorFilter.mode(
-                                          //     Colors.black45, BlendMode.darken),
-                                        ),
+                                            image: NetworkImage(
+                                              pull[index].urlToImage,
+                                            ),
+                                            fit: BoxFit.cover
+                                            // colorFilter: new ColorFilter.mode(
+                                            //     Colors.black45, BlendMode.darken),
+                                            ),
                                         color: Colors.black87,
-                                        // borderRadius: BorderRadius.only(
-                                        //   topLeft: Radius.circular(10),
-                                        //   topRight: const Radius.circular(10),
-                                        // ),
+                                        borderRadius: BorderRadius.circular(10),
                                       ),
                                     ),
                                     Container(
-                                      padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                                      margin: EdgeInsets.fromLTRB(10, 5, 5, 5),
                                       //color: Colors.black,
                                       width: MediaQuery.of(context).size.width /
                                           1.48,
                                       child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
                                         children: [
                                           Text(
                                             pull[index].title,
                                             style: TextStyle(
-                                              fontFamily:
-                                                  'Montserrat Alternates',
+                                              fontFamily: 'Montserrat',
                                               fontSize: 16,
                                               fontWeight: FontWeight.w500,
                                               color: Colors.white,
                                             ),
                                             maxLines: 2,
+                                          ),
+                                          Text(
+                                            pull[index].source,
+                                            style: regularText,
+                                          ),
+                                          Text(
+                                            DateFormat('hh:mm aaa').format(
+                                                pull[index].publishedAt),
+                                            style: regularText,
                                           ),
                                         ],
                                       ),
@@ -788,7 +912,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
                 "Add alert",
                 style: TextStyle(
                     color: Colors.black,
-                    fontFamily: "Montserrat Alternates",
+                    fontFamily: "Montserrat",
                     fontSize: 20,
                     fontWeight: FontWeight.w500),
               ),
@@ -801,7 +925,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
                       style: TextStyle(
                           fontSize: 15,
                           color: Colors.black,
-                          fontFamily: 'Montserrat Alternates',
+                          fontFamily: 'Montserrat',
                           fontWeight: FontWeight.w500),
                     ),
                     Container(
@@ -811,7 +935,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
                         '\$ ' + '${widget.cryptoprice.toStringAsFixed(2)}',
                         style: const TextStyle(
                             color: Colors.black,
-                            fontFamily: 'Montserrat Alternates',
+                            fontFamily: 'Montserrat',
                             fontSize: 30,
                             fontWeight: FontWeight.w500),
                       ),
@@ -834,7 +958,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
           "$tag",
           style: TextStyle(
               fontSize: 12,
-              fontFamily: 'Montserrat Alternates',
+              fontFamily: 'Montserrat',
               color: Color(0xFF909090),
               fontWeight: FontWeight.w400),
         ),
@@ -845,7 +969,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
           "$value",
           style: TextStyle(
               fontSize: 17,
-              fontFamily: 'Montserrat Alternates',
+              fontFamily: 'Montserrat',
               color: Colors.white,
               fontWeight: FontWeight.w500),
         ),
@@ -864,9 +988,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
         child: Text(
           daychange,
           style: TextStyle(
-              color: Colors.white,
-              fontFamily: 'Montserrat Alternates',
-              fontSize: 10),
+              color: Colors.white, fontFamily: 'Montserrat', fontSize: 10),
         ),
       ),
       decoration: BoxDecoration(

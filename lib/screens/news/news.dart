@@ -80,7 +80,7 @@ import 'package:intl/intl.dart';
                         //     style: TextStyle(
                         //         color: Colors.white,
                         //         fontSize: 30,
-                        //         fontFamily: 'Montserrat Alternates'),
+                        //         fontFamily: 'Montserrat'),
                         //   ),
                         // ),
                         Container(
@@ -144,7 +144,7 @@ import 'package:intl/intl.dart';
                                             ),
                                             Text(
                                               ' ' +
-                                                  DateFormat('dd-MM-yyyy')
+                                                  DateFormat('hh:mm aaa')
                                                       .format(news[index]
                                                           .publishedAt)
                                                       .toString(),

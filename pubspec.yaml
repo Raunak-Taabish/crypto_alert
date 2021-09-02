@@ -49,6 +49,7 @@ dependencies:
   anim_search_bar: ^2.0.2
   flutter_typeahead: ^3.2.0
   timezone: ^0.8.0
+  cloud_firestore: ^2.5.1
   
 
 dev_dependencies:
@@ -89,10 +90,11 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: Montserrat Alternates
+    - family: Montserrat
       fonts:
-        - asset: fonts/MontserratAlternates-Regular.ttf
-        - asset: fonts/MontserratAlternates-SemiBold.ttf
+        - asset: fonts/Montserrat-Regular.ttf
+        - asset: fonts/Montserrat-SemiBold.ttf
+        - asset: fonts/Montserrat-Medium.ttf
           
   #   - family: Trajan Pro
   #     fonts:

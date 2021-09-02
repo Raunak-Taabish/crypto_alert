@@ -43,7 +43,7 @@ class _ShowLoadingState extends State<ShowLoading> {
                             "Hi, $name\n",
                             style: TextStyle(
                               color: Colors.white,
-                              fontFamily: 'Montserrat Alternates',
+                              fontFamily: 'Montserrat',
                               //fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -51,7 +51,7 @@ class _ShowLoadingState extends State<ShowLoading> {
                             "Please wait we are\nsetting up",
                             style: TextStyle(
                               color: Colors.white,
-                              fontFamily: 'Montserrat Alternates',
+                              fontFamily: 'Montserrat',
                               fontWeight: FontWeight.w600,
                             ),
                           )

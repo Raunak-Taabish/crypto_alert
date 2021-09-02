@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto_alert/data/crypto_home.dart';
 // import 'package:crypto_alert/data/get_data.dart';
 import 'package:crypto_alert/screens/menu/menu.dart';
@@ -10,6 +11,8 @@ import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import '../constant.dart';
+import 'favourites/favourites.dart';
 import 'view_crypto/view_crypto.dart';
 import 'package:crypto_alert/data/crypto_list.dart';
 import 'package:intl/intl.dart';
@@ -33,8 +36,12 @@ class _HomeState extends State<Home> {
   late PageController _pageController;
   late Future getCryptoData;
   late Future getnews;
+  late Future getFavourites;
   List<Crypto_Home> crypto = [];
   TextEditingController textController = TextEditingController();
+
+  late Future getfav;
+  List snap = [];
 
   @override
   void initState() {
@@ -42,6 +49,7 @@ class _HomeState extends State<Home> {
     _pageController = PageController(initialPage: _pageIndex);
     getCryptoData = getCryptos();
     getnews = getNews();
+    // getfav = getFavouriteList();
   }
 
   void onPageChanged(int page) {
@@ -153,11 +161,12 @@ class _HomeState extends State<Home> {
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 10),
             child: AnimSearchBar(
-              rtl: true,
-              color: Color(0xFF1a1a1a),
-              style: TextStyle(color: Colors.white),
-              // suffixIcon: const Icon(Icons., color: Colors.white, size: 30),
-              prefixIcon: const Icon(Icons.search_rounded, color: Colors.white, size: 30),
+                rtl: true,
+                color: Color(0xFF1a1a1a),
+                style: TextStyle(color: Colors.white),
+                // suffixIcon: const Icon(Icons., color: Colors.white, size: 30),
+                prefixIcon: const Icon(Icons.search_rounded,
+                    color: Colors.white, size: 30),
                 width: MediaQuery.of(context).size.width - 20,
                 textController: textController,
                 helpText: 'Search....',
@@ -262,7 +271,7 @@ class _HomeState extends State<Home> {
                                                               color:
                                                                   Colors.white,
                                                               fontFamily:
-                                                                  'Montserrat Alternates'),
+                                                                  'Montserrat'),
                                                         ),
                                                       ),
                                                     ]),
@@ -274,7 +283,7 @@ class _HomeState extends State<Home> {
                                                               color:
                                                                   Colors.white,
                                                               fontFamily:
-                                                                  'Montserrat Alternates'),
+                                                                  'Montserrat'),
                                                         ),
                                                         Row(children: [
                                                           Icon(
@@ -305,7 +314,7 @@ class _HomeState extends State<Home> {
                                                                     : Color(
                                                                         0xFFFF493E),
                                                                 fontFamily:
-                                                                    'Montserrat Alternates'),
+                                                                    'Montserrat'),
                                                           ),
                                                         ]),
                                                       ],
@@ -327,13 +336,9 @@ class _HomeState extends State<Home> {
                       ));
                     }
                   }),
-              Center(
-                child: Text(
-                  'Page 2',
-                  style: TextStyle(
-                      color: Colors.white, fontFamily: 'Montserrat Alternates'),
-                ),
-              ),
+              // Favourites(crypto),
+              Favourites(crypto),
+
               RefreshIndicator(
                 onRefresh: getNews,
                 child: FutureBuilder(
@@ -367,8 +372,7 @@ class _HomeState extends State<Home> {
             ),
             title: Text(
               "Home",
-              style: TextStyle(
-                  color: Colors.white, fontFamily: 'Montserrat Alternates'),
+              style: TextStyle(color: Colors.white, fontFamily: 'Montserrat'),
             ),
           ),
           BottomNavigationBarItem(
@@ -379,8 +383,7 @@ class _HomeState extends State<Home> {
             ),
             title: Text(
               "Favorite",
-              style: TextStyle(
-                  color: Colors.white, fontFamily: 'Montserrat Alternates'),
+              style: TextStyle(color: Colors.white, fontFamily: 'Montserrat'),
             ),
           ),
           BottomNavigationBarItem(
@@ -391,8 +394,7 @@ class _HomeState extends State<Home> {
             ),
             title: Text(
               "News",
-              style: TextStyle(
-                  color: Colors.white, fontFamily: 'Montserrat Alternates'),
+              style: TextStyle(color: Colors.white, fontFamily: 'Montserrat'),
             ),
           ),
           BottomNavigationBarItem(
@@ -403,8 +405,7 @@ class _HomeState extends State<Home> {
             ),
             title: Text(
               "Menu",
-              style: TextStyle(
-                  color: Colors.white, fontFamily: 'Montserrat Alternates'),
+              style: TextStyle(color: Colors.white, fontFamily: 'Montserrat'),
             ),
           ),
         ],

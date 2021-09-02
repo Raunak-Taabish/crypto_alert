@@ -23,7 +23,7 @@ class _MenuPageState extends State<MenuPage> {
                 'Logout',
                 style: TextStyle(
                     color: Colors.white,
-                    fontFamily: 'Montserrat Alternates',
+                    fontFamily: 'Montserrat',
                     fontWeight: FontWeight.w600),
               ),
               style: ButtonStyle(
