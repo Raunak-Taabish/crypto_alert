@@ -224,7 +224,7 @@ class _FavouritesState extends State<Favourites> {
                               );
                             });
                       } else {
-                        return Center(child: CircularProgressIndicator());
+                        return const Center(child: CircularProgressIndicator(color: Colors.white,));
                       }
                     });
               } else {
