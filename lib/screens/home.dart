@@ -548,13 +548,14 @@ class _HomeState extends State<Home> {
             ),
           ),
           BottomNavigationBarItem(
+            // icon: Image.asset('assets/images/Icon.png', scale: _pageIndex == 1 ? 3.5 : 4,color: _pageIndex == 1 ? Colors.white : Colors.grey,),
             icon: Icon(
-              Icons.favorite,
+              Icons.notifications_active,
               color: _pageIndex == 1 ? Colors.white : Colors.grey,
               size: _pageIndex == 1 ? 28 : 25,
             ),
             title: Text(
-              "Favourite",
+              "Alerts",
               style: TextStyle(color: Colors.white, fontFamily: 'Montserrat'),
             ),
           ),

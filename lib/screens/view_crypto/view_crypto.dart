@@ -22,21 +22,22 @@ class View_Crypto extends StatefulWidget {
   final double cryptoprice;
   final double daychange;
   final int logoId;
-  
+
   View_Crypto(this.cryptoid, this.cryptoname, this.cryptoprice, this.daychange,
       this.logoId,
       {Key? key})
       : super(key: key);
 
   @override
-  _ViewCrypto_State createState() => _ViewCrypto_State();
+  _ViewCrypto_State createState() => _ViewCrypto_State(price: cryptoprice);
 }
 
-
-
 class _ViewCrypto_State extends State<View_Crypto> {
-    int riseAbove = 50;//cryptoprice.toInt();
-  int fallBelow = 50;//cryptoprice.toInt();
+  double price;
+  _ViewCrypto_State({required this.price});
+
+  late int riseAbove=price.toInt(); //cryptoprice.toInt();
+  late int fallBelow=price.toInt(); //cryptoprice.toInt();
   bool isAlert = false;
   var age = 25;
   bool _visible = false;
@@ -49,7 +50,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
   late Future getinfo, getcryptodetails, getcryptostatistics;
   late String CryptoURL;
   int selectedTab = 0;
-  
+
   final User? user = FirebaseAuth.instance.currentUser;
   //final uid = user.uid;
   final databaseReference = FirebaseFirestore.instance;
@@ -112,7 +113,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
     // print(ref.id);
   }
 
-  Future<void> deleteNews(BuildContext context) async {
+  Future<void> deleteFavs(BuildContext context) async {
     try {
       await databaseReference
           .collection("users")
@@ -387,7 +388,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
             ),
             GestureDetector(
               onTap: () {
-                saved ? deleteNews(context) : addFav(context);
+                saved ? deleteFavs(context) : addFav(context);
               },
               child: Container(
                 width: 30,
@@ -918,7 +919,6 @@ class _ViewCrypto_State extends State<View_Crypto> {
   }
 
   Container showdiag() {
-    
     // showDialog(
     //     context: context,
     //     builder: (BuildContext context) {
@@ -1012,8 +1012,8 @@ class _ViewCrypto_State extends State<View_Crypto> {
                                         ),
                                         itemHeight: 50,
                                         itemWidth: 120,
-                                        minValue: 0,
-                                        maxValue: 100,
+                                        minValue: (price/2).toInt(),
+                                        maxValue: price.toInt()*2,
                                         value: fallBelow,
                                         onChanged: (value) {
                                           setState(() {
@@ -1052,8 +1052,8 @@ class _ViewCrypto_State extends State<View_Crypto> {
                                         ),
                                         itemHeight: 50,
                                         itemWidth: 120,
-                                        minValue: 0,
-                                        maxValue: 100,
+                                        minValue: (price/2).toInt(),
+                                        maxValue: price.toInt()*2,
                                         value: riseAbove,
                                         onChanged: (value) {
                                           setState(() {
@@ -1104,7 +1104,11 @@ class _ViewCrypto_State extends State<View_Crypto> {
                                   )),
                               // SizedBox(width: 11),
                               GestureDetector(
-                                  onTap: null,
+                                  onTap: () {
+                                    saved
+                                        ? deleteFavs(context)
+                                        : addFav(context);
+                                  },
                                   child: Container(
                                     alignment: Alignment.center,
                                     width: 130,
