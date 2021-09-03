@@ -1,9 +1,38 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto_alert/data/crypto_home.dart';
 import 'package:crypto_alert/data/crypto_list.dart';
 import 'package:crypto_alert/screens/view_crypto/view_crypto.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-Container favourites(Crypto_Home crypto, Alert_List alert_list) {
+import '../../constant.dart';
+
+Container favourites(Crypto_Home crypto, Alert_List alert_list, context) {
+  final User? user = FirebaseAuth.instance.currentUser;
+  //final uid = user.uid;
+  final databaseReference = FirebaseFirestore.instance;
+  Future<void> deleteAlerts() async {
+    try {
+      await databaseReference
+          .collection("users")
+          .doc(user!.uid)
+          .collection('alert_list')
+          .doc(alert_list.crypto)
+          .delete();
+      displayToastMessage('Your alert is deleted', context);
+      // if (mounted) {
+      //   setState(() {
+      //     // _loading = false;
+      //     saved = false;
+      //   });
+      // }
+      // ignore: unrelated_type_equality_checks
+
+      // saved = true;
+      // checksaved(title,context);
+    } catch (e) {
+      displayToastMessage(e.toString(), context);
+    }}
   return Container(
       decoration: BoxDecoration(
         color: Color(0xFF1a1a1a),
@@ -75,6 +104,7 @@ Container favourites(Crypto_Home crypto, Alert_List alert_list) {
                 //   ),
                 // ]),
               ],
-            )
+            ),
+            GestureDetector(onTap: ()=> deleteAlerts(), child: Icon(Icons.delete, color: Colors.red))
           ]));
 }

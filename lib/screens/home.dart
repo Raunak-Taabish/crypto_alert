@@ -501,7 +501,7 @@ class _HomeState extends State<Home> {
                                                   },
                                                   child: favourites(
                                                       crypto_fav[index],
-                                                      alert_list[index]));
+                                                      alert_list[index], context));
                                             }),
                                       ),
                                     ],
