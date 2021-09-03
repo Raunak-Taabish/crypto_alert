@@ -42,9 +42,9 @@ class _HomeState extends State<Home> {
   TextEditingController textController = TextEditingController();
   final User? user = FirebaseAuth.instance.currentUser;
   final databaseReference = FirebaseFirestore.instance;
+  List<Alert_List> alert_list = [];
 
   late Future getfav, matchfav;
-  
 
   @override
   void initState() {
@@ -68,8 +68,9 @@ class _HomeState extends State<Home> {
   }
 
   Future<List> getFavouriteList() async {
-    List snap = [];
-    List fav = [];
+    Alert_List data;
+    List<Alert_List> dummy = [];
+
     try {
       print('Favourites working');
       // print(widget.crypto[0].cryptonames);
@@ -78,20 +79,22 @@ class _HomeState extends State<Home> {
       var snapshot = await databaseReference
           .collection("users")
           .doc(user!.uid)
-          .collection('fav_cryptos') //.doc('Cardano')
-          // .where('crypto_name', isEqualTo: 'Cardano')
+          .collection('alert_list')
           .get();
 
       snapshot.docs.forEach((element) {
-        fav.add(element.get('crypto_name'));
+        data = Alert_List(
+            crypto: element.get('crypto_name'),
+            riseAbove: element.get('rise_above').toString(),
+            fallBelow: element.get('fall_below').toString());
+        dummy.add(data);
         print(element.get('crypto_name'));
       });
       setState(() {
-        snap = fav;
+        alert_list = dummy;
       });
-
-      matchfav = matchFav(snap);
-      return fav;
+      matchfav = matchFav(alert_list);
+      return alert_list;
     } catch (e) {
       print(e.toString());
       displayToastMessage(e.toString(), context);
@@ -99,8 +102,13 @@ class _HomeState extends State<Home> {
     }
   }
 
-  Future<List<Crypto_Home>> matchFav(List snap) async {
+  Future<List<Crypto_Home>> matchFav(List<Alert_List> snap) async {
     print("Crypto data matched with DB");
+    List names=[];
+    snap.forEach((element) {
+      names.add(element.crypto);
+    });
+
     // List names=[];
     List<Crypto_Home> crypto_dummy = [];
     String key = 'aec925c7-3059-4a11-8592-b99deb474b47';
@@ -117,7 +125,7 @@ class _HomeState extends State<Home> {
     // print(jsonData["data"][0]["name"]);
     if (response.statusCode == 200) {
       jsonData["data"].forEach((element) {
-        if (snap.contains(element["name"].toString())) {
+        if (names.contains(element["name"].toString())) {
           Crypto_Home crypto_data = Crypto_Home(
               cryptonames: element["name"].toString(),
               cryptoprices: element["quote"]["USD"]["price"],
@@ -492,7 +500,8 @@ class _HomeState extends State<Home> {
                                                     }));
                                                   },
                                                   child: favourites(
-                                                      crypto_fav[index]));
+                                                      crypto_fav[index],
+                                                      alert_list[index]));
                                             }),
                                       ),
                                     ],

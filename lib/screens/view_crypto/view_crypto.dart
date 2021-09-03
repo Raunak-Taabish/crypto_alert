@@ -19,6 +19,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:crypto_alert/screens/favourites/favourites.dart';
 
+import '../home.dart';
+
 class View_Crypto extends StatefulWidget {
   final String cryptoid;
   final String cryptoname;
@@ -82,7 +84,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
     //     cryptoname = element[0];
     //   }
     // });
-    checksaved(context);
+    // checksaved(context);
     futureNews = pullNews();
     getinfo = getCryptoInfo();
     getcryptodetails = getCryptoGraphData();
@@ -94,13 +96,14 @@ class _ViewCrypto_State extends State<View_Crypto> {
       await databaseReference
           .collection("users")
           .doc(user!.uid)
-          .collection('fav_cryptos')
+          .collection('alert_list')
           .doc(widget.cryptoname)
           .set({
-        'crypto_name': widget.cryptoname.toString(),
-        'crypto_symbol': widget.cryptoid.toString(),
+        'crypto_name': widget.cryptoname,
+        'rise_above': _controllerFB.text,
+        'fall_below': _controllerRA.text,
       });
-      displayToastMessage('Saved', context);
+      displayToastMessage('Your alerts are saved', context);
       if (mounted) {
         setState(() {
           // _loading = false;
@@ -122,77 +125,77 @@ class _ViewCrypto_State extends State<View_Crypto> {
     // print(ref.id);
   }
 
-  Future<void> deleteFavs(BuildContext context) async {
-    try {
-      await databaseReference
-          .collection("users")
-          .doc(user!.uid)
-          .collection('fav_cryptos')
-          .doc(widget.cryptoname)
-          .delete();
-      displayToastMessage('Unsaved', context);
-      if (mounted) {
-        setState(() {
-          // _loading = false;
-          saved = false;
-          // newslists.removeWhere((item) => item.title == this.title);
-          // print(newslists);
-          // if (saveview) {
-          //   Navigator.pushReplacement(
-          //       context,
-          //       MaterialPageRoute(
-          //           builder: (BuildContext context) => SavedNews()));
-          //   // Saved sn=new Saved();
-          //   // sn.getSavedNews();
-          // }
-          // Home n=new Home();n.checksaved(title, context);
-        });
-      }
-      // ignore: unrelated_type_equality_checks
+  // Future<void> deleteFavs(BuildContext context) async {
+  //   try {
+  //     await databaseReference
+  //         .collection("users")
+  //         .doc(user!.uid)
+  //         .collection('fav_cryptos')
+  //         .doc(widget.cryptoname)
+  //         .delete();
+  //     displayToastMessage('Unsaved', context);
+  //     if (mounted) {
+  //       setState(() {
+  //         // _loading = false;
+  //         saved = false;
+  //         // newslists.removeWhere((item) => item.title == this.title);
+  //         // print(newslists);
+  //         // if (saveview) {
+  //         //   Navigator.pushReplacement(
+  //         //       context,
+  //         //       MaterialPageRoute(
+  //         //           builder: (BuildContext context) => SavedNews()));
+  //         //   // Saved sn=new Saved();
+  //         //   // sn.getSavedNews();
+  //         // }
+  //         // Home n=new Home();n.checksaved(title, context);
+  //       });
+  //     }
+  //     // ignore: unrelated_type_equality_checks
 
-      // saved = true;
-      // checksaved(title,context);
-    } catch (e) {
-      displayToastMessage(e.toString(), context);
-    }
+  //     // saved = true;
+  //     // checksaved(title,context);
+  //   } catch (e) {
+  //     displayToastMessage(e.toString(), context);
+  //   }
 
-    // DocumentReference ref = await databaseReference.collection("books").add({
-    //   'title': 'Flutter in Action',
-    //   'description': 'Complete Programming Guide to learn Flutter'
-    // });
-    // print(ref.id);
-  }
+  //   // DocumentReference ref = await databaseReference.collection("books").add({
+  //   //   'title': 'Flutter in Action',
+  //   //   'description': 'Complete Programming Guide to learn Flutter'
+  //   // });
+  //   // print(ref.id);
+  // }
 
-  void checksaved(BuildContext context) async {
-    //add index argument
+  // void checksaved(BuildContext context) async {
+  //   //add index argument
 
-    try {
-      // ignore: await_only_futures
-      var snap = await databaseReference
-          .collection("users")
-          .doc(user!.uid)
-          .collection('fav_cryptos')
-          .where('crypto_name', isEqualTo: widget.cryptoname)
-          .get();
-      //((result) => {
-      // print(value.data.contains(title));
-      // for(var doc in snap.docs) {
-      print(snap.docs.toList());
-      if (snap.docs.isNotEmpty) {
-        if (mounted) {
-          setState(() => {saved = true});
-        }
-        // print(title);
-      } else {
-        if (mounted) {
-          setState(() => {saved = false});
-        }
-        // print(title+'false');
-      }
-    } catch (e) {
-      displayToastMessage(e.toString(), context);
-    }
-  }
+  //   try {
+  //     // ignore: await_only_futures
+  //     var snap = await databaseReference
+  //         .collection("users")
+  //         .doc(user!.uid)
+  //         .collection('fav_cryptos')
+  //         .where('crypto_name', isEqualTo: widget.cryptoname)
+  //         .get();
+  //     //((result) => {
+  //     // print(value.data.contains(title));
+  //     // for(var doc in snap.docs) {
+  //     print(snap.docs.toList());
+  //     if (snap.docs.isNotEmpty) {
+  //       if (mounted) {
+  //         setState(() => {saved = true});
+  //       }
+  //       // print(title);
+  //     } else {
+  //       if (mounted) {
+  //         setState(() => {saved = false});
+  //       }
+  //       // print(title+'false');
+  //     }
+  //   } catch (e) {
+  //     displayToastMessage(e.toString(), context);
+  //   }
+  // }
 
   Future<Crypto_Statistics> getCryptoStatistics() async {
     // String key = 'aec925c7-3059-4a11-8592-b99deb474b47';
@@ -395,26 +398,26 @@ class _ViewCrypto_State extends State<View_Crypto> {
                 ],
               ),
             ),
-            GestureDetector(
-              onTap: () {
-                saved ? deleteFavs(context) : addFav(context);
-              },
-              child: Container(
-                width: 30,
-                height: 30,
-                child: Icon(
-                    saved ? Icons.favorite : Icons.favorite_border_sharp,
-                    color: saved ? Colors.red : Colors.white),
-                // child: IconButton(
-                //   icon: Icon(Icons.favorite_border_sharp),
-                //   onPressed: () {
-                //     setState(() {
-                //       selected = !selected;
-                //     });
-                //   },
-                // ),
-              ),
-            )
+            // GestureDetector(
+            //   onTap: () {
+            //     saved ? deleteFavs(context) : addFav(context);
+            //   },
+            //   child: Container(
+            //     width: 30,
+            //     height: 30,
+            //     child: Icon(
+            //         saved ? Icons.favorite : Icons.favorite_border_sharp,
+            //         color: saved ? Colors.red : Colors.white),
+            //     // child: IconButton(
+            //     //   icon: Icon(Icons.favorite_border_sharp),
+            //     //   onPressed: () {
+            //     //     setState(() {
+            //     //       selected = !selected;
+            //     //     });
+            //     //   },
+            //     // ),
+            //   ),
+            // )
           ]),
           foregroundColor: Colors.white,
           backgroundColor: const Color(0xFF151515),
@@ -423,30 +426,27 @@ class _ViewCrypto_State extends State<View_Crypto> {
         floatingActionButton: Container(
           margin: EdgeInsets.only(bottom: 0),
           child: !isAlert
-              ? saved
-                  ? FloatingActionButton.extended(
-                      backgroundColor: Colors.white,
-                      onPressed: () {
-                        setState(() {
-                          isAlert = !isAlert;
-                        });
-                      },
-                      isExtended: true,
-                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      icon: Image.asset(
-                        'assets/images/add.png',
-                        width: 15,
-                        height: 15,
-                      ),
-                      label: Text(
-                        'Add Alert',
-                        style: blackboldText,
-                      ),
-                      shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.all(Radius.circular(12.0))),
-                    )
-                  : Center()
+              ? FloatingActionButton.extended(
+                  backgroundColor: Colors.white,
+                  onPressed: () {
+                    setState(() {
+                      isAlert = !isAlert;
+                    });
+                  },
+                  isExtended: true,
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  icon: Image.asset(
+                    'assets/images/add.png',
+                    width: 15,
+                    height: 15,
+                  ),
+                  label: Text(
+                    'Add Alert',
+                    style: blackboldText,
+                  ),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(12.0))),
+                )
               : Center(),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
@@ -1189,15 +1189,14 @@ class _ViewCrypto_State extends State<View_Crypto> {
                               // SizedBox(width: 11),
                               GestureDetector(
                                   onTap: () {
-                                    saved
-                                        ? deleteFavs(context)
-                                        : addFav(context);
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) {
-                                              return favourites(Crypto_Home(cryptonames: widget.cryptoname, cryptoprices: widget.cryptoprice, cryptosymbols: , fallBelow: widget._controllerFB, logoId: logoId));
-                                            }));
+                                    isAlert=!isAlert;
+                                    addFav(context);
+                                    // Navigator.push(
+                                    //     context,
+                                    //     MaterialPageRoute(
+                                    //         builder: (context) {
+                                    //           return ;//favourites(Crypto_Home(cryptonames: widget.cryptoname, cryptoprices: widget.cryptoprice, cryptosymbols: '', daychange: 0.0, logoId: 0));
+                                    //         }));
                                   },
                                   child: Container(
                                     alignment: Alignment.center,

@@ -3,7 +3,7 @@ import 'package:crypto_alert/data/crypto_list.dart';
 import 'package:crypto_alert/screens/view_crypto/view_crypto.dart';
 import 'package:flutter/material.dart';
 
-Container favourites(Crypto_Home crypto) {
+Container favourites(Crypto_Home crypto, Alert_List alert_list) {
   return Container(
       decoration: BoxDecoration(
         color: Color(0xFF1a1a1a),
@@ -39,6 +39,14 @@ Container favourites(Crypto_Home crypto) {
                       color: Colors.white, fontFamily: 'Montserrat'),
                 ),
               ),
+              Text(
+                '  ${alert_list.fallBelow.toString()}  ',
+                style: TextStyle(color: Colors.white),
+              ),
+              Text(
+                '  ${alert_list.riseAbove.toString()}  ',
+                style: TextStyle(color: Colors.white),
+              )
             ]),
             Column(
               children: [
@@ -47,25 +55,25 @@ Container favourites(Crypto_Home crypto) {
                   style: const TextStyle(
                       color: Colors.white, fontFamily: 'Montserrat'),
                 ),
-                Row(children: [
-                  Icon(
-                    crypto.daychange >= 0
-                        ? Icons.arrow_drop_up_sharp
-                        : Icons.arrow_drop_down_sharp,
-                    size: 20,
-                    color: crypto.daychange >= 0
-                        ? Color(0xFF00D293)
-                        : Color(0xFFFF493E),
-                  ),
-                  Text(
-                    '${crypto.daychange.toStringAsFixed(2)}%',
-                    style: TextStyle(
-                        color: crypto.daychange >= 0
-                            ? Color(0xFF00D293)
-                            : Color(0xFFFF493E),
-                        fontFamily: 'Montserrat'),
-                  ),
-                ]),
+                // Row(children: [
+                //   Icon(
+                //     crypto.daychange >= 0
+                //         ? Icons.arrow_drop_up_sharp
+                //         : Icons.arrow_drop_down_sharp,
+                //     size: 20,
+                //     color: crypto.daychange >= 0
+                //         ? Color(0xFF00D293)
+                //         : Color(0xFFFF493E),
+                //   ),
+                //   Text(
+                //     '${crypto.daychange.toStringAsFixed(2)}%',
+                //     style: TextStyle(
+                //         color: crypto.daychange >= 0
+                //             ? Color(0xFF00D293)
+                //             : Color(0xFFFF493E),
+                //         fontFamily: 'Montserrat'),
+                //   ),
+                // ]),
               ],
             )
           ]));
