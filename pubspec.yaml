@@ -51,7 +51,6 @@ dependencies:
   timezone: ^0.8.0
   cloud_firestore: ^2.5.1
   numberpicker: ^2.1.1
-  show_overlay: ^1.0.8
   
 
 dev_dependencies:

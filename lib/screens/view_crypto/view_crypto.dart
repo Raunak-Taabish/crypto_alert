@@ -3,6 +3,8 @@ import 'package:crypto_alert/constant.dart';
 import 'package:crypto_alert/data/crypto_statistics.dart';
 import 'package:crypto_alert/screens/authentication/register.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/rendering.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +22,7 @@ class View_Crypto extends StatefulWidget {
   final double cryptoprice;
   final double daychange;
   final int logoId;
+  
   View_Crypto(this.cryptoid, this.cryptoname, this.cryptoprice, this.daychange,
       this.logoId,
       {Key? key})
@@ -29,7 +32,12 @@ class View_Crypto extends StatefulWidget {
   _ViewCrypto_State createState() => _ViewCrypto_State();
 }
 
+
+
 class _ViewCrypto_State extends State<View_Crypto> {
+    int riseAbove = 50;//cryptoprice.toInt();
+  int fallBelow = 50;//cryptoprice.toInt();
+  bool isAlert = false;
   var age = 25;
   bool _visible = false;
   bool saved = false;
@@ -41,7 +49,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
   late Future getinfo, getcryptodetails, getcryptostatistics;
   late String CryptoURL;
   int selectedTab = 0;
-  int currentDoubleValue = 100;
+  
   final User? user = FirebaseAuth.instance.currentUser;
   //final uid = user.uid;
   final databaseReference = FirebaseFirestore.instance;
@@ -404,573 +412,717 @@ class _ViewCrypto_State extends State<View_Crypto> {
         backgroundColor: const Color(0xFF151515),
         floatingActionButton: Container(
           margin: EdgeInsets.only(bottom: 0),
-          child: FloatingActionButton.extended(
-            backgroundColor: Colors.white,
-            onPressed: () {
-              showdiag(context);
-            },
-            isExtended: true,
-            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            icon: Image.asset(
-              'assets/images/add.png',
-              width: 15,
-              height: 15,
-            ),
-            label: Text(
-              'Add Alert',
-              style: blackboldText,
-            ),
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(12.0))),
-          ),
+          child: !isAlert
+              ? saved
+                  ? FloatingActionButton.extended(
+                      backgroundColor: Colors.white,
+                      onPressed: () {
+                        setState(() {
+                          isAlert = !isAlert;
+                        });
+                      },
+                      isExtended: true,
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      icon: Image.asset(
+                        'assets/images/add.png',
+                        width: 15,
+                        height: 15,
+                      ),
+                      label: Text(
+                        'Add Alert',
+                        style: blackboldText,
+                      ),
+                      shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(12.0))),
+                    )
+                  : Center()
+              : Center(),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: 30,
-              ),
-              Container(
-                margin: EdgeInsets.fromLTRB(25, 0, 0, 5),
-                child: Text(
-                  widget.cryptoname,
-                  style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.white,
-                      fontFamily: 'Montserrat'),
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        body: Stack(
+          children: [
+            // isAlert
+            //     ? Center()
+            //     :
+            SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  SizedBox(
+                    height: 30,
+                  ),
                   Container(
-                    margin: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                    //alignment: Alignment.centerLeft,
+                    margin: EdgeInsets.fromLTRB(25, 0, 0, 5),
                     child: Text(
-                      '\$ ' + '${widget.cryptoprice.toStringAsFixed(2)}',
-                      style: const TextStyle(
+                      widget.cryptoname,
+                      style: TextStyle(
+                          fontSize: 15,
                           color: Colors.white,
-                          fontFamily: 'Montserrat',
-                          fontSize: 40,
-                          fontWeight: FontWeight.w500),
+                          fontFamily: 'Montserrat'),
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                        //alignment: Alignment.centerLeft,
+                        child: Text(
+                          '\$ ' + '${widget.cryptoprice.toStringAsFixed(2)}',
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'Montserrat',
+                              fontSize: 40,
+                              fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                        decoration: BoxDecoration(
+                            color: widget.daychange >= 0
+                                ? Color(0xFF00D293)
+                                : Color(0xFFFF493E),
+                            borderRadius: BorderRadius.circular(6)),
+                        padding: EdgeInsets.all(5),
+                        child: Row(
+                          children: [
+                            Icon(
+                              widget.daychange >= 0
+                                  ? Icons.arrow_drop_up_sharp
+                                  : Icons.arrow_drop_down_sharp,
+                              size: 20,
+                              color: Colors.white,
+                              //widget.daychange >= 0 ? Colors.green : Colors.red,
+                            ),
+                            Text(
+                              '${widget.daychange.toStringAsFixed(2)}%',
+                              style: TextStyle(
+                                  color: Colors
+                                      .white, //widget.daychange >= 0 ? Colors.green : Colors.red,
+                                  fontFamily: 'Montserrat',
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Color(0xFF202020),
+                    ),
+                    padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
+                    margin: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                    height: 250,
+                    width: MediaQuery.of(context).size.width,
+                    child: FutureBuilder(
+                        future: getcryptodetails,
+                        builder: (context, AsyncSnapshot snapshot) {
+                          if (snapshot.hasData) {
+                            closeprice = snapshot.data;
+
+                            return SfCartesianChart(
+                                primaryXAxis: CategoryAxis(
+                                  labelStyle: TextStyle(
+                                      color: Colors.grey, fontSize: 10),
+                                  isVisible: true,
+                                  //Hide the gridlines of x-axis
+                                  majorGridLines:
+                                      const MajorGridLines(width: 0),
+                                  //Hide the axis line of x-axis
+                                  axisLine: const AxisLine(width: 0),
+                                ),
+                                primaryYAxis: NumericAxis(
+                                    labelStyle: TextStyle(
+                                        color: Colors.grey, fontSize: 10),
+                                    majorTickLines:
+                                        const MajorTickLines(width: 0),
+                                    // isVisible: false,
+                                    //Hide the gridlines of y-axis
+                                    majorGridLines:
+                                        const MajorGridLines(width: 0),
+                                    //Hide the axis line of y-axis
+                                    axisLine: const AxisLine(width: 0)),
+                                // plotAreaBackgroundColor: Colors.black,
+                                // borderColor: Colors.white,
+                                // borderWidth: 0,
+                                plotAreaBorderWidth: 0,
+                                // enableSideBySideSeriesPlacement: false,
+                                backgroundColor: const Color(0xFF202020),
+                                // primaryXAxis: CategoryAxis(),
+                                // title: ChartTitle(
+                                //     text: ''), //Chart title.
+                                // legend: Legend(
+                                //     isVisible: true,
+                                //     position:
+                                //         LegendPosition.bottom), // Enables the legend.
+                                tooltipBehavior: TooltipBehavior(
+                                    enable: true), // Enables the tooltip.
+                                series: <SplineAreaSeries<SalesData, String>>[
+                                  SplineAreaSeries<SalesData, String>(
+                                    // cardinalSplineTension: 4,
+                                    color: Colors.white,
+                                    gradient: LinearGradient(
+                                        begin: Alignment.topCenter,
+                                        end: Alignment.bottomCenter,
+                                        colors: [
+                                          widget.daychange >= 0
+                                              ? Color(0xFF00FFB3)
+                                              : Color(0xFFC01010),
+                                          Color(0xFF2F9FDB),
+                                        ]),
+                                    // name: 'Price in \$',
+                                    // emptyPointSettings: EmptyPointSettings(
+                                    //     mode: EmptyPointMode.average),
+                                    dataSource: closeprice,
+                                    xValueMapper: (SalesData sales, _) =>
+                                        DateFormat('d/MMM').format(sales.year),
+                                    yValueMapper: (SalesData sales, _) =>
+                                        sales.sales,
+                                    animationDuration: 3000,
+                                    markerSettings: const MarkerSettings(
+                                        borderColor: Colors.white,
+                                        height: 2,
+                                        width: 2,
+                                        isVisible: false),
+                                    // dataLabelSettings: const DataLabelSettings(
+                                    //     isVisible: true), // Enables the data label.
+                                    enableTooltip: true,
+                                    opacity: 0.8,
+                                  )
+                                ]);
+                          } else {
+                            return const Center();
+                          }
+                        }),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              selectedTab = 0;
+                              getCryptoGraphData();
+                            });
+                          },
+                          child: dayChange("7 D", 0)),
+                      GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              selectedTab = 1;
+                              getCryptoGraphData();
+                            });
+                          },
+                          child: dayChange("1 M", 1)),
+                      GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              selectedTab = 2;
+                              getCryptoGraphData();
+                            });
+                          },
+                          child: dayChange("6 M", 2)),
+                      GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              selectedTab = 3;
+                              getCryptoGraphData();
+                            });
+                          },
+                          child: dayChange("1 Y", 3)),
+                    ],
+                  ),
+                  Container(
+                    margin: EdgeInsets.all(30),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Low",
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  fontFamily: 'Montserrat',
+                                  color: Color(0xFF909090),
+                                  fontWeight: FontWeight.w400),
+                            ),
+                            Text(
+                              "High",
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  fontFamily: 'Montserrat',
+                                  color: Color(0xFF909090),
+                                  fontWeight: FontWeight.w400),
+                            ),
+                          ],
+                        ),
+                        Container(
+                          margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                          color: Colors.white,
+                          height: 3,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              statistics.lowprice.toStringAsFixed(2),
+                              style: TextStyle(
+                                  fontSize: 17,
+                                  fontFamily: 'Montserrat',
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                            Text(
+                              statistics.highprice.toStringAsFixed(2),
+                              style: TextStyle(
+                                  fontSize: 17,
+                                  fontFamily: 'Montserrat',
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  FutureBuilder(
+                      future: getcryptostatistics,
+                      builder: (context, snapshot) {
+                        return Container(
+                          margin: EdgeInsets.fromLTRB(30, 20, 0, 0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  alldata(
+                                    'Market cap',
+                                    statistics.marketcap.toStringAsFixed(2),
+                                  ),
+                                  alldata(
+                                    'Open',
+                                    statistics.openprice.toStringAsFixed(2),
+                                  ),
+                                  alldata(
+                                    'Previous close',
+                                    statistics.closeprice.toStringAsFixed(2),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.08,
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  alldata(
+                                    'Volume',
+                                    statistics.volume.toStringAsFixed(2),
+                                  ),
+                                  alldata(
+                                    'Supply',
+                                    statistics.supply.toStringAsFixed(2),
+                                  ),
+                                  alldata(
+                                    'Rank',
+                                    '#${statistics.rank.toString()}',
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        );
+                      }),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    //width: MediaQuery.of(context).size.width / 2.5,
+                    margin: EdgeInsets.fromLTRB(30, 15, 20, 0),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      //color: Color(0xFF202020),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "About " + widget.cryptoname,
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'Montserrat',
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500),
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        FutureBuilder(
+                            future: getCryptoInfo(),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                return Text(
+                                  desc,
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: 'Montserrat',
+                                      fontSize: 13),
+                                );
+                              } else {
+                                return const Center(
+                                    child: CircularProgressIndicator());
+                              }
+                            })
+                      ],
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                    decoration: BoxDecoration(
-                        color: widget.daychange >= 0
-                            ? Color(0xFF00D293)
-                            : Color(0xFFFF493E),
-                        borderRadius: BorderRadius.circular(6)),
-                    padding: EdgeInsets.all(5),
-                    child: Row(
-                      children: [
-                        Icon(
-                          widget.daychange >= 0
-                              ? Icons.arrow_drop_up_sharp
-                              : Icons.arrow_drop_down_sharp,
-                          size: 20,
-                          color: Colors.white,
-                          //widget.daychange >= 0 ? Colors.green : Colors.red,
-                        ),
-                        Text(
-                          '${widget.daychange.toStringAsFixed(2)}%',
-                          style: TextStyle(
-                              color: Colors
-                                  .white, //widget.daychange >= 0 ? Colors.green : Colors.red,
-                              fontFamily: 'Montserrat',
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600),
-                        ),
-                      ],
+                    margin: EdgeInsets.fromLTRB(30, 20, 0, 20),
+                    child: FlatButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(6.0))),
+                      color: Colors.white,
+                      onPressed: () async {
+                        if (await canLaunch(CryptoURL)) {
+                          await launch(CryptoURL);
+                        } else {
+                          throw 'Error';
+                        }
+                      },
+                      child: Text(
+                        "Learn more",
+                        style: blackboldText,
+                      ),
                     ),
                   ),
-                ],
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: Color(0xFF202020),
-                ),
-                padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
-                margin: EdgeInsets.fromLTRB(5, 0, 5, 0),
-                height: 250,
-                width: MediaQuery.of(context).size.width,
-                child: FutureBuilder(
-                    future: getcryptodetails,
-                    builder: (context, AsyncSnapshot snapshot) {
-                      if (snapshot.hasData) {
-                        closeprice = snapshot.data;
-
-                        return SfCartesianChart(
-                            primaryXAxis: CategoryAxis(
-                              labelStyle:
-                                  TextStyle(color: Colors.grey, fontSize: 10),
-                              isVisible: true,
-                              //Hide the gridlines of x-axis
-                              majorGridLines: const MajorGridLines(width: 0),
-                              //Hide the axis line of x-axis
-                              axisLine: const AxisLine(width: 0),
-                            ),
-                            primaryYAxis: NumericAxis(
-                                labelStyle:
-                                    TextStyle(color: Colors.grey, fontSize: 10),
-                                majorTickLines: const MajorTickLines(width: 0),
-                                // isVisible: false,
-                                //Hide the gridlines of y-axis
-                                majorGridLines: const MajorGridLines(width: 0),
-                                //Hide the axis line of y-axis
-                                axisLine: const AxisLine(width: 0)),
-                            // plotAreaBackgroundColor: Colors.black,
-                            // borderColor: Colors.white,
-                            // borderWidth: 0,
-                            plotAreaBorderWidth: 0,
-                            // enableSideBySideSeriesPlacement: false,
-                            backgroundColor: const Color(0xFF202020),
-                            // primaryXAxis: CategoryAxis(),
-                            // title: ChartTitle(
-                            //     text: ''), //Chart title.
-                            // legend: Legend(
-                            //     isVisible: true,
-                            //     position:
-                            //         LegendPosition.bottom), // Enables the legend.
-                            tooltipBehavior: TooltipBehavior(
-                                enable: true), // Enables the tooltip.
-                            series: <SplineAreaSeries<SalesData, String>>[
-                              SplineAreaSeries<SalesData, String>(
-                                // cardinalSplineTension: 4,
-                                color: Colors.white,
-                                gradient: LinearGradient(
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                    colors: [
-                                      widget.daychange >= 0
-                                          ? Color(0xFF00FFB3)
-                                          : Color(0xFFC01010),
-                                      Color(0xFF2F9FDB),
-                                    ]),
-                                // name: 'Price in \$',
-                                // emptyPointSettings: EmptyPointSettings(
-                                //     mode: EmptyPointMode.average),
-                                dataSource: closeprice,
-                                xValueMapper: (SalesData sales, _) =>
-                                    DateFormat('d/MMM').format(sales.year),
-                                yValueMapper: (SalesData sales, _) =>
-                                    sales.sales,
-                                animationDuration: 3000,
-                                markerSettings: const MarkerSettings(
-                                    borderColor: Colors.white,
-                                    height: 2,
-                                    width: 2,
-                                    isVisible: false),
-                                // dataLabelSettings: const DataLabelSettings(
-                                //     isVisible: true), // Enables the data label.
-                                enableTooltip: true,
-                                opacity: 0.8,
-                              )
-                            ]);
-                      } else {
-                        return const Center();
-                      }
-                    }),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          selectedTab = 0;
-                          getCryptoGraphData();
-                        });
-                      },
-                      child: dayChange("7 D", 0)),
-                  GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          selectedTab = 1;
-                          getCryptoGraphData();
-                        });
-                      },
-                      child: dayChange("1 M", 1)),
-                  GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          selectedTab = 2;
-                          getCryptoGraphData();
-                        });
-                      },
-                      child: dayChange("6 M", 2)),
-                  GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          selectedTab = 3;
-                          getCryptoGraphData();
-                        });
-                      },
-                      child: dayChange("1 Y", 3)),
-                ],
-              ),
-              Container(
-                margin: EdgeInsets.all(30),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Low",
-                          style: TextStyle(
-                              fontSize: 12,
-                              fontFamily: 'Montserrat',
-                              color: Color(0xFF909090),
-                              fontWeight: FontWeight.w400),
-                        ),
-                        Text(
-                          "High",
-                          style: TextStyle(
-                              fontSize: 12,
-                              fontFamily: 'Montserrat',
-                              color: Color(0xFF909090),
-                              fontWeight: FontWeight.w400),
-                        ),
-                      ],
-                    ),
-                    Container(
-                      margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                      color: Colors.white,
-                      height: 3,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          statistics.lowprice.toStringAsFixed(2),
-                          style: TextStyle(
-                              fontSize: 17,
-                              fontFamily: 'Montserrat',
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500),
-                        ),
-                        Text(
-                          statistics.highprice.toStringAsFixed(2),
-                          style: TextStyle(
-                              fontSize: 17,
-                              fontFamily: 'Montserrat',
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              FutureBuilder(
-                  future: getcryptostatistics,
-                  builder: (context, snapshot) {
-                    return Container(
-                      margin: EdgeInsets.fromLTRB(30, 20, 0, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              alldata(
-                                'Market cap',
-                                statistics.marketcap.toStringAsFixed(2),
-                              ),
-                              alldata(
-                                'Open',
-                                statistics.openprice.toStringAsFixed(2),
-                              ),
-                              alldata(
-                                'Previous close',
-                                statistics.closeprice.toStringAsFixed(2),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.08,
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              alldata(
-                                'Volume',
-                                statistics.volume.toStringAsFixed(2),
-                              ),
-                              alldata(
-                                'Supply',
-                                statistics.supply.toStringAsFixed(2),
-                              ),
-                              alldata(
-                                'Rank',
-                                '#${statistics.rank.toString()}',
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    );
-                  }),
-              SizedBox(
-                height: 20,
-              ),
-              Container(
-                //width: MediaQuery.of(context).size.width / 2.5,
-                margin: EdgeInsets.fromLTRB(30, 15, 20, 0),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  //color: Color(0xFF202020),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "About " + widget.cryptoname,
+                  Container(
+                    margin: EdgeInsets.fromLTRB(30, 20, 0, 0),
+                    child: Text(
+                      "${widget.cryptoname} News",
                       style: TextStyle(
                           color: Colors.white,
-                          fontFamily: 'Montserrat',
                           fontSize: 20,
-                          fontWeight: FontWeight.w500),
+                          fontWeight: FontWeight.w500,
+                          fontFamily: 'Montserrat'),
                     ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    FutureBuilder(
-                        future: getCryptoInfo(),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            return Text(
-                              desc,
-                              style: const TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: 'Montserrat',
-                                  fontSize: 13),
-                            );
-                          } else {
-                            return const Center(
-                                child: CircularProgressIndicator());
-                          }
-                        })
-                  ],
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.fromLTRB(30, 20, 0, 20),
-                child: FlatButton(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(6.0))),
-                  color: Colors.white,
-                  onPressed: () async {
-                    if (await canLaunch(CryptoURL)) {
-                      await launch(CryptoURL);
-                    } else {
-                      throw 'Error';
-                    }
-                  },
-                  child: Text(
-                    "Learn more",
-                    style: blackboldText,
                   ),
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.fromLTRB(30, 20, 0, 0),
-                child: Text(
-                  "${widget.cryptoname} News",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500,
-                      fontFamily: 'Montserrat'),
-                ),
-              ),
-              FutureBuilder(
-                  future: futureNews,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return Container(
-                        height: MediaQuery.of(context).size.height / 2.25,
-                        child: ListView.builder(
-                            physics: NeverScrollableScrollPhysics(),
-                            itemCount: pull.length,
-                            itemBuilder: (context, index) {
-                              return Container(
-                                margin: EdgeInsets.all(10),
-                                //color: Colors.amber,
-                                child: Row(
-                                  //crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      width:
-                                          MediaQuery.of(context).size.height *
+                  FutureBuilder(
+                      future: futureNews,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return Container(
+                            height: MediaQuery.of(context).size.height / 2.25,
+                            child: ListView.builder(
+                                physics: NeverScrollableScrollPhysics(),
+                                itemCount: pull.length,
+                                itemBuilder: (context, index) {
+                                  return Container(
+                                    margin: EdgeInsets.all(10),
+                                    //color: Colors.amber,
+                                    child: Row(
+                                      //crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
                                               0.12,
-                                      height:
-                                          MediaQuery.of(context).size.height *
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
                                               0.12,
-                                      decoration: BoxDecoration(
-                                        // border: Border.all(
-                                        // width: 3, color: Colors.black87, style: BorderStyle.solid),
-                                        image: DecorationImage(
-                                            image: NetworkImage(
-                                              pull[index].urlToImage,
-                                            ),
-                                            fit: BoxFit.cover
-                                            // colorFilter: new ColorFilter.mode(
-                                            //     Colors.black45, BlendMode.darken),
-                                            ),
-                                        color: Colors.black87,
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
+                                          decoration: BoxDecoration(
+                                            // border: Border.all(
+                                            // width: 3, color: Colors.black87, style: BorderStyle.solid),
+                                            image: DecorationImage(
+                                                image: NetworkImage(
+                                                  pull[index].urlToImage,
+                                                ),
+                                                fit: BoxFit.cover
+                                                // colorFilter: new ColorFilter.mode(
+                                                //     Colors.black45, BlendMode.darken),
+                                                ),
+                                            color: Colors.black87,
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                        ),
+                                        Container(
+                                          margin:
+                                              EdgeInsets.fromLTRB(10, 5, 5, 5),
+                                          //color: Colors.black,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              1.48,
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                pull[index].title,
+                                                style: TextStyle(
+                                                  fontFamily: 'Montserrat',
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Colors.white,
+                                                ),
+                                                maxLines: 2,
+                                              ),
+                                              Text(
+                                                pull[index].source,
+                                                style: regularText,
+                                              ),
+                                              Text(
+                                                DateFormat('hh:mm aaa').format(
+                                                    pull[index].publishedAt),
+                                                style: regularText,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    Container(
-                                      margin: EdgeInsets.fromLTRB(10, 5, 5, 5),
-                                      //color: Colors.black,
-                                      width: MediaQuery.of(context).size.width /
-                                          1.48,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            pull[index].title,
-                                            style: TextStyle(
-                                              fontFamily: 'Montserrat',
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w500,
-                                              color: Colors.white,
-                                            ),
-                                            maxLines: 2,
-                                          ),
-                                          Text(
-                                            pull[index].source,
-                                            style: regularText,
-                                          ),
-                                          Text(
-                                            DateFormat('hh:mm aaa').format(
-                                                pull[index].publishedAt),
-                                            style: regularText,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            }),
-                      );
-                    } else {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
-                  }),
-              SizedBox(
-                height: MediaQuery.of(context).size.height / 8,
-              )
-            ],
-          ),
+                                  );
+                                }),
+                          );
+                        } else {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                      }),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height / 8,
+                  )
+                ],
+              ),
+            ),
+            isAlert ? showdiag() : Center(),
+          ],
         ));
   }
 
-  void showdiag(BuildContext context) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return Container();
-          // return AlertDialog(
-          //     insetPadding: EdgeInsets.all(10),
-          //     content:
-          // content: Container(
-          //   width: 350,
-          //   child: Column(
-          //     //overflow: Overflow.visible,
-          //     children: <Widget>[
-          //       Text(
-          //         "Add alert",
-          //         style: TextStyle(
-          //             color: Colors.black,
-          //             fontFamily: "Montserrat",
-          //             fontSize: 20,
-          //             fontWeight: FontWeight.w500),
-          //       ),
-          //       Container(
-          //         margin: EdgeInsets.only(top: 30),
-          //         color: Colors.amber,
-          //         width: MediaQuery.of(context).size.width /1.4,
-          //         height: MediaQuery.of(context).size.height * 0.1,
-          //         child: Row(
-          //           //mainAxisAlignment:MainAxisAlignment.spaceBetween,
-          //           children: [
-          //             Text(
-          //               widget.cryptoname,
-          //               style: TextStyle(
-          //                   fontSize: 15,
-          //                   color: Colors.black,
-          //                   fontFamily: 'Montserrat',
-          //                   fontWeight: FontWeight.w500),
-          //             ),
-          //             Container(
-          //               margin: EdgeInsets.fromLTRB(20, 0, 0, 0),
-          //               //alignment: Alignment.centerLeft,
-          //               child: Text(
-          //                 '\$ ' + '${widget.cryptoprice.toStringAsFixed(2)}',
-          //                 style: const TextStyle(
-          //                     color: Colors.black,
-          //                     fontFamily: 'Montserrat',
-          //                     fontSize: 40,
-          //                     fontWeight: FontWeight.w500),
-          //               ),
-          //             ),
-          //           ],
-          //         ),
-          //       ),
-          //   Container(
-          // margin: EdgeInsets.only(top: 120),
-          // color: Colors.white,
-          // child: Column(
-          //   mainAxisAlignment: MainAxisAlignment.center,
-          //   children: [
-          // ElevatedButton(
-          //     onPressed: () {
-          //       showMaterialNumberPicker(
-          //         context: context,
-          //         title: 'Pick Your Age',
-          //         maxNumber: 100,
-          //         minNumber: 14,
-          //         selectedNumber: age,
-          //         onChanged: (value) => setState(() => age = value),
-          //       );
-          //     },
-          //     child: Text('Click here'))
-
-          // NumberPicker(
-          //   value: currentDoubleValue,
-          //   minValue: currentDoubleValue-1,
-          //   maxValue: currentDoubleValue+2,
-          //   onChanged: (value) =>
-          //       setState(() => currentDoubleValue = value),
-          // )
-          //             ],
-          //           ),
-          //         )
-          //         //     ],
-          //         //   ),
-          //         // ),
-          // );
-        });
+  Container showdiag() {
+    
+    // showDialog(
+    //     context: context,
+    //     builder: (BuildContext context) {
+    return Container(
+        color: Colors.black87,
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        child: Center(
+            child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Color(0xFF2E2E2E),
+                  ),
+                  borderRadius: BorderRadius.circular(20),
+                  color: Color(0xFF151515),
+                ),
+                padding: EdgeInsets.symmetric(horizontal: 25, vertical: 15),
+                width: MediaQuery.of(context).size.width * 0.85,
+                height: MediaQuery.of(context).size.height * 0.55,
+                // margin: EdgeIN,
+                // color: Color(0xFF151515),
+                child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                    //overflow: Overflow.visible,
+                    children: <Widget>[
+                      // Container(
+                      //   margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                      //   child: Text(
+                      //     "Add alert",
+                      //     style: TextStyle(
+                      //         color: Colors.white,
+                      //         fontFamily: "Montserrat",
+                      //         fontSize: 20,
+                      //         fontWeight: FontWeight.w500),
+                      //   ),
+                      // ),
+                      Container(
+                        alignment: Alignment.center,
+                        margin: EdgeInsets.only(top: 10),
+                        color: Colors.transparent,
+                        //width: MediaQuery.of(context).size.width / 1.4,
+                        //height: MediaQuery.of(context).size.height * 0.1,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          //mainAxisAlignment:MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text(
+                              widget.cryptoname,
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.white,
+                                  fontFamily: 'Montserrat',
+                                  fontWeight: FontWeight.w400),
+                            ),
+                            Container(
+                              margin: EdgeInsets.fromLTRB(0, 10, 0, 20),
+                              //alignment: Alignment.centerLeft,
+                              child: Text(
+                                '\$ ' +
+                                    '${widget.cryptoprice.toStringAsFixed(2)}',
+                                style: const TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: 'Montserrat',
+                                    fontSize: 35,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              child: Column(
+                                children: [
+                                  Container(
+                                    margin: EdgeInsets.only(bottom: 10),
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: Color(0xFF2E2E2E)),
+                                        borderRadius: BorderRadius.circular(20),
+                                        color: Color(0xFF202020)),
+                                    child: NumberPicker(
+                                        textStyle: TextStyle(
+                                            color: Colors.white, fontSize: 15),
+                                        selectedTextStyle: TextStyle(
+                                          color: Color(0xFFFC5D53),
+                                          fontSize: 25,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                        itemHeight: 50,
+                                        itemWidth: 120,
+                                        minValue: 0,
+                                        maxValue: 100,
+                                        value: fallBelow,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            fallBelow = value;
+                                          });
+                                        }),
+                                  ),
+                                  Text(
+                                    "Fall below",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 15,
+                                        fontFamily: 'Montserrat',
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              child: Column(
+                                children: [
+                                  Container(
+                                    margin: EdgeInsets.only(bottom: 10),
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: Color(0xFF2E2E2E)),
+                                        borderRadius: BorderRadius.circular(20),
+                                        color: Color(0xFF202020)),
+                                    child: NumberPicker(
+                                        textStyle: TextStyle(
+                                            color: Colors.white, fontSize: 15),
+                                        selectedTextStyle: TextStyle(
+                                          color: Color(0xFF00D293),
+                                          fontSize: 25,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                        itemHeight: 50,
+                                        itemWidth: 120,
+                                        minValue: 0,
+                                        maxValue: 100,
+                                        value: riseAbove,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            riseAbove = value;
+                                          });
+                                        }),
+                                  ),
+                                  Text(
+                                    "Rise above",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 15,
+                                        fontFamily: 'Montserrat',
+                                        fontWeight: FontWeight.w400),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        // color: Colors.amber,
+                        margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      isAlert = !isAlert;
+                                    });
+                                  },
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    width: 130,
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                        color: Color(0xFF2E2E2E),
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    child: Text('Cancel',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontFamily: 'Montserrat',
+                                          fontSize: 17,
+                                        )),
+                                  )),
+                              // SizedBox(width: 11),
+                              GestureDetector(
+                                  onTap: null,
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    width: 130,
+                                    height: 50,
+                                    child: Text('Save',
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontFamily: 'Montserrat',
+                                          fontSize: 17,
+                                        )),
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                  )),
+                            ]),
+                      ),
+                    ]))));
   }
 
   Column alldata(String tag, String value) {

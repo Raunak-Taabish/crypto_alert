@@ -44,7 +44,7 @@ class _HomeState extends State<Home> {
   final databaseReference = FirebaseFirestore.instance;
 
   late Future getfav, matchfav;
-  List snap = [];
+  
 
   @override
   void initState() {
@@ -68,6 +68,7 @@ class _HomeState extends State<Home> {
   }
 
   Future<List> getFavouriteList() async {
+    List snap = [];
     List fav = [];
     try {
       print('Favourites working');
@@ -281,8 +282,8 @@ class _HomeState extends State<Home> {
                                 if (snapshot.hasData) {
                                   // crypto = snapshot.data as List<Crypto_Home>;
                                   return ListView.builder(
-                                      physics: const ScrollPhysics(
-                                          parent: BouncingScrollPhysics()),
+                                      // physics: const ScrollPhysics(
+                                      //     parent: BouncingScrollPhysics()),
                                       itemCount: crypto.length,
                                       itemBuilder:
                                           (BuildContext ctxt, int index) {
@@ -456,9 +457,9 @@ class _HomeState extends State<Home> {
                                             MediaQuery.of(context).size.height -
                                                 170,
                                         child: ListView.builder(
-                                            physics: const ScrollPhysics(
-                                                parent:
-                                                    BouncingScrollPhysics()),
+                                            // physics: const ScrollPhysics(
+                                            //     parent:
+                                            //         BouncingScrollPhysics()),
                                             itemCount: crypto_fav.length,
                                             itemBuilder: (BuildContext context,
                                                 int index) {
