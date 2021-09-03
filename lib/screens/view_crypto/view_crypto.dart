@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'package:crypto_alert/constant.dart';
+import 'package:crypto_alert/data/crypto_home.dart';
+import 'package:crypto_alert/data/crypto_list.dart';
 import 'package:crypto_alert/data/crypto_statistics.dart';
 import 'package:crypto_alert/screens/authentication/register.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -15,6 +17,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:numberpicker/numberpicker.dart';
+import 'package:crypto_alert/screens/favourites/favourites.dart';
 
 class View_Crypto extends StatefulWidget {
   final String cryptoid;
@@ -1189,6 +1192,12 @@ class _ViewCrypto_State extends State<View_Crypto> {
                                     saved
                                         ? deleteFavs(context)
                                         : addFav(context);
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) {
+                                              return favourites(Crypto_Home(cryptonames: widget.cryptoname, cryptoprices: widget.cryptoprice, cryptosymbols: , fallBelow: widget._controllerFB, logoId: logoId));
+                                            }));
                                   },
                                   child: Container(
                                     alignment: Alignment.center,
