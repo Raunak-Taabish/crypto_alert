@@ -36,8 +36,8 @@ class _ViewCrypto_State extends State<View_Crypto> {
   double price;
   _ViewCrypto_State({required this.price});
 
-  late int riseAbove=price.toInt(); //cryptoprice.toInt();
-  late int fallBelow=price.toInt(); //cryptoprice.toInt();
+  late int riseAbove = price.toInt(); //cryptoprice.toInt();
+  late int fallBelow = price.toInt(); //cryptoprice.toInt();
   bool isAlert = false;
   var age = 25;
   bool _visible = false;
@@ -996,31 +996,34 @@ class _ViewCrypto_State extends State<View_Crypto> {
                               child: Column(
                                 children: [
                                   Container(
-                                    margin: EdgeInsets.only(bottom: 10),
-                                    decoration: BoxDecoration(
-                                        border: Border.all(
-                                            color: Color(0xFF2E2E2E)),
-                                        borderRadius: BorderRadius.circular(20),
-                                        color: Color(0xFF202020)),
-                                    child: NumberPicker(
-                                        textStyle: TextStyle(
-                                            color: Colors.white, fontSize: 15),
-                                        selectedTextStyle: TextStyle(
-                                          color: Color(0xFFFC5D53),
-                                          fontSize: 25,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                        itemHeight: 50,
-                                        itemWidth: 120,
-                                        minValue: (price/2).toInt(),
-                                        maxValue: price.toInt()*2,
-                                        value: fallBelow,
-                                        onChanged: (value) {
-                                          setState(() {
-                                            fallBelow = value;
-                                          });
-                                        }),
-                                  ),
+                                      width: 50,
+                                      // margin: EdgeInsets.only(bottom: 10),
+                                      child: TextField()
+                                      // decoration: BoxDecoration(
+                                      //     border: Border.all(
+                                      //         color: Color(0xFF2E2E2E)),
+                                      //     borderRadius: BorderRadius.circular(20),
+                                      //     color: Color(0xFF202020)),
+                                      // child:
+                                      // child: NumberPicker(
+                                      //     textStyle: TextStyle(
+                                      //         color: Colors.white, fontSize: 15),
+                                      //     selectedTextStyle: TextStyle(
+                                      //       color: Color(0xFFFC5D53),
+                                      //       fontSize: 25,
+                                      //       fontWeight: FontWeight.w500,
+                                      //     ),
+                                      //     itemHeight: 50,
+                                      //     itemWidth: 120,
+                                      //     minValue: (price/2).toInt(),
+                                      //     maxValue: price.toInt()*2,
+                                      //     value: fallBelow,
+                                      //     onChanged: (value) {
+                                      //       setState(() {
+                                      //         fallBelow = value;
+                                      //       });
+                                      //     }),
+                                      ),
                                   Text(
                                     "Fall below",
                                     style: TextStyle(
@@ -1036,30 +1039,32 @@ class _ViewCrypto_State extends State<View_Crypto> {
                               child: Column(
                                 children: [
                                   Container(
-                                    margin: EdgeInsets.only(bottom: 10),
-                                    decoration: BoxDecoration(
-                                        border: Border.all(
-                                            color: Color(0xFF2E2E2E)),
-                                        borderRadius: BorderRadius.circular(20),
-                                        color: Color(0xFF202020)),
-                                    child: NumberPicker(
-                                        textStyle: TextStyle(
-                                            color: Colors.white, fontSize: 15),
-                                        selectedTextStyle: TextStyle(
-                                          color: Color(0xFF00D293),
-                                          fontSize: 25,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                        itemHeight: 50,
-                                        itemWidth: 120,
-                                        minValue: (price/2).toInt(),
-                                        maxValue: price.toInt()*2,
-                                        value: riseAbove,
-                                        onChanged: (value) {
-                                          setState(() {
-                                            riseAbove = value;
-                                          });
-                                        }),
+                                    width: 50,
+                                    // margin: EdgeInsets.only(bottom: 10),
+                                    // decoration: BoxDecoration(
+                                    //     border: Border.all(
+                                    //         color: Color(0xFF2E2E2E)),
+                                    //     borderRadius: BorderRadius.circular(20),
+                                    //     color: Color(0xFF202020)),
+                                    child: TextField(),
+                                    // child: NumberPicker(
+                                    //     textStyle: TextStyle(
+                                    //         color: Colors.white, fontSize: 15),
+                                    //     selectedTextStyle: TextStyle(
+                                    //       color: Color(0xFF00D293),
+                                    //       fontSize: 25,
+                                    //       fontWeight: FontWeight.w500,
+                                    //     ),
+                                    //     itemHeight: 50,
+                                    //     itemWidth: 120,
+                                    //     minValue: (price/2).toInt(),
+                                    //     maxValue: price.toInt()*2,
+                                    //     value: riseAbove,
+                                    //     onChanged: (value) {
+                                    //       setState(() {
+                                    //         riseAbove = value;
+                                    //       });
+                                    //     }),
                                   ),
                                   Text(
                                     "Rise above",
@@ -1074,6 +1079,8 @@ class _ViewCrypto_State extends State<View_Crypto> {
                             ),
                           ],
                         ),
+                        // width: 50,
+                        // child: TextFormField(),
                       ),
                       Container(
                         // color: Colors.amber,
