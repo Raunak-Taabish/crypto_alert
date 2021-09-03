@@ -36,14 +36,16 @@ class _ViewCrypto_State extends State<View_Crypto> {
   double price;
   _ViewCrypto_State({required this.price});
 
-  late int riseAbove = price.toInt(); //cryptoprice.toInt();
-  late int fallBelow = price.toInt(); //cryptoprice.toInt();
+  // late int riseAbove = price.toInt(); //cryptoprice.toInt();
+  // late int fallBelow = price.toInt(); //cryptoprice.toInt();
   bool isAlert = false;
   var age = 25;
   bool _visible = false;
   bool saved = false;
   List name = [];
   List<SalesData> closeprice = [];
+  late TextEditingController _controllerFB;
+  late TextEditingController _controllerRA;
   late DateTime currentDate;
   late Future futureNews;
   late String desc;
@@ -67,6 +69,10 @@ class _ViewCrypto_State extends State<View_Crypto> {
   @override
   void initState() {
     super.initState();
+    _controllerFB = new TextEditingController(
+        text: '${widget.cryptoprice.toStringAsFixed(2)}');
+    _controllerRA = new TextEditingController(
+        text: '${widget.cryptoprice.toStringAsFixed(2)}');
     currentDate = DateTime.now();
     // cryptoid.forEach((element) {
     //   if (element[1] == widget.cryptoid) {
@@ -928,6 +934,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
         width: MediaQuery.of(context).size.width,
         child: Center(
             child: Container(
+                margin: EdgeInsets.only(bottom: 100),
                 decoration: BoxDecoration(
                   border: Border.all(
                     color: Color(0xFF2E2E2E),
@@ -935,9 +942,9 @@ class _ViewCrypto_State extends State<View_Crypto> {
                   borderRadius: BorderRadius.circular(20),
                   color: Color(0xFF151515),
                 ),
-                padding: EdgeInsets.symmetric(horizontal: 25, vertical: 15),
-                width: MediaQuery.of(context).size.width * 0.85,
-                height: MediaQuery.of(context).size.height * 0.55,
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                width: MediaQuery.of(context).size.width * 0.9,
+                height: MediaQuery.of(context).size.height * 0.4,
                 // margin: EdgeIN,
                 // color: Color(0xFF151515),
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start,
@@ -990,48 +997,82 @@ class _ViewCrypto_State extends State<View_Crypto> {
                       ),
                       Container(
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             Container(
+                              margin: EdgeInsets.symmetric(
+                                  horizontal: 0, vertical: 20),
                               child: Column(
                                 children: [
                                   Container(
-                                      width: 50,
-                                      // margin: EdgeInsets.only(bottom: 10),
-                                      child: TextField()
-                                      // decoration: BoxDecoration(
-                                      //     border: Border.all(
-                                      //         color: Color(0xFF2E2E2E)),
-                                      //     borderRadius: BorderRadius.circular(20),
-                                      //     color: Color(0xFF202020)),
-                                      // child:
-                                      // child: NumberPicker(
-                                      //     textStyle: TextStyle(
-                                      //         color: Colors.white, fontSize: 15),
-                                      //     selectedTextStyle: TextStyle(
-                                      //       color: Color(0xFFFC5D53),
-                                      //       fontSize: 25,
-                                      //       fontWeight: FontWeight.w500,
-                                      //     ),
-                                      //     itemHeight: 50,
-                                      //     itemWidth: 120,
-                                      //     minValue: (price/2).toInt(),
-                                      //     maxValue: price.toInt()*2,
-                                      //     value: fallBelow,
-                                      //     onChanged: (value) {
-                                      //       setState(() {
-                                      //         fallBelow = value;
-                                      //       });
-                                      //     }),
+                                    width:
+                                        MediaQuery.of(context).size.width / 3,
+                                    // margin: EdgeInsets.only(bottom: 10),
+                                    child: TextField(
+                                      onChanged: (value) {
+                                        String fallBelowtext = value;
+                                        print(fallBelowtext);
+                                      },
+                                      style: TextStyle(
+                                          fontSize: 15.0,
+                                          color: Color(0xFFbdc6cf)),
+                                      controller: _controllerFB,
+                                      decoration: InputDecoration(
+                                        filled: true,
+                                        fillColor: Color(0xFF202020),
+                                        labelText: "Fall below",
+                                        labelStyle:
+                                            TextStyle(color: Colors.redAccent),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderSide:
+                                              BorderSide(color: Colors.white),
+                                        ),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderSide:
+                                              BorderSide(color: Colors.white),
+                                          // borderRadius:
+                                          // BorderRadius.circular(25.7),
+                                          // borderRadius:
+                                          // BorderRadius.circular(25.7),
+                                          //hintText: 'Username',
+                                          // contentPadding: const EdgeInsets.only(
+                                          //     left: 14.0, bottom: 8.0, top: 8.0),
+                                        ),
                                       ),
-                                  Text(
-                                    "Fall below",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 15,
-                                        fontFamily: 'Montserrat',
-                                        fontWeight: FontWeight.w400),
+                                    ),
                                   ),
+                                  // decoration: BoxDecoration(
+                                  //     border: Border.all(
+                                  //         color: Color(0xFF2E2E2E)),
+                                  //     borderRadius: BorderRadius.circular(20),
+                                  //     color: Color(0xFF202020)),
+                                  // child:
+                                  // child: NumberPicker(
+                                  //     textStyle: TextStyle(
+                                  //         color: Colors.white, fontSize: 15),
+                                  //     selectedTextStyle: TextStyle(
+                                  //       color: Color(0xFFFC5D53),
+                                  //       fontSize: 25,
+                                  //       fontWeight: FontWeight.w500,
+                                  //     ),
+                                  //     itemHeight: 50,
+                                  //     itemWidth: 120,
+                                  //     minValue: (price/2).toInt(),
+                                  //     maxValue: price.toInt()*2,
+                                  //     value: fallBelow,
+                                  //     onChanged: (value) {
+                                  //       setState(() {
+                                  //         fallBelow = value;
+                                  //       });
+                                  //     }),
+                                  // Text(
+                                  //   "Fall below",
+                                  //   style: TextStyle(
+                                  //       color: Colors.white,
+                                  //       fontSize: 15,
+                                  //       fontFamily: 'Montserrat',
+                                  //       fontWeight: FontWeight.w400),
+                                  // ),
                                 ],
                               ),
                             ),
@@ -1039,14 +1080,46 @@ class _ViewCrypto_State extends State<View_Crypto> {
                               child: Column(
                                 children: [
                                   Container(
-                                    width: 50,
+                                    width:
+                                        MediaQuery.of(context).size.width / 3,
                                     // margin: EdgeInsets.only(bottom: 10),
                                     // decoration: BoxDecoration(
                                     //     border: Border.all(
                                     //         color: Color(0xFF2E2E2E)),
                                     //     borderRadius: BorderRadius.circular(20),
                                     //     color: Color(0xFF202020)),
-                                    child: TextField(),
+                                    child: TextField(
+                                      onChanged: (value) {
+                                        String riseAbovetext = value;
+                                        print(riseAbovetext);
+                                      },
+                                      style: TextStyle(
+                                          fontSize: 15.0,
+                                          color: Color(0xFFbdc6cf)),
+                                      controller: _controllerRA,
+                                      decoration: InputDecoration(
+                                        filled: true,
+                                        fillColor: Color(0xFF202020),
+                                        labelText: "Rise above",
+                                        //hintText: widget.cryptoprice.toString(),
+                                        labelStyle: TextStyle(
+                                            color: Colors.greenAccent),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderSide:
+                                              BorderSide(color: Colors.white),
+                                        ),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderSide:
+                                              BorderSide(color: Colors.white),
+                                          // borderRadius:
+                                          // BorderRadius.circular(25.7),
+                                          // borderRadius:
+                                          // BorderRadius.circular(25.7),
+                                          // contentPadding: const EdgeInsets.only(
+                                          //     left: 14.0, bottom: 8.0, top: 8.0),
+                                        ),
+                                      ),
+                                    ),
                                     // child: NumberPicker(
                                     //     textStyle: TextStyle(
                                     //         color: Colors.white, fontSize: 15),
@@ -1066,14 +1139,14 @@ class _ViewCrypto_State extends State<View_Crypto> {
                                     //       });
                                     //     }),
                                   ),
-                                  Text(
-                                    "Rise above",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 15,
-                                        fontFamily: 'Montserrat',
-                                        fontWeight: FontWeight.w400),
-                                  )
+                                  // Text(
+                                  //   "Rise above",
+                                  //   style: TextStyle(
+                                  //       color: Colors.white,
+                                  //       fontSize: 15,
+                                  //       fontFamily: 'Montserrat',
+                                  //       fontWeight: FontWeight.w400),
+                                  // )
                                 ],
                               ),
                             ),
@@ -1086,7 +1159,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
                         // color: Colors.amber,
                         margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
                         child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               GestureDetector(
                                   onTap: () {
@@ -1096,7 +1169,8 @@ class _ViewCrypto_State extends State<View_Crypto> {
                                   },
                                   child: Container(
                                     alignment: Alignment.center,
-                                    width: 130,
+                                    width:
+                                        MediaQuery.of(context).size.width / 2.8,
                                     height: 50,
                                     decoration: BoxDecoration(
                                         color: Color(0xFF2E2E2E),
@@ -1118,7 +1192,8 @@ class _ViewCrypto_State extends State<View_Crypto> {
                                   },
                                   child: Container(
                                     alignment: Alignment.center,
-                                    width: 130,
+                                    width:
+                                        MediaQuery.of(context).size.width / 2.8,
                                     height: 50,
                                     child: Text('Save',
                                         style: TextStyle(
