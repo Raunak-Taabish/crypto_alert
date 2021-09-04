@@ -93,7 +93,7 @@ class _HomeState extends State<Home> {
       setState(() {
         alert_list = dummy;
       });
-      matchfav = matchFav(alert_list);
+        matchfav = matchFav(alert_list);
       return alert_list;
     } catch (e) {
       print(e.toString());
@@ -446,6 +446,7 @@ class _HomeState extends State<Home> {
                                   return Scaffold(
                                     backgroundColor: Colors.transparent,
                                     appBar: AppBar(
+                                      automaticallyImplyLeading: false,
                                       elevation: 0,
                                       toolbarHeight: 30,
                                       backgroundColor: Colors.transparent,
@@ -603,3 +604,6 @@ class _HomeState extends State<Home> {
     super.dispose();
   }
 }
+
+
+

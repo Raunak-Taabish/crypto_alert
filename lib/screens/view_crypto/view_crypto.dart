@@ -588,8 +588,8 @@ class _ViewCrypto_State extends State<View_Crypto> {
                                           Color(0xFF2F9FDB),
                                         ]),
                                     // name: 'Price in \$',
-                                    // emptyPointSettings: EmptyPointSettings(
-                                    //     mode: EmptyPointMode.average),
+                                    emptyPointSettings: EmptyPointSettings(
+                                        mode: EmptyPointMode.average),
                                     dataSource: closeprice,
                                     xValueMapper: (SalesData sales, _) =>
                                         DateFormat('d/MMM').format(sales.year),
