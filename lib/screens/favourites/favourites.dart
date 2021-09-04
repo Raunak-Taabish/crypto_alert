@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto_alert/data/crypto_home.dart';
 import 'package:crypto_alert/data/crypto_list.dart';
+import 'package:crypto_alert/screens/home.dart';
 import 'package:crypto_alert/screens/view_crypto/view_crypto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,7 @@ import '../../constant.dart';
 Container favourites(Crypto_Home crypto, Alert_List alert_list, context) {
   final User? user = FirebaseAuth.instance.currentUser;
   //final uid = user.uid;
+  double wid = MediaQuery.of(context).size.width;
   final databaseReference = FirebaseFirestore.instance;
   Future<void> deleteAlerts() async {
     try {
@@ -32,79 +34,250 @@ Container favourites(Crypto_Home crypto, Alert_List alert_list, context) {
       // checksaved(title,context);
     } catch (e) {
       displayToastMessage(e.toString(), context);
-    }}
+    }
+  }
+
   return Container(
-      decoration: BoxDecoration(
-        color: Color(0xFF1a1a1a),
-        borderRadius: BorderRadius.all(Radius.circular(10)),
-      ),
+      //color: Colors.amber,
       // alignment: Alignment.center,
       //height: 50,
-      padding: EdgeInsets.fromLTRB(15, 15, 15, 15),
-      margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
-      child: Row(
+      padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
+      margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+      child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Row(children: [
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
               Container(
-                height: 35,
-                width: 35,
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                  image: NetworkImage(
-                      "https://github.com/coinwink/cryptocurrency-logos/blob/master/coins/128x128/${crypto.logoId}.png?raw=true"),
-                  fit: BoxFit.fill,
-                )),
-              ),
-              Container(
-                padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
-                child: Text(
-                  crypto.cryptonames,
-                  //    + ' (' +
-                  //     cryptosymbols[index] +
-                  //     ')', // +cryptolist.length.toString(),
-                  style: const TextStyle(
-                      color: Colors.white, fontFamily: 'Montserrat'),
+                child: Row(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(right: 10),
+                      height: 25,
+                      width: 25,
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                        image: NetworkImage(
+                            "https://github.com/coinwink/cryptocurrency-logos/blob/master/coins/128x128/${crypto.logoId}.png?raw=true"),
+                        fit: BoxFit.fill,
+                      )),
+                    ),
+                    // SizedBox(
+                    //   width: MediaQuery.of(context).size.width * 0.03,
+                    // ),
+                    Text(
+                      crypto.cryptonames,
+                      //    + ' (' +
+                      //     cryptosymbols[index] +
+                      //     ')', // +cryptolist.length.toString(),
+                      style: const TextStyle(
+                          fontSize: 15,
+                          color: Colors.white,
+                          fontFamily: 'Montserrat'),
+                    ),
+                  ],
                 ),
               ),
-              Text(
-                '  ${alert_list.fallBelow.toString()}  ',
-                style: TextStyle(color: Colors.white),
-              ),
-              Text(
-                '  ${alert_list.riseAbove.toString()}  ',
-                style: TextStyle(color: Colors.white),
-              )
+              GestureDetector(
+                  onTap: () {
+                    deleteAlerts();
+                  },
+                  child: Icon(Icons.delete, color: Colors.white))
             ]),
-            Column(
-              children: [
-                Text(
-                  '${crypto.cryptoprices.toStringAsFixed(2)} \$',
-                  style: const TextStyle(
-                      color: Colors.white, fontFamily: 'Montserrat'),
-                ),
-                // Row(children: [
-                //   Icon(
-                //     crypto.daychange >= 0
-                //         ? Icons.arrow_drop_up_sharp
-                //         : Icons.arrow_drop_down_sharp,
-                //     size: 20,
-                //     color: crypto.daychange >= 0
-                //         ? Color(0xFF00D293)
-                //         : Color(0xFFFF493E),
-                //   ),
-                //   Text(
-                //     '${crypto.daychange.toStringAsFixed(2)}%',
-                //     style: TextStyle(
-                //         color: crypto.daychange >= 0
-                //             ? Color(0xFF00D293)
-                //             : Color(0xFFFF493E),
-                //         fontFamily: 'Montserrat'),
-                //   ),
-                // ]),
-              ],
+            Container(
+              height: MediaQuery.of(context).size.height / 12,
+              margin: EdgeInsets.only(top: 10),
+              padding: EdgeInsets.fromLTRB(35, 10, 0, 10),
+              //height: 50,
+              decoration: BoxDecoration(
+                color: Color(0xFF1a1a1a),
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+              ),
+              child: GridView.count(
+                physics: new NeverScrollableScrollPhysics(),
+                crossAxisCount: 2,
+                crossAxisSpacing: 0, //MediaQuery.of(context).size.width / 5,
+                children: [
+                  Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          child: Row(
+                            children: [
+                              Container(
+                                margin: EdgeInsets.only(right: 10),
+                                width: 10,
+                                height: 10,
+                                decoration: new BoxDecoration(
+                                  color: Color(0xFFFF493E),
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                              Container(
+                                child: Text(
+                                  "Below",
+                                  style: const TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.white,
+                                      fontFamily: 'Montserrat'),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.01,
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(left: 10),
+                          child: Text(
+                            '  ${alert_list.fallBelow.toString()}  ',
+                            style: const TextStyle(
+                                fontSize: 15,
+                                color: Colors.white,
+                                fontFamily: 'Montserrat'),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          child: Row(
+                            children: [
+                              Container(
+                                margin: EdgeInsets.only(right: 10),
+                                width: 10,
+                                height: 10,
+                                decoration: new BoxDecoration(
+                                  color: Color(0xFF00D293),
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                              Text(
+                                "Above",
+                                style: const TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.white,
+                                    fontFamily: 'Montserrat'),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.01,
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(left: 10),
+                          child: Text(
+                            '  ${alert_list.riseAbove.toString()}  ',
+                            style: const TextStyle(
+                                fontSize: 15,
+                                color: Colors.white,
+                                fontFamily: 'Montserrat'),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              // Row(
+
+              //     //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //     children: [
+              //       Container(
+              //         child: Column(
+              //           crossAxisAlignment: CrossAxisAlignment.start,
+              //           children: [
+              //             Container(
+              //               child: Row(
+              //                 children: [
+              //                   Container(
+              //                     margin: EdgeInsets.only(right: 10),
+              //                     width: 10,
+              //                     height: 10,
+              //                     decoration: new BoxDecoration(
+              //                       color: Color(0xFFFF493E),
+              //                       shape: BoxShape.circle,
+              //                     ),
+              //                   ),
+              //                   Container(
+              //                     child: Text(
+              //                       "Below",
+              //                       style: const TextStyle(
+              //                           fontSize: 12,
+              //                           color: Colors.white,
+              //                           fontFamily: 'Montserrat'),
+              //                     ),
+              //                   ),
+              //                 ],
+              //               ),
+              //             ),
+              //             SizedBox(
+              //               height: MediaQuery.of(context).size.height * 0.01,
+              //             ),
+              //             Container(
+              //               margin: EdgeInsets.only(left: 10),
+              //               child: Text(
+              //                 '  ${alert_list.fallBelow.toString()}  ',
+              //                 style: const TextStyle(
+              //                     fontSize: 15,
+              //                     color: Colors.white,
+              //                     fontFamily: 'Montserrat'),
+              //               ),
+              //             ),
+              //           ],
+              //         ),
+              //       ),
+
+              //       Container(
+              //         child: Column(
+              //           crossAxisAlignment: CrossAxisAlignment.start,
+              //           children: [
+              //             Container(
+              //               child: Row(
+              //                 children: [
+              //                   Container(
+              //                     margin: EdgeInsets.only(right: 10),
+              //                     width: 10,
+              //                     height: 10,
+              //                     decoration: new BoxDecoration(
+              //                       color: Color(0xFF00D293),
+              //                       shape: BoxShape.circle,
+              //                     ),
+              //                   ),
+              //                   Text(
+              //                     "Above",
+              //                     style: const TextStyle(
+              //                         fontSize: 14,
+              //                         color: Colors.white,
+              //                         fontFamily: 'Montserrat'),
+              //                   ),
+              //                 ],
+              //               ),
+              //             ),
+              //             SizedBox(
+              //               height: MediaQuery.of(context).size.height * 0.01,
+              //             ),
+              //             Container(
+              //               margin: EdgeInsets.only(left: 10),
+              //               child: Text(
+              //                 '  ${alert_list.riseAbove.toString()}  ',
+              //                 style: const TextStyle(
+              //                     fontSize: 15,
+              //                     color: Colors.white,
+              //                     fontFamily: 'Montserrat'),
+              //               ),
+              //             ),
+              //           ],
+              //         ),
+              //       ),
+              //     ])
             ),
-            GestureDetector(onTap: ()=> deleteAlerts(), child: Icon(Icons.delete, color: Colors.red))
           ]));
 }

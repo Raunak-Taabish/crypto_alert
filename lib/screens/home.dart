@@ -104,7 +104,7 @@ class _HomeState extends State<Home> {
 
   Future<List<Crypto_Home>> matchFav(List<Alert_List> snap) async {
     print("Crypto data matched with DB");
-    List names=[];
+    List names = [];
     snap.forEach((element) {
       names.add(element.crypto);
     });
@@ -443,68 +443,70 @@ class _HomeState extends State<Home> {
                               builder: (context, snapshot) {
                                 if (snapshot.hasData) {
                                   // crypto = snapshot.data as List<Crypto_Home>;
-                                  return Column(
-                                    children: [
-                                      Container(
-                                        padding:
-                                            EdgeInsets.fromLTRB(0, 0, 0, 5),
+                                  return Scaffold(
+                                    backgroundColor: Colors.transparent,
+                                    appBar: AppBar(
+                                      elevation: 0,
+                                      toolbarHeight: 30,
+                                      backgroundColor: Colors.transparent,
+                                      title: Container(
+                                        margin: EdgeInsets.only(bottom: 10),
                                         child: Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           children: [
-                                            Icon(Icons.arrow_downward,
-                                                color: Colors.grey),
-                                            Text('Pull down to refresh',
-                                                style: TextStyle(
-                                                    color: Colors.grey)),
+                                            Icon(
+                                              Icons.arrow_downward,
+                                              color: Colors.grey,
+                                              size: 15,
+                                            ),
+                                            Text(
+                                              'Pull down to refresh',
+                                              style: TextStyle(
+                                                  fontFamily: 'Montserrat',
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: Colors.grey),
+                                            ),
                                           ],
                                         ),
                                       ),
-                                      Container(
-                                        height:
-                                            MediaQuery.of(context).size.height -
-                                                170,
-                                        child: ListView.builder(
-                                            // physics: const ScrollPhysics(
-                                            //     parent:
-                                            //         BouncingScrollPhysics()),
-                                            itemCount: crypto_fav.length,
-                                            itemBuilder: (BuildContext context,
-                                                int index) {
-                                              return GestureDetector(
-                                                  onTap: () {
-                                                    setState(() {
-                                                      cryptoid
-                                                          .forEach((element) {
-                                                        if (element[0] ==
-                                                            crypto_fav[index]
-                                                                .cryptosymbols) {
-                                                          id = element[1];
-                                                          print(element[0]);
-                                                        }
-                                                      });
-                                                    });
-                                                    Navigator.push(context,
-                                                        MaterialPageRoute(
-                                                            builder: (context) {
-                                                      return View_Crypto(
-                                                          id,
-                                                          crypto_fav[index]
-                                                              .cryptonames,
-                                                          crypto_fav[index]
-                                                              .cryptoprices,
-                                                          crypto_fav[index]
-                                                              .daychange,
-                                                          crypto_fav[index]
-                                                              .logoId);
-                                                    }));
-                                                  },
-                                                  child: favourites(
-                                                      crypto_fav[index],
-                                                      alert_list[index], context));
-                                            }),
-                                      ),
-                                    ],
+                                    ),
+                                    body: ListView.builder(
+                                        itemCount: crypto_fav.length,
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          return GestureDetector(
+                                              onTap: () {
+                                                setState(() {
+                                                  cryptoid.forEach((element) {
+                                                    if (element[0] ==
+                                                        crypto_fav[index]
+                                                            .cryptosymbols) {
+                                                      id = element[1];
+                                                      print(element[0]);
+                                                    }
+                                                  });
+                                                });
+                                                Navigator.push(context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) {
+                                                  return View_Crypto(
+                                                      id,
+                                                      crypto_fav[index]
+                                                          .cryptonames,
+                                                      crypto_fav[index]
+                                                          .cryptoprices,
+                                                      crypto_fav[index]
+                                                          .daychange,
+                                                      crypto_fav[index].logoId);
+                                                }));
+                                              },
+                                              child: favourites(
+                                                  crypto_fav[index],
+                                                  alert_list[index],
+                                                  context));
+                                        }),
                                   );
                                 } else {
                                   return Center(
