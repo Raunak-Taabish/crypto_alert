@@ -100,8 +100,8 @@ class _ViewCrypto_State extends State<View_Crypto> {
           .doc(widget.cryptoname)
           .set({
         'crypto_name': widget.cryptoname,
-        'rise_above': _controllerFB.text,
-        'fall_below': _controllerRA.text,
+        'rise_above': _controllerRA.text,
+        'fall_below': _controllerFB.text,
       });
       displayToastMessage('Your alerts are saved', context);
       if (mounted) {
@@ -1189,14 +1189,14 @@ class _ViewCrypto_State extends State<View_Crypto> {
                               // SizedBox(width: 11),
                               GestureDetector(
                                   onTap: () {
-                                    isAlert=!isAlert;
+                                    isAlert = !isAlert;
                                     addFav(context);
-                                    // Navigator.push(
-                                    //     context,
-                                    //     MaterialPageRoute(
-                                    //         builder: (context) {
-                                    //           return ;//favourites(Crypto_Home(cryptonames: widget.cryptoname, cryptoprices: widget.cryptoprice, cryptosymbols: '', daychange: 0.0, logoId: 0));
-                                    //         }));
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) {
+                                      return Home(
+                                        pindex: 1,
+                                      );
+                                    }));
                                   },
                                   child: Container(
                                     alignment: Alignment.center,

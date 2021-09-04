@@ -190,7 +190,7 @@ class _Login_RegisterState extends State<Login_Register> {
 
         // currentState!.save();
         Navigator.push(context,
-            MaterialPageRoute(builder: (BuildContext context) => Home()));
+            MaterialPageRoute(builder: (BuildContext context) => Home(pindex: 0)));
         displayToastMessage('Welcome', context);
       } else {
         setState(() {

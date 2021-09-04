@@ -254,7 +254,7 @@ class _LoginState extends State<Login> {
 
         // SchedulerBinding.instance.addPostFrameCallback((_) {
         Navigator.push(context,
-            MaterialPageRoute(builder: (BuildContext context) => Home()));
+            MaterialPageRoute(builder: (BuildContext context) => Home(pindex: 0,)));
         //visible=!visible;
         // });
 
@@ -296,7 +296,7 @@ class _LoginState extends State<Login> {
 
         // _formKey.currentState!.save();
         Navigator.push(context,
-            MaterialPageRoute(builder: (BuildContext context) => Home()));
+            MaterialPageRoute(builder: (BuildContext context) => Home(pindex: 0,)));
         displayToastMessage('Welcome', context);
       } else {
         setState(() {

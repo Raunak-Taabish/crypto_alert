@@ -25,7 +25,7 @@ class Register extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(home: _RegisterPage(), routes: {
-      'homepage': (context) => Home(),
+      'homepage': (context) => Home(pindex: 0,),
       'login': (context) => Login(),
     });
   }

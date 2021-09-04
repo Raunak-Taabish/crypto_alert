@@ -81,6 +81,10 @@ Container favourites(Crypto_Home crypto, Alert_List alert_list, context) {
               GestureDetector(
                   onTap: () {
                     deleteAlerts();
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return Home(pindex: 1,);
+                    }));
                   },
                   child: Icon(Icons.delete, color: Colors.white))
             ]),

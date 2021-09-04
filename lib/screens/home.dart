@@ -20,19 +20,24 @@ import 'package:anim_search_bar/anim_search_bar.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 class Home extends StatefulWidget {
-  Home({Key? key}) : super(key: key);
+  int pindex;
+  Home({required this.pindex, Key? key}) : super(key: key);
 
   @override
-  _HomeState createState() => _HomeState();
+  // ignore: no_logic_in_create_state
+  _HomeState createState() => _HomeState(pageIndex: pindex);
 }
 
 class _HomeState extends State<Home> {
+  int pageIndex;
+  _HomeState({required this.pageIndex});
+  // late Home getp;
   late Timer timer;
   late String id;
   String name = '';
   List logo = [];
   int index = 0;
-  int _pageIndex = 0;
+  // int pageIndex = pgindex;
   late PageController _pageController;
   late Future getCryptoData;
   late Future getnews;
@@ -49,7 +54,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    _pageController = PageController(initialPage: _pageIndex);
+    _pageController = PageController(initialPage: pageIndex);
     getCryptoData = getCryptos();
     getnews = getNews();
     getfav = getFavouriteList();
@@ -58,7 +63,7 @@ class _HomeState extends State<Home> {
 
   void onPageChanged(int page) {
     setState(() {
-      this._pageIndex = page;
+      this.pageIndex = page;
     });
   }
 
@@ -93,7 +98,7 @@ class _HomeState extends State<Home> {
       setState(() {
         alert_list = dummy;
       });
-        matchfav = matchFav(alert_list);
+      matchfav = matchFav(alert_list);
       return alert_list;
     } catch (e) {
       print(e.toString());
@@ -443,72 +448,49 @@ class _HomeState extends State<Home> {
                               builder: (context, snapshot) {
                                 if (snapshot.hasData) {
                                   // crypto = snapshot.data as List<Crypto_Home>;
-                                  return Scaffold(
-                                    backgroundColor: Colors.transparent,
-                                    appBar: AppBar(
-                                      automaticallyImplyLeading: false,
-                                      elevation: 0,
-                                      toolbarHeight: 30,
-                                      backgroundColor: Colors.transparent,
-                                      title: Container(
-                                        margin: EdgeInsets.only(bottom: 10),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Icon(
-                                              Icons.arrow_downward,
-                                              color: Colors.grey,
-                                              size: 15,
-                                            ),
-                                            Text(
-                                              'Pull down to refresh',
-                                              style: TextStyle(
-                                                  fontFamily: 'Montserrat',
-                                                  fontSize: 13,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: Colors.grey),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    body: ListView.builder(
-                                        itemCount: crypto_fav.length,
-                                        itemBuilder:
-                                            (BuildContext context, int index) {
-                                          return GestureDetector(
-                                              onTap: () {
-                                                setState(() {
-                                                  cryptoid.forEach((element) {
-                                                    if (element[0] ==
-                                                        crypto_fav[index]
-                                                            .cryptosymbols) {
-                                                      id = element[1];
-                                                      print(element[0]);
-                                                    }
+                                  return crypto_fav.length != 0
+                                      ? ListView.builder(
+                                          itemCount: crypto_fav.length,
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
+                                            return GestureDetector(
+                                                onTap: () {
+                                                  setState(() {
+                                                    cryptoid.forEach((element) {
+                                                      if (element[0] ==
+                                                          crypto_fav[index]
+                                                              .cryptosymbols) {
+                                                        id = element[1];
+                                                        print(element[0]);
+                                                      }
+                                                    });
                                                   });
-                                                });
-                                                Navigator.push(context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) {
-                                                  return View_Crypto(
-                                                      id,
-                                                      crypto_fav[index]
-                                                          .cryptonames,
-                                                      crypto_fav[index]
-                                                          .cryptoprices,
-                                                      crypto_fav[index]
-                                                          .daychange,
-                                                      crypto_fav[index].logoId);
-                                                }));
-                                              },
-                                              child: favourites(
-                                                  crypto_fav[index],
-                                                  alert_list[index],
-                                                  context));
-                                        }),
-                                  );
+                                                  Navigator.push(context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) {
+                                                    return View_Crypto(
+                                                        id,
+                                                        crypto_fav[index]
+                                                            .cryptonames,
+                                                        crypto_fav[index]
+                                                            .cryptoprices,
+                                                        crypto_fav[index]
+                                                            .daychange,
+                                                        crypto_fav[index]
+                                                            .logoId);
+                                                  }));
+                                                },
+                                                child: favourites(
+                                                    crypto_fav[index],
+                                                    alert_list[index],
+                                                    context));
+                                          })
+                                      : Center(
+                                          child: Text(
+                                              'Your list seems to be empty',
+                                              style: TextStyle(
+                                                  color: Colors.grey)),
+                                        );
                                 } else {
                                   return Center(
                                     child: CircularProgressIndicator(
@@ -545,14 +527,14 @@ class _HomeState extends State<Home> {
         type: BottomNavigationBarType.fixed,
         selectedItemColor: Colors.white,
         backgroundColor: const Color(0xFF151515),
-        currentIndex: _pageIndex,
+        currentIndex: pageIndex,
         onTap: onTabTapped,
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(
               Icons.home_rounded,
-              color: _pageIndex == 0 ? Colors.white : Colors.grey,
-              size: _pageIndex == 0 ? 28 : 25,
+              color: pageIndex == 0 ? Colors.white : Colors.grey,
+              size: pageIndex == 0 ? 28 : 25,
             ),
             title: Text(
               "Home",
@@ -560,11 +542,11 @@ class _HomeState extends State<Home> {
             ),
           ),
           BottomNavigationBarItem(
-            // icon: Image.asset('assets/images/Icon.png', scale: _pageIndex == 1 ? 3.5 : 4,color: _pageIndex == 1 ? Colors.white : Colors.grey,),
+            // icon: Image.asset('assets/images/Icon.png', scale: pageIndex == 1 ? 3.5 : 4,color: pageIndex == 1 ? Colors.white : Colors.grey,),
             icon: Icon(
               Icons.notifications_active,
-              color: _pageIndex == 1 ? Colors.white : Colors.grey,
-              size: _pageIndex == 1 ? 28 : 25,
+              color: pageIndex == 1 ? Colors.white : Colors.grey,
+              size: pageIndex == 1 ? 28 : 25,
             ),
             title: Text(
               "Alerts",
@@ -574,8 +556,8 @@ class _HomeState extends State<Home> {
           BottomNavigationBarItem(
             icon: Icon(
               Icons.menu_book_rounded,
-              color: _pageIndex == 2 ? Colors.white : Colors.grey,
-              size: _pageIndex == 2 ? 28 : 25,
+              color: pageIndex == 2 ? Colors.white : Colors.grey,
+              size: pageIndex == 2 ? 28 : 25,
             ),
             title: Text(
               "News",
@@ -585,8 +567,8 @@ class _HomeState extends State<Home> {
           BottomNavigationBarItem(
             icon: Icon(
               Icons.menu,
-              color: _pageIndex == 3 ? Colors.white : Colors.grey,
-              size: _pageIndex == 3 ? 28 : 25,
+              color: pageIndex == 3 ? Colors.white : Colors.grey,
+              size: pageIndex == 3 ? 28 : 25,
             ),
             title: Text(
               "Menu",
@@ -604,6 +586,3 @@ class _HomeState extends State<Home> {
     super.dispose();
   }
 }
-
-
-

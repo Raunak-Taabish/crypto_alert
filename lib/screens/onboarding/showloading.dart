@@ -59,7 +59,7 @@ class _ShowLoadingState extends State<ShowLoading> {
                       ),
                     ),
                   ),
-                  nextScreen: Home(),
+                  nextScreen: Home(pindex: 0,),
                   splashTransition: SplashTransition.fadeTransition,
                   backgroundColor: Color(0xFF151515)),
             );
