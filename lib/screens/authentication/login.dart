@@ -82,8 +82,7 @@ class _LoginState extends State<Login> {
                         controller: _emailidController,
                         keyboardType: TextInputType.emailAddress,
                         style: const TextStyle(
-                            color: Colors.white,
-                            fontFamily: 'Montserrat'),
+                            color: Colors.white, fontFamily: 'Montserrat'),
                         decoration: const InputDecoration(
                           filled: true,
                           fillColor: Colors.transparent,
@@ -102,8 +101,7 @@ class _LoginState extends State<Login> {
                         obscureText: !_passwordVisible,
                         keyboardType: TextInputType.visiblePassword,
                         style: const TextStyle(
-                            color: Colors.white,
-                            fontFamily: 'Montserrat'),
+                            color: Colors.white, fontFamily: 'Montserrat'),
                         decoration: InputDecoration(
                           suffixIcon: IconButton(
                               icon: Icon(
@@ -169,7 +167,8 @@ class _LoginState extends State<Login> {
                                     ),
                                   ),
                                   Image(
-                                    image: AssetImage("assets/images/google_logo.png"),
+                                    image: AssetImage(
+                                        "assets/images/google_logo.png"),
                                     height: 20.0,
                                   ),
                                   Text(
@@ -253,8 +252,18 @@ class _LoginState extends State<Login> {
             password: _passwordController.text.trim());
 
         // SchedulerBinding.instance.addPostFrameCallback((_) {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (BuildContext context) => Home(pindex: 0,)));
+        // Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //         builder: (BuildContext context) => Home(
+        //               pindex: 0,
+        //             )));
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+                builder: (context) => Home(
+                      pindex: 0,
+                    )),
+            (Route<dynamic> route) => false);
         //visible=!visible;
         // });
 
@@ -295,8 +304,14 @@ class _LoginState extends State<Login> {
         dbRef.child(currentuser.uid).set(userDataMap);
 
         // _formKey.currentState!.save();
-        Navigator.push(context,
-            MaterialPageRoute(builder: (BuildContext context) => Home(pindex: 0,)));
+        // Navigator.push(context,
+        //     MaterialPageRoute(builder: (BuildContext context) => Home(pindex: 0,)));
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+                builder: (context) => Home(
+                      pindex: 0,
+                    )),
+            (Route<dynamic> route) => false);
         displayToastMessage('Welcome', context);
       } else {
         setState(() {

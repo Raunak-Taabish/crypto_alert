@@ -83,11 +83,10 @@ class _OnBoardingState extends State<OnBoarding> {
                               //     return Home();
                               //   }));
                             })
-                          : Navigator.push(
-                              context,
+                          : Navigator.of(context).pushAndRemoveUntil(
                               MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      ShowLoading()));
+                                  builder: (context) => ShowLoading()),
+                              (Route<dynamic> route) => false);
                     },
                     child: const Icon(
                       Icons.arrow_forward_ios,

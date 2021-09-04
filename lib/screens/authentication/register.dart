@@ -374,9 +374,10 @@ class _LoginDemoState extends State<_RegisterPage> {
         };
         dbRef.child(currentuser.uid).set(userDataMap);
         _formKey.currentState!.save();
-        Navigator.push(
-            context,
-            MaterialPageRoute(builder: (BuildContext context) => OnBoarding()));
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+                builder: (context) => OnBoarding()),
+            (Route<dynamic> route) => false);
         displayToastMessage('Account Created', context);
       
     } catch (e) {

@@ -1,6 +1,7 @@
 import 'package:crypto_alert/screens/authentication/login.dart';
 import 'package:crypto_alert/screens/authentication/register.dart';
 import 'package:crypto_alert/screens/home.dart';
+import 'package:crypto_alert/screens/onboarding/onboarding.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -106,7 +107,8 @@ class _Login_RegisterState extends State<Login_Register> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             Image(
-                              image: AssetImage("assets/images/google_logo.png"),
+                              image:
+                                  AssetImage("assets/images/google_logo.png"),
                               height: 20.0,
                             ),
                             Text(
@@ -164,7 +166,8 @@ class _Login_RegisterState extends State<Login_Register> {
       ),
     );
   }
-   Future<void> googleSignIn(BuildContext context) async {
+
+  Future<void> googleSignIn(BuildContext context) async {
     try {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
@@ -177,36 +180,51 @@ class _Login_RegisterState extends State<Login_Register> {
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
-      final User? currentuser =
-          (await auth.signInWithCredential(credential)).user;
-      if (currentuser != null) {
-        dbRef.child(currentuser.uid);
-        Map userDataMap = {
-          'name': currentuser.displayName,
-          'email': currentuser.email,
-          'profile': currentuser.photoURL,
-        };
-        dbRef.child(currentuser.uid).set(userDataMap);
-
-        // currentState!.save();
-        Navigator.push(context,
-            MaterialPageRoute(builder: (BuildContext context) => Home(pindex: 0)));
-        displayToastMessage('Welcome', context);
+      var authResult = await auth.signInWithCredential(credential);
+      if (authResult.additionalUserInfo!.isNewUser) {
+        //User logging in for the first time
+        // Redirect user to tutorial
+        final User? currentuser =
+            (await auth.signInWithCredential(credential)).user;
+        if (currentuser != null) {
+          dbRef.child(currentuser.uid);
+          Map userDataMap = {
+            'name': currentuser.displayName,
+            'email': currentuser.email,
+            'profile': currentuser.photoURL,
+          };
+          dbRef.child(currentuser.uid).set(userDataMap);
+          // currentState!.save();
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => OnBoarding()),
+              (Route<dynamic> route) => false);
+          // displayToastMessage('Welcome ${currentuser.displayName}', context);
+        } else {
+          setState(() {
+            gvisible = load(gvisible);
+          });
+          // displayToastMessage('Some error has occured', context);
+        }
       } else {
-        setState(() {
-          gvisible = load(gvisible);
-        });
-        // displayToastMessage('Some error has occured', context);
+        //User has already logged in before.
+        //Show user profile
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+                builder: (context) => Home(
+                      pindex: 0,
+                    )),
+            (Route<dynamic> route) => false);
       }
     } catch (e) {
       setState(() {
         gvisible = load(gvisible);
       });
-      displayToastMessage('error', context);
-      print('error is this:    $e');
+      displayToastMessage(e.toString(), context);
+      print('Error in Google Signin:    $e');
     }
   }
-    bool load(visible) {
+
+  bool load(visible) {
     return visible = !visible;
   }
 }
