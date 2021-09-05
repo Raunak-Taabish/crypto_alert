@@ -135,55 +135,55 @@ class _LoginState extends State<Login> {
                       ),
                       Container(
                         child: Column(children: [
-                          Container(
-                            padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
-                            width: double.infinity,
-                            height: 50,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                // primary: Colors.black45,
-                                primary: Colors.white,
-                                onPrimary: Colors.black,
-                                //side: BorderSide(color: Colors.white70,
-                                elevation: 0,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(50.0),
-                                ),
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  gvisible = load(gvisible);
-                                });
-                                googleSignIn(context);
-                              },
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Text(
-                                    'Login with ',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontFamily: 'Montserrat',
-                                    ),
-                                  ),
-                                  Image(
-                                    image: AssetImage(
-                                        "assets/images/google_logo.png"),
-                                    height: 20.0,
-                                  ),
-                                  Text(
-                                    'oogle',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontFamily: 'Montserrat',
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
+                          // Container(
+                          //   padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                          //   width: double.infinity,
+                          //   height: 50,
+                          //   child: ElevatedButton(
+                          //     style: ElevatedButton.styleFrom(
+                          //       // primary: Colors.black45,
+                          //       primary: Colors.white,
+                          //       onPrimary: Colors.black,
+                          //       //side: BorderSide(color: Colors.white70,
+                          //       elevation: 0,
+                          //       shape: RoundedRectangleBorder(
+                          //         borderRadius: BorderRadius.circular(50.0),
+                          //       ),
+                          //     ),
+                          //     onPressed: () {
+                          //       setState(() {
+                          //         gvisible = load(gvisible);
+                          //       });
+                          //       googleSignIn(context);
+                          //     },
+                          //     child: Row(
+                          //       mainAxisAlignment: MainAxisAlignment.center,
+                          //       children: <Widget>[
+                          //         Text(
+                          //           'Login with ',
+                          //           style: TextStyle(
+                          //             fontWeight: FontWeight.w600,
+                          //             fontFamily: 'Montserrat',
+                          //           ),
+                          //         ),
+                          //         Image(
+                          //           image: AssetImage(
+                          //               "assets/images/google_logo.png"),
+                          //           height: 20.0,
+                          //         ),
+                          //         Text(
+                          //           'oogle',
+                          //           style: TextStyle(
+                          //             fontWeight: FontWeight.w600,
+                          //             fontFamily: 'Montserrat',
+                          //           ),
+                          //         )
+                          //       ],
+                          //     ),
+                          //   ),
+                          // ),
                           SizedBox(
-                            height: 20,
+                            height: 70,
                           ),
                           Container(
                             padding: EdgeInsets.fromLTRB(5, 0, 5, 0),

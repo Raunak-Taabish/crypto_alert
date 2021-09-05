@@ -15,7 +15,6 @@ import 'package:crypto_alert/data/crypto_list.dart';
 import 'package:intl/intl.dart';
 import 'package:crypto_alert/data/constant.dart';
 
-
 class Home extends StatefulWidget {
   int pindex;
   Home({required this.pindex, Key? key}) : super(key: key);
@@ -65,7 +64,7 @@ class _HomeState extends State<Home> {
     search();
     // getfav = getFavouriteList();
   }
-  
+
   void onPageChanged(int page) {
     setState(() {
       this.pageIndex = page;
@@ -287,6 +286,7 @@ class _HomeState extends State<Home> {
                 width: MediaQuery.of(context).size.width / 3,
               )
             : Row(
+                //crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Flexible(
                     flex: 1,
@@ -298,9 +298,9 @@ class _HomeState extends State<Home> {
                             profile = (snapshot.data?.value).toString();
                             print(profile);
                             return Container(
-                              height: 50,
-                              width: 50,
-                              margin: EdgeInsets.fromLTRB(0, 8, 10, 0),
+                              height: 45,
+                              width: 45,
+                              margin: EdgeInsets.fromLTRB(10, 8, 10, 0),
                               decoration: BoxDecoration(
                                 image: DecorationImage(
                                     image: NetworkImage(profile)),
@@ -314,7 +314,7 @@ class _HomeState extends State<Home> {
                             return Container(
                               height: 50,
                               width: 50,
-                              margin: EdgeInsets.fromLTRB(0, 8, 10, 0),
+                              margin: EdgeInsets.fromLTRB(10, 8, 10, 0),
                               child: Image.asset(
                                 'assets/images/defaultAccount.png',
                                 fit: BoxFit.cover,
@@ -332,7 +332,7 @@ class _HomeState extends State<Home> {
                           if (snapshot.hasData) {
                             name = (snapshot.data?.value).toString();
                             return Container(
-                              margin: EdgeInsets.fromLTRB(0, 15, 0, 0),
+                              margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
                               child: Text(
                                 name,
                                 style: TextStyle(fontFamily: 'Montserrat'),
@@ -397,7 +397,7 @@ class _HomeState extends State<Home> {
                                     bottomRight: const Radius.circular(32)),
                               ),
                               child: Icon(_folded ? Icons.search : Icons.close,
-                                  color: Colors.white, size: 28),
+                                  color: Colors.white, size: 25),
                             ),
                             onTap: () {
                               setState(() {
