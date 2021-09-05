@@ -54,7 +54,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
   late DateTime currentDate;
   late Future futureNews;
   late String desc;
-  late Future getinfo, getcryptodetails, getcryptostatistics;
+  late Future getinfo, getcryptodetails, getcryptostatistics, checkAlerts;
   late String CryptoURL;
   int selectedTab = 0;
 
@@ -89,6 +89,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
     getinfo = getCryptoInfo();
     getcryptodetails = getCryptoGraphData();
     getcryptostatistics = getCryptoStatistics();
+    checkAlerts = checkAlert();
   }
 
   Future<void> addFav(BuildContext context) async {
@@ -166,36 +167,36 @@ class _ViewCrypto_State extends State<View_Crypto> {
   //   // print(ref.id);
   // }
 
-  // void checksaved(BuildContext context) async {
-  //   //add index argument
+  Future<void> checkAlert() async {
+    //add index argument
 
-  //   try {
-  //     // ignore: await_only_futures
-  //     var snap = await databaseReference
-  //         .collection("users")
-  //         .doc(user!.uid)
-  //         .collection('fav_cryptos')
-  //         .where('crypto_name', isEqualTo: widget.cryptoname)
-  //         .get();
-  //     //((result) => {
-  //     // print(value.data.contains(title));
-  //     // for(var doc in snap.docs) {
-  //     print(snap.docs.toList());
-  //     if (snap.docs.isNotEmpty) {
-  //       if (mounted) {
-  //         setState(() => {saved = true});
-  //       }
-  //       // print(title);
-  //     } else {
-  //       if (mounted) {
-  //         setState(() => {saved = false});
-  //       }
-  //       // print(title+'false');
-  //     }
-  //   } catch (e) {
-  //     displayToastMessage(e.toString(), context);
-  //   }
-  // }
+    try {
+      // ignore: await_only_futures
+      var snap = await databaseReference
+          .collection("users")
+          .doc(user!.uid)
+          .collection('alert_list')
+          .where('crypto_name', isEqualTo: widget.cryptoname)
+          .get();
+      //((result) => {
+      // print(value.data.contains(title));
+      // for(var doc in snap.docs) {
+      print(snap.docs.toList());
+      if (snap.docs.isNotEmpty) {
+        if (mounted) {
+          setState(() => {saved = true});
+        }
+        // print(title);
+      } else {
+        if (mounted) {
+          setState(() => {saved = false});
+        }
+        // print(title+'false');
+      }
+    } catch (e) {
+      displayToastMessage(e.toString(), context);
+    }
+  }
 
   Future<Crypto_Statistics> getCryptoStatistics() async {
     // String key = 'aec925c7-3059-4a11-8592-b99deb474b47';
@@ -426,27 +427,53 @@ class _ViewCrypto_State extends State<View_Crypto> {
         floatingActionButton: Container(
           margin: EdgeInsets.only(bottom: 0),
           child: !isAlert
-              ? FloatingActionButton.extended(
-                  backgroundColor: Colors.white,
-                  onPressed: () {
-                    setState(() {
-                      isAlert = !isAlert;
-                    });
-                  },
-                  isExtended: true,
-                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  icon: Image.asset(
-                    'assets/images/add.png',
-                    width: 15,
-                    height: 15,
-                  ),
-                  label: Text(
-                    'Add Alert',
-                    style: blackboldText,
-                  ),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(12.0))),
-                )
+              ? saved
+                  ? FloatingActionButton.extended(
+                      backgroundColor: Colors.white,
+                      onPressed: () {
+                        setState(() {
+                          isAlert = !isAlert;
+                        });
+                      },
+                      isExtended: true,
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      icon: Icon(Icons.mode_edit_outline_outlined,
+                          color: Colors.black),
+                      // Image.asset(
+                      //   'assets/images/add.png',
+                      //   width: 15,
+                      //   height: 15,
+                      // ),
+                      label: Text(
+                        'Edit Alert',
+                        style: blackboldText,
+                      ),
+                      shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(12.0))),
+                    )
+                  : FloatingActionButton.extended(
+                      backgroundColor: Colors.white,
+                      onPressed: () {
+                        setState(() {
+                          isAlert = !isAlert;
+                        });
+                      },
+                      isExtended: true,
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      icon: Image.asset(
+                        'assets/images/add.png',
+                        width: 15,
+                        height: 15,
+                      ),
+                      label: Text(
+                        'Add Alert',
+                        style: blackboldText,
+                      ),
+                      shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(12.0))),
+                    )
               : Center(),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
@@ -792,7 +819,8 @@ class _ViewCrypto_State extends State<View_Crypto> {
                                 );
                               } else {
                                 return const Center(
-                                    child: CircularProgressIndicator());
+                                    child: CircularProgressIndicator(
+                                        color: Colors.white));
                               }
                             })
                       ],
@@ -839,10 +867,11 @@ class _ViewCrypto_State extends State<View_Crypto> {
                                 itemCount: pull.length,
                                 itemBuilder: (context, index) {
                                   return Container(
-                                    margin: EdgeInsets.all(10),
+                                    margin: EdgeInsets.fromLTRB(20, 10, 10, 10),
                                     //color: Colors.amber,
                                     child: Row(
-                                      //crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Container(
                                           width: MediaQuery.of(context)
@@ -864,45 +893,48 @@ class _ViewCrypto_State extends State<View_Crypto> {
                                                 // colorFilter: new ColorFilter.mode(
                                                 //     Colors.black45, BlendMode.darken),
                                                 ),
-                                            color: Colors.black87,
+                                            color: Colors.white,
                                             borderRadius:
                                                 BorderRadius.circular(10),
                                           ),
                                         ),
-                                        Container(
-                                          margin:
-                                              EdgeInsets.fromLTRB(10, 5, 5, 5),
-                                          //color: Colors.black,
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              1.48,
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                pull[index].title,
-                                                style: TextStyle(
-                                                  fontFamily: 'Montserrat',
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w500,
-                                                  color: Colors.white,
+                                        Flexible(
+                                          child: Container(
+                                            margin: EdgeInsets.fromLTRB(
+                                                10, 5, 0, 5),
+                                            //color: Colors.black,
+                                            // width: MediaQuery.of(context)
+                                            //         .size
+                                            //         .width /
+                                            //     1.48,
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  pull[index].title,
+                                                  style: TextStyle(
+                                                    fontFamily: 'Montserrat',
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Colors.white,
+                                                  ),
+                                                  maxLines: 2,
                                                 ),
-                                                maxLines: 2,
-                                              ),
-                                              Text(
-                                                pull[index].source,
-                                                style: regularText,
-                                              ),
-                                              Text(
-                                                DateFormat('hh:mm aaa').format(
-                                                    pull[index].publishedAt),
-                                                style: regularText,
-                                              ),
-                                            ],
+                                                Text(
+                                                  pull[index].source,
+                                                  style: regularText,
+                                                ),
+                                                Text(
+                                                  DateFormat('hh:mm aaa')
+                                                      .format(pull[index]
+                                                          .publishedAt),
+                                                  style: regularText,
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ],
@@ -912,7 +944,8 @@ class _ViewCrypto_State extends State<View_Crypto> {
                           );
                         } else {
                           return const Center(
-                            child: CircularProgressIndicator(),
+                            child:
+                                CircularProgressIndicator(color: Colors.white),
                           );
                         }
                       }),

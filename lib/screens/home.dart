@@ -283,90 +283,133 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Image.asset(
-          "assets/images/logoname.png",
-          width: MediaQuery.of(context).size.width / 3,
-        ),
+        title: pageIndex == 3
+            ? Image.asset(
+                "assets/images/logoname.png",
+                width: MediaQuery.of(context).size.width / 3,
+              )
+            : Row(
+                children: [
+                  Flexible(
+                    flex: 2,
+                    child: Container(
+                      height: 45,
+                      width: 45,
+                      margin: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        // borderRadius: BorderRadius.circular(32),
+                        color: Color(0xFF1a1a1a),
+                        boxShadow: kElevationToShadow[6],
+                      ),
+                      child: Image.asset("assets/images/defaultAccount.png",
+                          fit: BoxFit.cover),
+                    ),
+                  ),
+                  Flexible(
+                    flex: 1,
+                    child: FutureBuilder(
+                        future: dbRef.child(uid!).child('name').once(),
+                        builder:
+                            (context, AsyncSnapshot<DataSnapshot> snapshot) {
+                          if (snapshot.hasData) {
+                            name = (snapshot.data?.value).toString();
+                            return Text(name);
+                          } else {
+                            return const Center();
+                          }
+                        }),
+                  ),
+                ],
+              ),
+        // title: Image.asset(
+        //   "assets/images/logoname.png",
+        //   width: MediaQuery.of(context).size.width / 3,
+        // ),
         automaticallyImplyLeading: false,
         actions: [
           Container(
               margin: const EdgeInsets.symmetric(horizontal: 10),
-              child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 400),
-                  width: _folded ? 56 : MediaQuery.of(context).size.width - 20,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(32),
-                    color: Color(0xFF1a1a1a),
-                    boxShadow: kElevationToShadow[6],
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                          child: Container(
-                              padding: const EdgeInsets.only(left: 16),
-                              child: !_folded
-                                  ? TextFormField(
-                                      controller: searchController,
-                                      onChanged: searchCrypos,
-                                      style:
-                                          const TextStyle(color: Colors.white),
-                                      cursorColor: Colors.white,
-                                      decoration: const InputDecoration(
-                                        labelStyle:
-                                            TextStyle(color: Colors.white),
-                                        hintText: 'Search',
-                                        hintStyle:
-                                            TextStyle(color: Colors.grey),
-                                        border: InputBorder.none,
-                                      ),
-                                    )
-                                  : null)),
-                      GestureDetector(
-                        child: Container(
-                          padding: const EdgeInsets.all(16.0),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(_folded ? 32 : 0),
-                                topRight: const Radius.circular(32),
-                                bottomLeft: Radius.circular(_folded ? 32 : 0),
-                                bottomRight: const Radius.circular(32)),
-                          ),
-                          child: Icon(_folded ? Icons.search : Icons.close,
-                              color: Colors.white),
-                        ),
-                        onTap: () {
-                          setState(() {
-                            if (_folded) {
-                              _isSearching = true;
-                              _folded = !_folded;
-                            } else {
-                              _isSearching = false;
-                              _folded = !_folded;
-                              searchlist.clear();
-                              searchController.clear();
-                            }
-                          });
-                        },
+              child: pageIndex == 0
+                  ? AnimatedContainer(
+                      duration: const Duration(milliseconds: 400),
+                      width:
+                          _folded ? 56 : MediaQuery.of(context).size.width - 20,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(32),
+                        color: Color(0xFF1a1a1a),
+                        boxShadow: kElevationToShadow[6],
                       ),
-                    ],
-                  )
-                  // child: AnimSearchBar(
-                  //     rtl: true,
-                  //     color: Color(0xFF1a1a1a),
-                  //     style: TextStyle(color: Colors.white),
-                  //     // suffixIcon: const Icon(Icons., color: Colors.white, size: 30),
-                  //     prefixIcon: const Icon(Icons.search_rounded,
-                  //         color: Colors.white, size: 30),
-                  //     width: MediaQuery.of(context).size.width - 20,
-                  //     textController: textController,
-                  //     helpText: 'Search....',
-                  //     closeSearchOnSuffixTap: true,
-                  //     onSuffixTap: () {
-                  //       setState(() {
-                  //         textController.clear();
-                  //       });
-                  //     }),
-                  ))
+                      child: Row(
+                        children: [
+                          Expanded(
+                              child: Container(
+                                  padding: const EdgeInsets.only(left: 16),
+                                  child: !_folded
+                                      ? TextFormField(
+                                          controller: searchController,
+                                          onChanged: searchCrypos,
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                          cursorColor: Colors.white,
+                                          decoration: const InputDecoration(
+                                            labelStyle:
+                                                TextStyle(color: Colors.white),
+                                            hintText: 'Search',
+                                            hintStyle:
+                                                TextStyle(color: Colors.grey),
+                                            border: InputBorder.none,
+                                          ),
+                                        )
+                                      : null)),
+                          GestureDetector(
+                            child: Container(
+                              padding: const EdgeInsets.all(12.0),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(_folded ? 32 : 0),
+                                    topRight: const Radius.circular(32),
+                                    bottomLeft:
+                                        Radius.circular(_folded ? 32 : 0),
+                                    bottomRight: const Radius.circular(32)),
+                              ),
+                              child: Icon(_folded ? Icons.search : Icons.close,
+                                  color: Colors.white, size: 28),
+                            ),
+                            onTap: () {
+                              setState(() {
+                                if (_folded) {
+                                  _isSearching = true;
+                                  _folded = !_folded;
+                                } else {
+                                  _isSearching = false;
+                                  _folded = !_folded;
+                                  searchlist.clear();
+                                  searchController.clear();
+                                }
+                              });
+                            },
+                          ),
+                        ],
+                      ))
+                  : const Center()
+              // child: AnimSearchBar(
+              //     rtl: true,
+              //     color: Color(0xFF1a1a1a),
+              //     style: TextStyle(color: Colors.white),
+              //     // suffixIcon: const Icon(Icons., color: Colors.white, size: 30),
+              //     prefixIcon: const Icon(Icons.search_rounded,
+              //         color: Colors.white, size: 30),
+              //     width: MediaQuery.of(context).size.width - 20,
+              //     textController: textController,
+              //     helpText: 'Search....',
+              //     closeSearchOnSuffixTap: true,
+              //     onSuffixTap: () {
+              //       setState(() {
+              //         textController.clear();
+              //       });
+              //     }),
+              )
         ],
       ),
       body: Padding(
@@ -376,312 +419,275 @@ class _HomeState extends State<Home> {
             onPageChanged: onPageChanged,
             controller: _pageController,
             children: [
-              FutureBuilder(
-                  future: dbRef.child(uid!).child('name').once(),
-                  builder: (context, AsyncSnapshot<DataSnapshot> snapshot) {
-                    if (snapshot.hasData) {
-                      name = (snapshot.data?.value).toString();
-                      return RefreshIndicator(
-                          onRefresh: getCryptos,
-                          child: FutureBuilder(
-                              future: getCryptoData,
-                              builder: (context, snapshot) {
-                                if (snapshot.hasData) {
-                                  // crypto = snapshot.data as List<Crypto_Home>;
-                                  return Container(
-                                    child: searchlist.length != 0 ||
-                                            searchController.text.isNotEmpty
-                                        ? ListView.builder(
-                                            shrinkWrap: true,
-                                            // physics: const ScrollPhysics(
-                                            //     parent: BouncingScrollPhysics()),
-                                            itemCount: searchlist.length,
-                                            itemBuilder:
-                                                (BuildContext ctxt, int index) {
-                                              return GestureDetector(
-                                                onTap: () {
-                                                  setState(() {
-                                                    cryptoid.forEach((element) {
-                                                      if (element[0] ==
-                                                          searchlist[index]
-                                                              .cryptosymbols) {
-                                                        id = element[1];
-                                                        // print(element[0]);
-                                                      }
-                                                    });
-                                                    Navigator.push(context,
-                                                        MaterialPageRoute(
-                                                            builder: (context) {
-                                                      return View_Crypto(
-                                                          id,
-                                                          searchlist[index]
-                                                              .cryptonames,
-                                                          searchlist[index]
-                                                              .cryptoprices,
-                                                          searchlist[index]
-                                                              .daychange,
-                                                          searchlist[index]
-                                                              .logoId);
-                                                    }));
-                                                  });
-                                                },
-                                                child: Container(
-                                                    decoration: BoxDecoration(
-                                                      color: Color(0xFF1a1a1a),
-                                                      borderRadius:
-                                                          BorderRadius.all(
-                                                              Radius.circular(
-                                                                  10)),
+              RefreshIndicator(
+                  onRefresh: getCryptos,
+                  child: FutureBuilder(
+                      future: getCryptoData,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          // crypto = snapshot.data as List<Crypto_Home>;
+                          return Container(
+                            child: searchlist.isNotEmpty ||
+                                    searchController.text.isNotEmpty
+                                ? ListView.builder(
+                                    shrinkWrap: true,
+                                    // physics: const ScrollPhysics(
+                                    //     parent: BouncingScrollPhysics()),
+                                    itemCount: searchlist.length,
+                                    itemBuilder:
+                                        (BuildContext ctxt, int index) {
+                                      return GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            cryptoid.forEach((element) {
+                                              if (element[0] ==
+                                                  searchlist[index]
+                                                      .cryptosymbols) {
+                                                id = element[1];
+                                                // print(element[0]);
+                                              }
+                                            });
+                                            Navigator.push(context,
+                                                MaterialPageRoute(
+                                                    builder: (context) {
+                                              return View_Crypto(
+                                                  id,
+                                                  searchlist[index].cryptonames,
+                                                  searchlist[index]
+                                                      .cryptoprices,
+                                                  searchlist[index].daychange,
+                                                  searchlist[index].logoId);
+                                            }));
+                                          });
+                                        },
+                                        child: Container(
+                                            decoration: BoxDecoration(
+                                              color: Color(0xFF1a1a1a),
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(10)),
+                                            ),
+                                            // alignment: Alignment.center,
+                                            //height: 50,
+                                            padding: EdgeInsets.fromLTRB(
+                                                15, 15, 15, 15),
+                                            margin: EdgeInsets.fromLTRB(
+                                                0, 20, 0, 0),
+                                            child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Row(children: [
+                                                    Container(
+                                                      height: 35,
+                                                      width: 35,
+                                                      decoration: BoxDecoration(
+                                                          image:
+                                                              DecorationImage(
+                                                        image: NetworkImage(
+                                                            "https://github.com/coinwink/cryptocurrency-logos/blob/master/coins/128x128/${searchlist[index].logoId}.png?raw=true"),
+                                                        fit: BoxFit.fill,
+                                                      )),
                                                     ),
-                                                    // alignment: Alignment.center,
-                                                    //height: 50,
-                                                    padding:
-                                                        EdgeInsets.fromLTRB(
-                                                            15, 15, 15, 15),
-                                                    margin: EdgeInsets.fromLTRB(
-                                                        0, 20, 0, 0),
-                                                    child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          Row(children: [
-                                                            Container(
-                                                              height: 35,
-                                                              width: 35,
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                      image:
-                                                                          DecorationImage(
-                                                                image: NetworkImage(
-                                                                    "https://github.com/coinwink/cryptocurrency-logos/blob/master/coins/128x128/${searchlist[index].logoId}.png?raw=true"),
-                                                                fit:
-                                                                    BoxFit.fill,
-                                                              )),
-                                                            ),
-                                                            Container(
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .fromLTRB(
-                                                                          15,
-                                                                          0,
-                                                                          0,
-                                                                          0),
-                                                              child: Text(
-                                                                searchlist[
-                                                                        index]
-                                                                    .cryptonames,
-                                                                //    + ' (' +
-                                                                //     cryptosymbols[index] +
-                                                                //     ')', // +cryptolist.length.toString(),
-                                                                style: const TextStyle(
-                                                                    color: Colors
-                                                                        .white,
-                                                                    fontFamily:
-                                                                        'Montserrat'),
-                                                              ),
-                                                            ),
-                                                          ]),
-                                                          Column(
-                                                            children: [
-                                                              Text(
-                                                                '${searchlist[index].cryptoprices.toStringAsFixed(2)} \$',
-                                                                style: const TextStyle(
-                                                                    color: Colors
-                                                                        .white,
-                                                                    fontFamily:
-                                                                        'Montserrat'),
-                                                              ),
-                                                              Row(children: [
-                                                                Icon(
-                                                                  searchlist[index]
-                                                                              .daychange >=
-                                                                          0
-                                                                      ? Icons
-                                                                          .arrow_drop_up_sharp
-                                                                      : Icons
-                                                                          .arrow_drop_down_sharp,
-                                                                  size: 20,
-                                                                  color: searchlist[index].daychange >=
-                                                                          0
-                                                                      ? Color(
-                                                                          0xFF00D293)
-                                                                      : Color(
-                                                                          0xFFFF493E),
-                                                                ),
-                                                                Text(
-                                                                  '${searchlist[index].daychange.toStringAsFixed(2)}%',
-                                                                  style: TextStyle(
-                                                                      color: searchlist[index].daychange >=
-                                                                              0
-                                                                          ? Color(
-                                                                              0xFF00D293)
-                                                                          : Color(
-                                                                              0xFFFF493E),
-                                                                      fontFamily:
-                                                                          'Montserrat'),
-                                                                ),
-                                                              ]),
-                                                            ],
-                                                          )
-                                                        ])),
-                                              );
-                                            })
-                                        : ListView.builder(
-                                            shrinkWrap: true,
-                                            // physics: const ScrollPhysics(
-                                            //     parent: BouncingScrollPhysics()),
-                                            itemCount: crypto.length,
-                                            itemBuilder:
-                                                (BuildContext ctxt, int index) {
-                                              return GestureDetector(
-                                                onTap: () {
-                                                  setState(() {
-                                                    cryptoid.forEach((element) {
-                                                      if (element[0] ==
-                                                          crypto[index]
-                                                              .cryptosymbols) {
-                                                        id = element[1];
-                                                        // print(element[0]);
-                                                      }
-                                                    });
-                                                    Navigator.push(context,
-                                                        MaterialPageRoute(
-                                                            builder: (context) {
-                                                      return View_Crypto(
-                                                          id,
-                                                          crypto[index]
-                                                              .cryptonames,
-                                                          crypto[index]
-                                                              .cryptoprices,
-                                                          crypto[index]
-                                                              .daychange,
-                                                          crypto[index].logoId);
-                                                    }));
-                                                  });
-                                                },
-                                                child: Container(
-                                                    decoration: BoxDecoration(
-                                                      color: Color(0xFF1a1a1a),
-                                                      borderRadius:
-                                                          BorderRadius.all(
-                                                              Radius.circular(
-                                                                  10)),
+                                                    Container(
+                                                      padding:
+                                                          EdgeInsets.fromLTRB(
+                                                              15, 0, 0, 0),
+                                                      child: Text(
+                                                        searchlist[index]
+                                                            .cryptonames,
+                                                        //    + ' (' +
+                                                        //     cryptosymbols[index] +
+                                                        //     ')', // +cryptolist.length.toString(),
+                                                        style: const TextStyle(
+                                                            color: Colors.white,
+                                                            fontFamily:
+                                                                'Montserrat'),
+                                                      ),
                                                     ),
-                                                    // alignment: Alignment.center,
-                                                    //height: 50,
-                                                    padding:
-                                                        EdgeInsets.fromLTRB(
-                                                            15, 15, 15, 15),
-                                                    margin: EdgeInsets.fromLTRB(
-                                                        0, 20, 0, 0),
-                                                    child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          Row(children: [
-                                                            Container(
-                                                              height: 35,
-                                                              width: 35,
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                      image:
-                                                                          DecorationImage(
-                                                                image: NetworkImage(
-                                                                    "https://github.com/coinwink/cryptocurrency-logos/blob/master/coins/128x128/${crypto[index].logoId}.png?raw=true"),
-                                                                fit:
-                                                                    BoxFit.fill,
-                                                              )),
-                                                            ),
-                                                            Container(
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .fromLTRB(
-                                                                          15,
-                                                                          0,
-                                                                          0,
-                                                                          0),
-                                                              child: Text(
-                                                                crypto[index]
-                                                                    .cryptonames,
-                                                                //    + ' (' +
-                                                                //     cryptosymbols[index] +
-                                                                //     ')', // +cryptolist.length.toString(),
-                                                                style: const TextStyle(
-                                                                    color: Colors
-                                                                        .white,
-                                                                    fontFamily:
-                                                                        'Montserrat'),
-                                                              ),
-                                                            ),
-                                                          ]),
-                                                          Column(
-                                                            children: [
-                                                              Text(
-                                                                '${crypto[index].cryptoprices.toStringAsFixed(2)} \$',
-                                                                style: const TextStyle(
-                                                                    color: Colors
-                                                                        .white,
-                                                                    fontFamily:
-                                                                        'Montserrat'),
-                                                              ),
-                                                              Row(children: [
-                                                                Icon(
-                                                                  crypto[index]
-                                                                              .daychange >=
-                                                                          0
-                                                                      ? Icons
-                                                                          .arrow_drop_up_sharp
-                                                                      : Icons
-                                                                          .arrow_drop_down_sharp,
-                                                                  size: 20,
-                                                                  color: crypto[index].daychange >=
-                                                                          0
-                                                                      ? Color(
-                                                                          0xFF00D293)
-                                                                      : Color(
-                                                                          0xFFFF493E),
-                                                                ),
-                                                                Text(
-                                                                  '${crypto[index].daychange.toStringAsFixed(2)}%',
-                                                                  style: TextStyle(
-                                                                      color: crypto[index].daychange >=
-                                                                              0
-                                                                          ? Color(
-                                                                              0xFF00D293)
-                                                                          : Color(
-                                                                              0xFFFF493E),
-                                                                      fontFamily:
-                                                                          'Montserrat'),
-                                                                ),
-                                                              ]),
-                                                            ],
-                                                          )
-                                                        ])),
-                                              );
-                                            }),
-                                  );
-                                } else {
-                                  return const Center(
-                                      child: CircularProgressIndicator(
-                                    color: Colors.white,
-                                  ));
-                                }
-                              }));
-                    } else {
-                      return const Center(
-                          child: CircularProgressIndicator(
-                        color: Colors.white,
-                      ));
-                    }
-                  }),
+                                                  ]),
+                                                  Column(
+                                                    children: [
+                                                      Text(
+                                                        '${searchlist[index].cryptoprices.toStringAsFixed(2)} \$',
+                                                        style: const TextStyle(
+                                                            color: Colors.white,
+                                                            fontFamily:
+                                                                'Montserrat'),
+                                                      ),
+                                                      Row(children: [
+                                                        Icon(
+                                                          searchlist[index]
+                                                                      .daychange >=
+                                                                  0
+                                                              ? Icons
+                                                                  .arrow_drop_up_sharp
+                                                              : Icons
+                                                                  .arrow_drop_down_sharp,
+                                                          size: 20,
+                                                          color: searchlist[
+                                                                          index]
+                                                                      .daychange >=
+                                                                  0
+                                                              ? Color(
+                                                                  0xFF00D293)
+                                                              : Color(
+                                                                  0xFFFF493E),
+                                                        ),
+                                                        Text(
+                                                          '${searchlist[index].daychange.toStringAsFixed(2)}%',
+                                                          style: TextStyle(
+                                                              color: searchlist[
+                                                                              index]
+                                                                          .daychange >=
+                                                                      0
+                                                                  ? Color(
+                                                                      0xFF00D293)
+                                                                  : Color(
+                                                                      0xFFFF493E),
+                                                              fontFamily:
+                                                                  'Montserrat'),
+                                                        ),
+                                                      ]),
+                                                    ],
+                                                  )
+                                                ])),
+                                      );
+                                    })
+                                : ListView.builder(
+                                    shrinkWrap: true,
+                                    // physics: const ScrollPhysics(
+                                    //     parent: BouncingScrollPhysics()),
+                                    itemCount: crypto.length,
+                                    itemBuilder:
+                                        (BuildContext ctxt, int index) {
+                                      return GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            cryptoid.forEach((element) {
+                                              if (element[0] ==
+                                                  crypto[index].cryptosymbols) {
+                                                id = element[1];
+                                                // print(element[0]);
+                                              }
+                                            });
+                                            Navigator.push(context,
+                                                MaterialPageRoute(
+                                                    builder: (context) {
+                                              return View_Crypto(
+                                                  id,
+                                                  crypto[index].cryptonames,
+                                                  crypto[index].cryptoprices,
+                                                  crypto[index].daychange,
+                                                  crypto[index].logoId);
+                                            }));
+                                          });
+                                        },
+                                        child: Container(
+                                            decoration: BoxDecoration(
+                                              color: Color(0xFF1a1a1a),
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(10)),
+                                            ),
+                                            // alignment: Alignment.center,
+                                            //height: 50,
+                                            padding: EdgeInsets.fromLTRB(
+                                                15, 15, 15, 15),
+                                            margin: EdgeInsets.fromLTRB(
+                                                0, 20, 0, 0),
+                                            child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Row(children: [
+                                                    Container(
+                                                      height: 35,
+                                                      width: 35,
+                                                      decoration: BoxDecoration(
+                                                          image:
+                                                              DecorationImage(
+                                                        image: NetworkImage(
+                                                            "https://github.com/coinwink/cryptocurrency-logos/blob/master/coins/128x128/${crypto[index].logoId}.png?raw=true"),
+                                                        fit: BoxFit.fill,
+                                                      )),
+                                                    ),
+                                                    Container(
+                                                      padding:
+                                                          EdgeInsets.fromLTRB(
+                                                              15, 0, 0, 0),
+                                                      child: Text(
+                                                        crypto[index]
+                                                            .cryptonames,
+                                                        //    + ' (' +
+                                                        //     cryptosymbols[index] +
+                                                        //     ')', // +cryptolist.length.toString(),
+                                                        style: const TextStyle(
+                                                            color: Colors.white,
+                                                            fontFamily:
+                                                                'Montserrat'),
+                                                      ),
+                                                    ),
+                                                  ]),
+                                                  Column(
+                                                    children: [
+                                                      Text(
+                                                        '${crypto[index].cryptoprices.toStringAsFixed(2)} \$',
+                                                        style: const TextStyle(
+                                                            color: Colors.white,
+                                                            fontFamily:
+                                                                'Montserrat'),
+                                                      ),
+                                                      Row(children: [
+                                                        Icon(
+                                                          crypto[index]
+                                                                      .daychange >=
+                                                                  0
+                                                              ? Icons
+                                                                  .arrow_drop_up_sharp
+                                                              : Icons
+                                                                  .arrow_drop_down_sharp,
+                                                          size: 20,
+                                                          color: crypto[index]
+                                                                      .daychange >=
+                                                                  0
+                                                              ? Color(
+                                                                  0xFF00D293)
+                                                              : Color(
+                                                                  0xFFFF493E),
+                                                        ),
+                                                        Text(
+                                                          '${crypto[index].daychange.toStringAsFixed(2)}%',
+                                                          style: TextStyle(
+                                                              color: crypto[index]
+                                                                          .daychange >=
+                                                                      0
+                                                                  ? Color(
+                                                                      0xFF00D293)
+                                                                  : Color(
+                                                                      0xFFFF493E),
+                                                              fontFamily:
+                                                                  'Montserrat'),
+                                                        ),
+                                                      ]),
+                                                    ],
+                                                  )
+                                                ])),
+                                      );
+                                    }),
+                          );
+                        } else {
+                          return const Center(
+                              child: CircularProgressIndicator(
+                            color: Colors.white,
+                          ));
+                        }
+                      })),
+
               // Favourites(crypto),
               RefreshIndicator(
                   onRefresh: getFavouriteList,
