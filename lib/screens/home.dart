@@ -1,23 +1,20 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:crypto_alert/data/crypto_home.dart';
-// import 'package:crypto_alert/data/get_data.dart';
 import 'package:crypto_alert/screens/menu/menu.dart';
 import 'package:crypto_alert/screens/news/article.dart';
 import 'package:crypto_alert/screens/news/news.dart';
 import 'package:http/http.dart' as http;
-// import 'package:crypto_alert/screens/authentication/login_register.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import '../constant.dart';
+import '../data/constant.dart';
 import 'favourites/favourites.dart';
 import 'view_crypto/view_crypto.dart';
 import 'package:crypto_alert/data/crypto_list.dart';
 import 'package:intl/intl.dart';
-import 'package:anim_search_bar/anim_search_bar.dart';
-import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:crypto_alert/data/constant.dart';
+
 
 class Home extends StatefulWidget {
   int pindex;
@@ -53,8 +50,9 @@ class _HomeState extends State<Home> {
   bool _folded = true;
   bool _isSearching = false;
   String _searchText = '';
+  String profile = '';
 
-  late Future getfav, matchfav;
+  late Future getfav, matchfav, getUserData;
 
   @override
   void initState() {
@@ -67,7 +65,7 @@ class _HomeState extends State<Home> {
     search();
     // getfav = getFavouriteList();
   }
-
+  
   void onPageChanged(int page) {
     setState(() {
       this.pageIndex = page;
@@ -76,7 +74,7 @@ class _HomeState extends State<Home> {
 
   void onTabTapped(int index) {
     this._pageController.animateToPage(index,
-        duration: const Duration(milliseconds: 500), curve: Curves.easeInOut);
+        duration: const Duration(milliseconds: 250), curve: Curves.easeInOut);
   }
 
   void searchCrypos(String searchText) {
@@ -291,30 +289,55 @@ class _HomeState extends State<Home> {
             : Row(
                 children: [
                   Flexible(
-                    flex: 2,
-                    child: Container(
-                      height: 45,
-                      width: 45,
-                      margin: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        // borderRadius: BorderRadius.circular(32),
-                        color: Color(0xFF1a1a1a),
-                        boxShadow: kElevationToShadow[6],
-                      ),
-                      child: Image.asset("assets/images/defaultAccount.png",
-                          fit: BoxFit.cover),
-                    ),
-                  ),
-                  Flexible(
                     flex: 1,
                     child: FutureBuilder(
-                        future: dbRef.child(uid!).child('name').once(),
+                        future: dbRef.child(uid!).child('profile').once(),
+                        builder:
+                            (context, AsyncSnapshot<DataSnapshot> snapshot) {
+                          if (snapshot.hasData) {
+                            profile = (snapshot.data?.value).toString();
+                            print(profile);
+                            return Container(
+                              height: 50,
+                              width: 50,
+                              margin: EdgeInsets.fromLTRB(0, 8, 10, 0),
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                    image: NetworkImage(profile)),
+                                shape: BoxShape.circle,
+                                // borderRadius: BorderRadius.circular(32),
+                                color: Color(0xFF1a1a1a),
+                                boxShadow: kElevationToShadow[6],
+                              ),
+                            );
+                          } else {
+                            return Container(
+                              height: 50,
+                              width: 50,
+                              margin: EdgeInsets.fromLTRB(0, 8, 10, 0),
+                              child: Image.asset(
+                                'assets/images/defaultAccount.png',
+                                fit: BoxFit.cover,
+                              ),
+                            );
+                          }
+                        }),
+                  ),
+                  Flexible(
+                    flex: 3,
+                    child: FutureBuilder(
+                        future: dbRef.child(uid).child('name').once(),
                         builder:
                             (context, AsyncSnapshot<DataSnapshot> snapshot) {
                           if (snapshot.hasData) {
                             name = (snapshot.data?.value).toString();
-                            return Text(name);
+                            return Container(
+                              margin: EdgeInsets.fromLTRB(0, 15, 0, 0),
+                              child: Text(
+                                name,
+                                style: TextStyle(fontFamily: 'Montserrat'),
+                              ),
+                            );
                           } else {
                             return const Center();
                           }
@@ -332,7 +355,7 @@ class _HomeState extends State<Home> {
               margin: const EdgeInsets.symmetric(horizontal: 10),
               child: pageIndex == 0
                   ? AnimatedContainer(
-                      duration: const Duration(milliseconds: 400),
+                      duration: const Duration(milliseconds: 250),
                       width:
                           _folded ? 56 : MediaQuery.of(context).size.width - 20,
                       decoration: BoxDecoration(
@@ -773,7 +796,7 @@ class _HomeState extends State<Home> {
                       }
                     }),
               ),
-              MenuPage()
+              MenuPage(profile, name)
             ]),
       ),
       //Center(child: Text('Welcome' + name)),

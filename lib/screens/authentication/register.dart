@@ -14,7 +14,7 @@ import 'package:crypto_alert/screens/onboarding/onboarding.dart';
 // import 'package:flutter/scheduler.dart';
 
 // import 'main.dart';
-import '../../constant.dart';
+import '../../data/constant.dart';
 import './Login.dart';
 import 'package:crypto_alert/screens/home.dart';
 

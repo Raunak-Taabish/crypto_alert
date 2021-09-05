@@ -8,7 +8,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 import 'package:crypto_alert/screens/home.dart';
 
-import '../../constant.dart';
+import '../../data/constant.dart';
 
 class Login extends StatefulWidget {
   @override

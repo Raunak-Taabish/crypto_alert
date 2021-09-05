@@ -3,7 +3,7 @@ import 'package:crypto_alert/screens/news/article.dart';
 import 'package:crypto_alert/screens/news/open_news.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:crypto_alert/constant.dart';
+import 'package:crypto_alert/data/constant.dart';
 import 'package:flutter_bounce/flutter_bounce.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:intl/intl.dart';

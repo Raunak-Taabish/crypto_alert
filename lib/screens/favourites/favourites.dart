@@ -1,12 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:crypto_alert/data/crypto_home.dart';
 import 'package:crypto_alert/data/crypto_list.dart';
 import 'package:crypto_alert/screens/home.dart';
 import 'package:crypto_alert/screens/view_crypto/view_crypto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../../constant.dart';
+import '../../data/constant.dart';
 
 Container favourites(Crypto_Home crypto, Alert_List alert_list, context) {
   final User? user = FirebaseAuth.instance.currentUser;

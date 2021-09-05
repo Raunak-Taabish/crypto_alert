@@ -1,6 +1,5 @@
 import 'dart:convert';
-import 'package:crypto_alert/constant.dart';
-import 'package:crypto_alert/data/crypto_home.dart';
+import 'package:crypto_alert/data/constant.dart';
 import 'package:crypto_alert/data/crypto_list.dart';
 import 'package:crypto_alert/data/crypto_statistics.dart';
 import 'package:crypto_alert/screens/authentication/register.dart';
@@ -16,8 +15,6 @@ import 'package:crypto_alert/screens/news/article.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:numberpicker/numberpicker.dart';
-import 'package:crypto_alert/screens/favourites/favourites.dart';
 
 import '../home.dart';
 
@@ -969,7 +966,8 @@ class _ViewCrypto_State extends State<View_Crypto> {
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
         child: Center(
-            child: Container(
+            child: AnimatedContainer(
+                duration: Duration(milliseconds: 300),
                 margin: EdgeInsets.only(bottom: 100),
                 decoration: BoxDecoration(
                   border: Border.all(
@@ -1301,6 +1299,12 @@ class _ViewCrypto_State extends State<View_Crypto> {
               color: selectedTab == tab ? Colors.white : Colors.transparent)),
     );
   }
+  // @override
+  // void dispose() {
+  //   _controllerFB.dispose();
+  //   _controllerFB.dispose();
+  //   super.dispose();
+  // }
 }
 
 class SalesData {
