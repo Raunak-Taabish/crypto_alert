@@ -9,7 +9,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import '../data/constant.dart';
-import 'favourites/favourites.dart';
+import 'alerts/alerts.dart';
 import 'view_crypto/view_crypto.dart';
 import 'package:crypto_alert/data/crypto_list.dart';
 import 'package:intl/intl.dart';
@@ -358,6 +358,7 @@ class _HomeState extends State<Home> {
                                           controller: searchController,
                                           onChanged: searchCrypos,
                                           style: const TextStyle(
+                                              fontSize: 15,
                                               color: Colors.white),
                                           cursorColor: Colors.white,
                                           decoration: const InputDecoration(
@@ -459,12 +460,15 @@ class _HomeState extends State<Home> {
                                                 MaterialPageRoute(
                                                     builder: (context) {
                                               return View_Crypto(
-                                                  id,
-                                                  searchlist[index].cryptonames,
-                                                  searchlist[index]
+                                                  cryptoid: id,
+                                                  cryptoname:
+                                                      crypto[index].cryptonames,
+                                                  cryptoprice: crypto[index]
                                                       .cryptoprices,
-                                                  searchlist[index].daychange,
-                                                  searchlist[index].logoId);
+                                                  daychange:
+                                                      crypto[index].daychange,
+                                                  logoId: crypto[index].logoId,
+                                                  alert: false);
                                             }));
                                           });
                                         },
@@ -585,11 +589,15 @@ class _HomeState extends State<Home> {
                                                 MaterialPageRoute(
                                                     builder: (context) {
                                               return View_Crypto(
-                                                  id,
-                                                  crypto[index].cryptonames,
-                                                  crypto[index].cryptoprices,
-                                                  crypto[index].daychange,
-                                                  crypto[index].logoId);
+                                                  cryptoid: id,
+                                                  cryptoname:
+                                                      crypto[index].cryptonames,
+                                                  cryptoprice: crypto[index]
+                                                      .cryptoprices,
+                                                  daychange:
+                                                      crypto[index].daychange,
+                                                  logoId: crypto[index].logoId,
+                                                  alert: false);
                                             }));
                                           });
                                         },
@@ -731,21 +739,28 @@ class _HomeState extends State<Home> {
                                                       MaterialPageRoute(
                                                           builder: (context) {
                                                     return View_Crypto(
-                                                        id,
-                                                        crypto_fav[index]
-                                                            .cryptonames,
-                                                        crypto_fav[index]
-                                                            .cryptoprices,
-                                                        crypto_fav[index]
-                                                            .daychange,
-                                                        crypto_fav[index]
-                                                            .logoId);
+                                                        cryptoid: id,
+                                                        cryptoname:
+                                                            crypto_fav[index]
+                                                                .cryptonames,
+                                                        cryptoprice:
+                                                            crypto_fav[index]
+                                                                .cryptoprices,
+                                                        daychange:
+                                                            crypto_fav[index]
+                                                                .daychange,
+                                                        logoId:
+                                                            crypto_fav[index]
+                                                                .logoId,
+                                                        alert: false);
                                                   }));
                                                 },
                                                 child: favourites(
-                                                    crypto_fav[index],
-                                                    alert_list[index],
-                                                    context));
+                                                  id,
+                                                  crypto_fav[index],
+                                                  alert_list[index],
+                                                  context,
+                                                ));
                                           })
                                       : Center(
                                           child: Text(
@@ -781,7 +796,7 @@ class _HomeState extends State<Home> {
                       }
                     }),
               ),
-              MenuPage(profile, name)
+              MenuPage(profile, name, randomColor)
             ]),
       ),
       //Center(child: Text('Welcome' + name)),
@@ -844,6 +859,8 @@ class _HomeState extends State<Home> {
 
   @override
   void dispose() {
+    _pageController.dispose();
+    searchController.dispose();
     _pageController.dispose();
     super.dispose();
   }

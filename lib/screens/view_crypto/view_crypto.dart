@@ -24,23 +24,29 @@ class View_Crypto extends StatefulWidget {
   final double cryptoprice;
   final double daychange;
   final int logoId;
+  final bool alert;
 
-  View_Crypto(this.cryptoid, this.cryptoname, this.cryptoprice, this.daychange,
-      this.logoId,
-      {Key? key})
+  View_Crypto(
+      {required this.cryptoid,
+      required this.cryptoname,
+      required this.cryptoprice,
+      required this.daychange,
+      required this.logoId,
+      required this.alert,
+      Key? key})
       : super(key: key);
 
   @override
-  _ViewCrypto_State createState() => _ViewCrypto_State(price: cryptoprice);
+  _ViewCrypto_State createState() => _ViewCrypto_State(cryptoprice, alert);
 }
 
 class _ViewCrypto_State extends State<View_Crypto> {
   double price;
-  _ViewCrypto_State({required this.price});
-
+  bool isAlert;
+  _ViewCrypto_State(this.price, this.isAlert);
   // late int riseAbove = price.toInt(); //cryptoprice.toInt();
   // late int fallBelow = price.toInt(); //cryptoprice.toInt();
-  bool isAlert = false;
+  // bool isAlert = View_Crypto.alert;
   var age = 25;
   bool _visible = false;
   bool saved = false;
@@ -122,47 +128,6 @@ class _ViewCrypto_State extends State<View_Crypto> {
     // });
     // print(ref.id);
   }
-
-  // Future<void> deleteFavs(BuildContext context) async {
-  //   try {
-  //     await databaseReference
-  //         .collection("users")
-  //         .doc(user!.uid)
-  //         .collection('fav_cryptos')
-  //         .doc(widget.cryptoname)
-  //         .delete();
-  //     displayToastMessage('Unsaved', context);
-  //     if (mounted) {
-  //       setState(() {
-  //         // _loading = false;
-  //         saved = false;
-  //         // newslists.removeWhere((item) => item.title == this.title);
-  //         // print(newslists);
-  //         // if (saveview) {
-  //         //   Navigator.pushReplacement(
-  //         //       context,
-  //         //       MaterialPageRoute(
-  //         //           builder: (BuildContext context) => SavedNews()));
-  //         //   // Saved sn=new Saved();
-  //         //   // sn.getSavedNews();
-  //         // }
-  //         // Home n=new Home();n.checksaved(title, context);
-  //       });
-  //     }
-  //     // ignore: unrelated_type_equality_checks
-
-  //     // saved = true;
-  //     // checksaved(title,context);
-  //   } catch (e) {
-  //     displayToastMessage(e.toString(), context);
-  //   }
-
-  //   // DocumentReference ref = await databaseReference.collection("books").add({
-  //   //   'title': 'Flutter in Action',
-  //   //   'description': 'Complete Programming Guide to learn Flutter'
-  //   // });
-  //   // print(ref.id);
-  // }
 
   Future<void> checkAlert() async {
     //add index argument
@@ -1064,49 +1029,10 @@ class _ViewCrypto_State extends State<View_Crypto> {
                                         enabledBorder: OutlineInputBorder(
                                           borderSide:
                                               BorderSide(color: Colors.white),
-                                          // borderRadius:
-                                          // BorderRadius.circular(25.7),
-                                          // borderRadius:
-                                          // BorderRadius.circular(25.7),
-                                          //hintText: 'Username',
-                                          // contentPadding: const EdgeInsets.only(
-                                          //     left: 14.0, bottom: 8.0, top: 8.0),
                                         ),
                                       ),
                                     ),
                                   ),
-                                  // decoration: BoxDecoration(
-                                  //     border: Border.all(
-                                  //         color: Color(0xFF2E2E2E)),
-                                  //     borderRadius: BorderRadius.circular(20),
-                                  //     color: Color(0xFF202020)),
-                                  // child:
-                                  // child: NumberPicker(
-                                  //     textStyle: TextStyle(
-                                  //         color: Colors.white, fontSize: 15),
-                                  //     selectedTextStyle: TextStyle(
-                                  //       color: Color(0xFFFC5D53),
-                                  //       fontSize: 25,
-                                  //       fontWeight: FontWeight.w500,
-                                  //     ),
-                                  //     itemHeight: 50,
-                                  //     itemWidth: 120,
-                                  //     minValue: (price/2).toInt(),
-                                  //     maxValue: price.toInt()*2,
-                                  //     value: fallBelow,
-                                  //     onChanged: (value) {
-                                  //       setState(() {
-                                  //         fallBelow = value;
-                                  //       });
-                                  //     }),
-                                  // Text(
-                                  //   "Fall below",
-                                  //   style: TextStyle(
-                                  //       color: Colors.white,
-                                  //       fontSize: 15,
-                                  //       fontFamily: 'Montserrat',
-                                  //       fontWeight: FontWeight.w400),
-                                  // ),
                                 ],
                               ),
                             ),
@@ -1145,52 +1071,17 @@ class _ViewCrypto_State extends State<View_Crypto> {
                                         enabledBorder: OutlineInputBorder(
                                           borderSide:
                                               BorderSide(color: Colors.white),
-                                          // borderRadius:
-                                          // BorderRadius.circular(25.7),
-                                          // borderRadius:
-                                          // BorderRadius.circular(25.7),
-                                          // contentPadding: const EdgeInsets.only(
-                                          //     left: 14.0, bottom: 8.0, top: 8.0),
                                         ),
                                       ),
                                     ),
-                                    // child: NumberPicker(
-                                    //     textStyle: TextStyle(
-                                    //         color: Colors.white, fontSize: 15),
-                                    //     selectedTextStyle: TextStyle(
-                                    //       color: Color(0xFF00D293),
-                                    //       fontSize: 25,
-                                    //       fontWeight: FontWeight.w500,
-                                    //     ),
-                                    //     itemHeight: 50,
-                                    //     itemWidth: 120,
-                                    //     minValue: (price/2).toInt(),
-                                    //     maxValue: price.toInt()*2,
-                                    //     value: riseAbove,
-                                    //     onChanged: (value) {
-                                    //       setState(() {
-                                    //         riseAbove = value;
-                                    //       });
-                                    //     }),
                                   ),
-                                  // Text(
-                                  //   "Rise above",
-                                  //   style: TextStyle(
-                                  //       color: Colors.white,
-                                  //       fontSize: 15,
-                                  //       fontFamily: 'Montserrat',
-                                  //       fontWeight: FontWeight.w400),
-                                  // )
                                 ],
                               ),
                             ),
                           ],
                         ),
-                        // width: 50,
-                        // child: TextFormField(),
                       ),
                       Container(
-                        // color: Colors.amber,
                         margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
                         child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,

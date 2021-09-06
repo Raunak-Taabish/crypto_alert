@@ -7,7 +7,9 @@ import 'package:numberpicker/numberpicker.dart';
 
 class MenuPage extends StatefulWidget {
   String profile, name;
-  MenuPage(this.profile, this.name, {Key? key}) : super(key: key);
+  MaterialColor randomColor;
+  MenuPage(this.profile, this.name, this.randomColor, {Key? key})
+      : super(key: key);
 
   @override
   _MenuPageState createState() => _MenuPageState();
@@ -36,18 +38,20 @@ class _MenuPageState extends State<MenuPage> {
             child: Row(
               children: [
                 Container(
-                  margin: EdgeInsets.fromLTRB(10, 0, 20, 0),
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    image: widget.profile == ''
-                        ? DecorationImage(image: NetworkImage(widget.profile))
-                        : DecorationImage(
-                            image:
-                                AssetImage('assets/images/defaultAccount.png')),
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                  ),
+                  margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  child: widget.profile == 'default'
+                      ? CircleAvatar(
+                          radius: 22,
+                          backgroundColor: widget.randomColor,
+                          child: Text(
+                            widget.name.substring(0, 1),
+                            style: TextStyle(fontSize: 20.0),
+                          ),
+                        )
+                      : CircleAvatar(
+                          radius: 22,
+                          backgroundImage: NetworkImage(widget.profile),
+                        ),
                 ),
                 Column(
                   //mainAxisAlignment: MainAxisAlignment.center,
@@ -72,7 +76,7 @@ class _MenuPageState extends State<MenuPage> {
                             return Text(
                               email,
                               style: TextStyle(
-                                  fontSize: 10,
+                                  fontSize: 13,
                                   color: Colors.white,
                                   fontFamily: 'Montserrat'),
                             );
@@ -149,7 +153,10 @@ class _MenuPageState extends State<MenuPage> {
                 ),
                 "Github link")),
         GestureDetector(
-            onTap: () => _signOut(context),
+            onTap: () {
+              _displayDialog(context);
+              //_signOut(context);
+            },
             // AlertDialog(
             //       content: Text('Logout?'),
             //     ),
@@ -204,5 +211,57 @@ class _MenuPageState extends State<MenuPage> {
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => Login_Register()),
         (Route<dynamic> route) => false);
+  }
+
+  _displayDialog(BuildContext context) async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Color(0xFF202020),
+          title: Row(
+            children: [
+              Icon(
+                Icons.power_settings_new,
+                color: Colors.white,
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Text(
+                'Logout?',
+                style: TextStyle(fontFamily: 'Montserrat', color: Colors.white),
+              ),
+            ],
+          ),
+          // content: Text(
+          //   'Logout?',
+          //   style: TextStyle(fontFamily: 'Montserrat', color: Colors.white),
+          // ),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                'No',
+                style: TextStyle(fontFamily: 'Montserrat', color: Colors.white),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                _signOut(context);
+              },
+              child: Text(
+                'Yes',
+                style: TextStyle(fontFamily: 'Montserrat', color: Colors.white),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 }
