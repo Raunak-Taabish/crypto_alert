@@ -35,8 +35,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-          fontFamily: 'Montserrat',
-          backgroundColor: Color(0xFF151515)),
+          fontFamily: 'Montserrat', backgroundColor: Color(0xFF151515)),
       home: _Splashscreen(),
       debugShowCheckedModeBanner: true,
     );
@@ -64,7 +63,9 @@ class SecondScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(home: Login(), initialRoute: initialroute, routes: {
-      'homepage': (context) => Home(pindex: 0,),
+      'homepage': (context) => Home(
+            pindex: 0,
+          ),
       'login': (context) => Login_Register(),
     });
   }

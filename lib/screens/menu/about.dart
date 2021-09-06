@@ -15,6 +15,7 @@ class _AboutState extends State<About> {
         backgroundColor: Color(0xFF151515),
         body: Container(
           width: double.infinity,
+          // height: MediaQuery.of(context).size.height * 0.5,
           padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -40,7 +41,7 @@ class _AboutState extends State<About> {
                   borderRadius: BorderRadius.circular(10),
                   color: Colors.white,
                 ),
-                child: FlatButton(
+                child: TextButton(
                   child: Text(
                     "Cryptlert Github link",
                     style: TextStyle(
@@ -63,7 +64,7 @@ class _AboutState extends State<About> {
         color: Color(0xFF202020),
       ),
       width: double.infinity,
-      height: MediaQuery.of(context).size.height / 3,
+      height: MediaQuery.of(context).size.height * 0.35,
       child: Column(
         children: [
           Container(
@@ -154,7 +155,7 @@ class _AboutState extends State<About> {
                     borderRadius: BorderRadius.circular(7),
                   ),
                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 1),
-                  child: FlatButton(
+                  child: TextButton(
                     child: Text(
                       "$button",
                       style: TextStyle(
@@ -171,7 +172,7 @@ class _AboutState extends State<About> {
                     borderRadius: BorderRadius.circular(7),
                   ),
                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 1),
-                  child: FlatButton(
+                  child: TextButton(
                     child: Text(
                       "Github",
                       style: TextStyle(

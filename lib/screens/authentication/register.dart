@@ -371,6 +371,7 @@ class _LoginDemoState extends State<_RegisterPage> {
         Map userDataMap = {
           'name': _usernameController.text.trim(),
           'email': _emailController.text.trim(),
+          'profile': 'default'
         };
         dbRef.child(currentuser.uid).set(userDataMap);
         _formKey.currentState!.save();

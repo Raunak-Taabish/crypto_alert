@@ -40,7 +40,7 @@ class _MenuPageState extends State<MenuPage> {
                   width: 40,
                   height: 40,
                   decoration: BoxDecoration(
-                    image: widget.profile.isNotEmpty
+                    image: widget.profile == ''
                         ? DecorationImage(image: NetworkImage(widget.profile))
                         : DecorationImage(
                             image:
@@ -96,9 +96,8 @@ class _MenuPageState extends State<MenuPage> {
             ),
           ),
         ),
-        FlatButton(
-            padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
-            onPressed: () {
+        GestureDetector(
+            onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) {
                 return About();
               }));
@@ -109,56 +108,51 @@ class _MenuPageState extends State<MenuPage> {
                   color: Colors.white,
                 ),
                 "About")),
-        FlatButton(
-            padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
-            onPressed: () {},
+        GestureDetector(
+            onTap: () {},
             child: list(
                 Icon(
                   Icons.call,
                   color: Colors.white,
                 ),
                 "Contact")),
-        FlatButton(
-            padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
-            onPressed: () {},
+        GestureDetector(
+            onTap: () {},
             child: list(
                 Icon(
                   Icons.feedback,
                   color: Colors.white,
                 ),
                 "Feedback")),
-        FlatButton(
-            padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
-            onPressed: () {},
+        GestureDetector(
+            onTap: () {},
             child: list(
                 Icon(
                   Icons.share,
                   color: Colors.white,
                 ),
                 "Share App")),
-        FlatButton(
-            padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
-            onPressed: () {},
+        GestureDetector(
+            onTap: () {},
             child: list(
                 Icon(
                   Icons.link,
                   color: Colors.white,
                 ),
                 "Website link")),
-        FlatButton(
-            padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
-            onPressed: () {},
+        GestureDetector(
+            onTap: () {},
             child: list(
                 Icon(
                   Icons.link,
                   color: Colors.white,
                 ),
                 "Github link")),
-        FlatButton(
-            padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
-            onPressed: () {
-              _signOut(context);
-            },
+        GestureDetector(
+            onTap: () => _signOut(context),
+            // AlertDialog(
+            //       content: Text('Logout?'),
+            //     ),
             child: list(
                 Icon(
                   Icons.power_settings_new,
@@ -174,6 +168,7 @@ class _MenuPageState extends State<MenuPage> {
     String textname,
   ) {
     return Container(
+      padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
       width: double.infinity,
       child: Row(
         children: [

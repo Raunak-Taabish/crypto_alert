@@ -14,6 +14,7 @@ import 'view_crypto/view_crypto.dart';
 import 'package:crypto_alert/data/crypto_list.dart';
 import 'package:intl/intl.dart';
 import 'package:crypto_alert/data/constant.dart';
+import 'dart:math';
 
 class Home extends StatefulWidget {
   int pindex;
@@ -50,6 +51,7 @@ class _HomeState extends State<Home> {
   bool _isSearching = false;
   String _searchText = '';
   String profile = '';
+  late MaterialColor randomColor;
 
   late Future getfav, matchfav, getUserData;
 
@@ -62,6 +64,7 @@ class _HomeState extends State<Home> {
     getfav = getFavouriteList();
     _isSearching = false;
     search();
+    randomColor = Colors.primaries[Random().nextInt(Colors.primaries.length)];
     // getfav = getFavouriteList();
   }
 
@@ -285,66 +288,48 @@ class _HomeState extends State<Home> {
                 "assets/images/logoname.png",
                 width: MediaQuery.of(context).size.width / 3,
               )
-            : Row(
-                //crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Flexible(
-                    flex: 1,
-                    child: FutureBuilder(
-                        future: dbRef.child(uid!).child('profile').once(),
-                        builder:
-                            (context, AsyncSnapshot<DataSnapshot> snapshot) {
-                          if (snapshot.hasData) {
-                            profile = (snapshot.data?.value).toString();
-                            print(profile);
-                            return Container(
-                              height: 45,
-                              width: 45,
-                              margin: EdgeInsets.fromLTRB(10, 8, 10, 0),
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                    image: NetworkImage(profile)),
-                                shape: BoxShape.circle,
-                                // borderRadius: BorderRadius.circular(32),
-                                color: Color(0xFF1a1a1a),
-                                boxShadow: kElevationToShadow[6],
-                              ),
-                            );
-                          } else {
-                            return Container(
-                              height: 50,
-                              width: 50,
-                              margin: EdgeInsets.fromLTRB(10, 8, 10, 0),
-                              child: Image.asset(
-                                'assets/images/defaultAccount.png',
-                                fit: BoxFit.cover,
-                              ),
-                            );
-                          }
-                        }),
-                  ),
-                  Flexible(
-                    flex: 3,
-                    child: FutureBuilder(
-                        future: dbRef.child(uid).child('name').once(),
-                        builder:
-                            (context, AsyncSnapshot<DataSnapshot> snapshot) {
-                          if (snapshot.hasData) {
-                            name = (snapshot.data?.value).toString();
-                            return Container(
-                              margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+            : FutureBuilder(
+                future: dbRef.child(uid!).once(),
+                builder: (context, AsyncSnapshot<DataSnapshot> snapshot) {
+                  if (snapshot.hasData) {
+                    profile = snapshot.data!.value['profile'].toString();
+                    name = snapshot.data!.value['name'].toString();
+                    print(profile);
+                    print(name);
+                    return Row(
+                      //crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Flexible(
+                          flex: 1,
+                          child: profile == 'default'
+                              ? CircleAvatar(
+                                  radius: 18,
+                                  backgroundColor: randomColor,
+                                  child: Text(
+                                    name.substring(0, 1),
+                                    style: TextStyle(fontSize: 20.0),
+                                  ),
+                                )
+                              : CircleAvatar(
+                                  radius: 18,
+                                  backgroundImage: NetworkImage(profile),
+                                ),
+                        ),
+                        Flexible(
+                            flex: 3,
+                            child: Container(
+                              margin: EdgeInsets.fromLTRB(10, 5, 0, 0),
                               child: Text(
                                 name,
                                 style: TextStyle(fontFamily: 'Montserrat'),
                               ),
-                            );
-                          } else {
-                            return const Center();
-                          }
-                        }),
-                  ),
-                ],
-              ),
+                            )),
+                      ],
+                    );
+                  } else {
+                    return const Center();
+                  }
+                }),
         // title: Image.asset(
         //   "assets/images/logoname.png",
         //   width: MediaQuery.of(context).size.width / 3,
@@ -352,12 +337,12 @@ class _HomeState extends State<Home> {
         automaticallyImplyLeading: false,
         actions: [
           Container(
-              margin: const EdgeInsets.symmetric(horizontal: 10),
+              margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               child: pageIndex == 0
                   ? AnimatedContainer(
                       duration: const Duration(milliseconds: 250),
                       width:
-                          _folded ? 56 : MediaQuery.of(context).size.width - 20,
+                          _folded ? 46 : MediaQuery.of(context).size.width - 20,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(32),
                         color: Color(0xFF1a1a1a),
@@ -367,7 +352,7 @@ class _HomeState extends State<Home> {
                         children: [
                           Expanded(
                               child: Container(
-                                  padding: const EdgeInsets.only(left: 16),
+                                  padding: const EdgeInsets.only(left: 12),
                                   child: !_folded
                                       ? TextFormField(
                                           controller: searchController,
@@ -387,7 +372,7 @@ class _HomeState extends State<Home> {
                                       : null)),
                           GestureDetector(
                             child: Container(
-                              padding: const EdgeInsets.all(12.0),
+                              padding: const EdgeInsets.all(8.0),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.only(
                                     topLeft: Radius.circular(_folded ? 32 : 0),
@@ -397,7 +382,7 @@ class _HomeState extends State<Home> {
                                     bottomRight: const Radius.circular(32)),
                               ),
                               child: Icon(_folded ? Icons.search : Icons.close,
-                                  color: Colors.white, size: 25),
+                                  color: Colors.white, size: 28),
                             ),
                             onTap: () {
                               setState(() {
