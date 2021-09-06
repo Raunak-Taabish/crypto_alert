@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto_alert/screens/menu/menu.dart';
 import 'package:crypto_alert/screens/news/article.dart';
@@ -63,9 +64,27 @@ class _HomeState extends State<Home> {
     getnews = getNews();
     getfav = getFavouriteList();
     _isSearching = false;
+
     search();
     randomColor = Colors.primaries[Random().nextInt(Colors.primaries.length)];
     // getfav = getFavouriteList();
+  }
+
+  void notify() async {
+    String timezom = await AwesomeNotifications().getLocalTimeZoneIdentifier();
+
+    await AwesomeNotifications().createNotification(
+      content: NotificationContent(
+          id: 1,
+          channelKey: 'key1',
+          title: 'This is Notification title',
+          body: 'This is Body of Noti',
+          bigPicture:
+              'https://protocoderspoint.com/wp-content/uploads/2021/05/Monitize-flutter-app-with-google-admob-min-741x486.png',
+          notificationLayout: NotificationLayout.BigPicture),
+      schedule:
+          NotificationInterval(interval: 5, timeZone: timezom, repeats: false),
+    );
   }
 
   void onPageChanged(int page) {
@@ -280,6 +299,16 @@ class _HomeState extends State<Home> {
         FirebaseDatabase.instance.reference().child('users');
     return Scaffold(
       backgroundColor: Color(0xFF151515),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          notify();
+          AwesomeNotifications().actionStream.listen((receivedNotifiction) {
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return Home(pindex: 1);
+            }));
+          });
+        },
+      ),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,

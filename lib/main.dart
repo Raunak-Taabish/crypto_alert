@@ -6,10 +6,33 @@ import 'screens/authentication/login_register.dart';
 import 'screens/authentication/login.dart';
 import 'screens/authentication/register.dart';
 import 'screens/home.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  AwesomeNotifications().initialize(
+      null,
+      [
+        NotificationChannel(
+          channelKey: 'key1',
+          channelName: 'Proto Coders Point',
+          channelDescription: "Notification example",
+          defaultColor: Color(0XFF9050DD),
+          ledColor: Colors.white,
+          playSound: true,
+          enableLights:true,
+          enableVibration: true
+        )
+      ]
+  );
+  AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+  if (!isAllowed) {
+    // Insert here your friendly dialog box before call the request method
+    // This is very important to not harm the user experience
+    AwesomeNotifications().requestPermissionToSendNotifications();
+  }
+});
   await isUserLoggedIn();
   runApp(MyApp());
 }
