@@ -7,49 +7,8 @@ import 'package:flutter/material.dart';
 
 import '../../data/constant.dart';
 
-TextEditingController RAcontroller = TextEditingController();
-TextEditingController FBcontroller = TextEditingController();
-final User? user = FirebaseAuth.instance.currentUser;
-//final uid = user.uid;
-final databaseReference = FirebaseFirestore.instance;
-// Future<void> addFav(BuildContext context) async {
-//     try {
-//       await databaseReference
-//           .collection("users")
-//           .doc(user!.uid)
-//           .collection('alert_list')
-//           .doc(widget.cryptoname)
-//           .set({
-//         'crypto_name': widget.cryptoname,
-//         'rise_above': _controllerRA.text,
-//         'fall_below': _controllerFB.text,
-//       });
-//       displayToastMessage('Your alerts are saved', context);
-//       if (mounted) {
-//         setState(() {
-//           // _loading = false;
-//           saved = true;
-//           // Home n=new Home();n.checksaved(title, context);
-//         });
-//       }
-//       // saved = true;
-//       // checksaved(title,context);
-//     } catch (e) {
-//       print(e.toString());
-//       displayToastMessage(e.toString(), context);
-//     }
-
-//     // DocumentReference ref = await databaseReference.collection("books").add({
-//     //   'title': 'Flutter in Action',
-//     //   'description': 'Complete Programming Guide to learn Flutter'
-//     // });
-//     // print(ref.id);
-//   }
-
 Container favourites(
     String id, Crypto_Home crypto, Alert_List alert_list, context) {
-  RAcontroller.text = alert_list.riseAbove;
-  FBcontroller.text = alert_list.fallBelow;
   final User? user = FirebaseAuth.instance.currentUser;
   //final uid = user.uid;
   double wid = MediaQuery.of(context).size.width;
@@ -166,13 +125,9 @@ Container favourites(
                           height: MediaQuery.of(context).size.height * 0.01,
                         ),
                         Container(
-                          height: 20,
-                          width: 50,
-                          alignment: Alignment.topCenter,
                           margin: EdgeInsets.only(left: 10),
-                          child: TextFormField(
-                            controller: FBcontroller,
-                            // '  ${alert_list.riseAbove.toString()}  ',
+                          child: Text(
+                            '  ${alert_list.fallBelow.toString()}  ',
                             style: const TextStyle(
                                 fontSize: 15,
                                 color: Colors.white,
@@ -207,17 +162,13 @@ Container favourites(
                             ),
                           ],
                         ),
-                        // SizedBox(
-                        //   height: MediaQuery.of(context).size.height * 0.01,
-                        // ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.01,
+                        ),
                         Container(
-                          height: 20,
-                          width: 50,
-                          alignment: Alignment.topCenter,
                           margin: EdgeInsets.only(left: 10),
-                          child: TextFormField(
-                            controller: RAcontroller,
-                            // '  ${alert_list.riseAbove.toString()}  ',
+                          child: Text(
+                            '  ${alert_list.riseAbove.toString()}  ',
                             style: const TextStyle(
                                 fontSize: 15,
                                 color: Colors.white,
