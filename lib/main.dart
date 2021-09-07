@@ -26,13 +26,6 @@ void main() async {
         )
       ]
   );
-  AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
-  if (!isAllowed) {
-    // Insert here your friendly dialog box before call the request method
-    // This is very important to not harm the user experience
-    AwesomeNotifications().requestPermissionToSendNotifications();
-  }
-});
   await isUserLoggedIn();
   runApp(MyApp());
 }

@@ -104,8 +104,8 @@ class _ViewCrypto_State extends State<View_Crypto> {
           .doc(widget.cryptoname)
           .set({
         'crypto_name': widget.cryptoname,
-        'rise_above': _controllerRA.text,
-        'fall_below': _controllerFB.text,
+        'rise_above': double.parse(_controllerRA.text),
+        'fall_below': double.parse(_controllerFB.text),
       });
       displayToastMessage('Your alerts are saved', context);
       if (mounted) {
@@ -1090,6 +1090,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
                                   onTap: () {
                                     setState(() {
                                       isAlert = !isAlert;
+                                      Navigator.pop(context);
                                     });
                                   },
                                   child: Container(

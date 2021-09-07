@@ -64,13 +64,134 @@ class _HomeState extends State<Home> {
     getnews = getNews();
     getfav = getFavouriteList();
     _isSearching = false;
+    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+      if (!isAllowed) {
+        showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  title: Text('Notifications'),
+                  content: Text(
+                      'We would like to take your permission to display Notifications'),
+                  actions: [
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text('Don\'t Allow')),
+                    TextButton(
+                        onPressed: () {
+                          AwesomeNotifications()
+                              .requestPermissionToSendNotifications()
+                              .then((value) => Navigator.pop(context));
+                        },
+                        child: Text('Allow'))
+                  ],
+                ));
+        // Insert here your friendly dialog box before call the request method
+        // This is very important to not harm the user experience
 
+      }
+    });
+
+    notify();
+    AwesomeNotifications().actionStream.listen((receivedNotifiction) {
+      Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return Home(pindex: 1);
+      }));
+    });
     search();
     randomColor = Colors.primaries[Random().nextInt(Colors.primaries.length)];
     // getfav = getFavouriteList();
   }
 
   void notify() async {
+    //get Favs
+    // Alert_List data;
+    // List<Alert_List> notify_alert_list = [];
+
+    // try {
+    //   print('Favourites working(Notification)');
+    //   var snapshot = await databaseReference
+    //       .collection("users")
+    //       .doc(user!.uid)
+    //       .collection('alert_list')
+    //       .get();
+
+    //   snapshot.docs.forEach((element) {
+    //     data = Alert_List(
+    //         crypto: element.get('crypto_name'),
+    //         riseAbove: element.get('rise_above'),
+    //         fallBelow: element.get('fall_below'));
+    //     notify_alert_list.add(data);
+    //     print(element.get('crypto_name'));
+    //   });
+    //   // setState(() {
+    //   //   notify_alert_list = dummy;
+    //   // });
+    //   // matchfav = matchFav(notify_alert_list);
+    // } catch (e) {
+    //   print(e.toString());
+    //   displayToastMessage(e.toString(), context);
+    // }
+    // //Cryptos matched
+    // print("Crypto data matched with DB(Notification)");
+    // List names = [];
+    // notify_alert_list.forEach((element) {
+    //   names.add(element.crypto);
+    // });
+
+    // // List names=[];
+    // List<Crypto_Home> notify_crypto = [];
+    // String key = 'aec925c7-3059-4a11-8592-b99deb474b47';
+    // // var key = '1a7e4376-d437-4aa1-929b-a9e04968d593';
+
+    // String url =
+    //     "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest";
+    // var response =
+    //     await http.get(Uri.parse(url), headers: {"X-CMC_PRO_API_KEY": key});
+
+    // var jsonData = jsonDecode(response.body);
+    // // print(response.body);
+    // print(response.statusCode);
+    // // print(jsonData["data"][0]["name"]);
+    // if (response.statusCode == 200) {
+    //   jsonData["data"].forEach((element) {
+    //     notify_alert_list.forEach((notify_alert_list) {
+    //       if (notify_alert_list.crypto.contains(element["name"].toString())) {
+    //         if (element["quote"]["USD"]["price"] >
+    //                 notify_alert_list.riseAbove ||
+    //             element["quote"]["USD"]["price"] <
+    //                 notify_alert_list.fallBelow) {
+    //           Crypto_Home crypto_data = Crypto_Home(
+    //               cryptonames: element["name"].toString(),
+    //               cryptoprices: element["quote"]["USD"]["price"],
+    //               cryptosymbols: element["symbol"].toString(),
+    //               daychange: element["quote"]["USD"]["percent_change_24h"],
+    //               logoId: element["id"]);
+    //           // print(crypto_data.cryptoprices);
+    //           notify_crypto.add(crypto_data);
+    //         }
+    //       }
+    //     });
+    //   });
+    // }
+
+    // // setState(() {
+    // if (notify_alert_list.isNotEmpty) {
+    //   cryptoid.forEach((element) {
+    //     if (element[0] == notify_crypto[index].cryptosymbols) {
+    //       id = element[1];
+    //       // print(element[0]);
+    //     }
+    //   });
+    // }
+    // // crypto_fav = notify_crypto;
+    // // });
+
+    // // print(crypto_dummy[0].cryptoprices);
+
+    // //Notify
+    // if (notify_crypto.isNotEmpty) {
     String timezom = await AwesomeNotifications().getLocalTimeZoneIdentifier();
 
     await AwesomeNotifications().createNotification(
@@ -85,6 +206,7 @@ class _HomeState extends State<Home> {
       schedule:
           NotificationInterval(interval: 5, timeZone: timezom, repeats: false),
     );
+    // }
   }
 
   void onPageChanged(int page) {
@@ -300,14 +422,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
       backgroundColor: Color(0xFF151515),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          notify();
-          AwesomeNotifications().actionStream.listen((receivedNotifiction) {
-            Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return Home(pindex: 1);
-            }));
-          });
-        },
+        onPressed: () {},
       ),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
