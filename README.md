@@ -12,6 +12,7 @@ Click here https://github.com/Raunak-Taabish/crypto_alert/blob/main/app.apk
 # App Preview
 
 ![ezgif-2-c6c1b178d3f3](https://user-images.githubusercontent.com/68766724/140732624-7d297412-1ff4-49b6-94b1-a0b6472fd5fe.gif)
+![ezgif-2-e11f4d2ce1db](https://user-images.githubusercontent.com/68766724/140733117-f673bbca-aa68-453a-9a89-4bbea7eed5e8.gif)
 
 
 ## Figma design file
