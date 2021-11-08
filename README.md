@@ -19,4 +19,5 @@ samples, guidance on mobile development, and a full API reference.
 
 Figma desing file : https://www.figma.com/file/WQid0X9Z9DXXN9LCHqnSMf/Crypto-alert?node-id=0%3A1
 
+![Frame 8](https://user-images.githubusercontent.com/68766724/140684129-5d0c877b-d06f-4058-ba37-4c49d25814a9.png)
 
