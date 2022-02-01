@@ -11,21 +11,21 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  AwesomeNotifications().initialize(
-      null,
-      [
-        NotificationChannel(
-          channelKey: 'key1',
-          channelName: 'Proto Coders Point',
-          channelDescription: "Notification example",
-          defaultColor: Color(0XFF9050DD),
-          ledColor: Colors.white,
-          playSound: true,
-          enableLights:true,
-          enableVibration: true
-        )
-      ]
-  );
+  // AwesomeNotifications().initialize(
+  //     null,
+  //     [
+  //       NotificationChannel(
+  //         channelKey: 'key1',
+  //         channelName: 'Proto Coders Point',
+  //         channelDescription: "Notification example",
+  //         defaultColor: Color(0XFF9050DD),
+  //         ledColor: Colors.white,
+  //         playSound: true,
+  //         enableLights:true,
+  //         enableVibration: true
+  //       )
+  //     ]
+  // );
   await isUserLoggedIn();
   runApp(MyApp());
 }

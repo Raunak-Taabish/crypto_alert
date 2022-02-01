@@ -56,9 +56,9 @@ class _ViewCrypto_State extends State<View_Crypto> {
   late TextEditingController _controllerRA;
   late DateTime currentDate;
   late Future futureNews;
-  late String desc;
+  String desc = '';
   late Future getinfo, getcryptodetails, getcryptostatistics, checkAlerts;
-  late String CryptoURL;
+  String CryptoURL = '';
   int selectedTab = 0;
 
   final User? user = FirebaseAuth.instance.currentUser;
@@ -584,7 +584,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
                                         DateFormat('d/MMM').format(sales.year),
                                     yValueMapper: (SalesData sales, _) =>
                                         sales.sales,
-                                    animationDuration: 3000,
+                                    animationDuration: 1000,
                                     markerSettings: const MarkerSettings(
                                         borderColor: Colors.white,
                                         height: 2,
