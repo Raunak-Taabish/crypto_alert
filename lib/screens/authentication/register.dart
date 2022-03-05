@@ -9,7 +9,7 @@ import 'package:crypto_alert/screens/onboarding/onboarding.dart';
 
 // import 'main.dart';
 import '../../data/constant.dart';
-import './Login.dart';
+import './login.dart';
 import 'package:crypto_alert/screens/home.dart';
 
 FirebaseAuth auth = FirebaseAuth.instance;
