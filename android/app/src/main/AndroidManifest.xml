@@ -2,7 +2,7 @@
     package="com.example.crypto_alert">
     <uses-permission android:name="android.permission.INTERNET" />
    <application
-        android:label="crypto_alert"
+        android:label="Cryptlert"
         android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher">
         <activity
