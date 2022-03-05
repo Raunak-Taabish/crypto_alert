@@ -6,7 +6,7 @@ A new Flutter project.
 
 # Download preview APP
 
-Click here https://github.com/Raunak-Taabish/crypto_alert/blob/main/app.apk
+Click here 
 
 
 # App Preview
