@@ -9,7 +9,9 @@ import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:workmanager/workmanager.dart';
 import '../data/constant.dart';
+import '../main.dart';
 import 'alerts/alerts.dart';
 import 'view_crypto/view_crypto.dart';
 import 'package:crypto_alert/data/crypto_list.dart';
@@ -31,7 +33,7 @@ class _HomeState extends State<Home> {
   _HomeState({required this.pageIndex});
   // late Home getp;
   late Timer timer;
-  late String id;
+  String id = '';
   String name = '';
   List logo = [];
   int index = 0;
@@ -64,41 +66,10 @@ class _HomeState extends State<Home> {
     getnews = getNews();
     getfav = getFavouriteList();
     _isSearching = false;
-    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
-      if (!isAllowed) {
-        showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-                  title: Text('Notifications'),
-                  content: Text(
-                      'We would like to take your permission to display Notifications'),
-                  actions: [
-                    TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: Text('Don\'t Allow')),
-                    TextButton(
-                        onPressed: () {
-                          AwesomeNotifications()
-                              .requestPermissionToSendNotifications()
-                              .then((value) => Navigator.pop(context));
-                        },
-                        child: Text('Allow'))
-                  ],
-                ));
-        // Insert here your friendly dialog box before call the request method
-        // This is very important to not harm the user experience
 
-      }
-    });
-
-    // notify();
-    // AwesomeNotifications().actionStream.listen((receivedNotifiction) {
-    //   Navigator.push(context, MaterialPageRoute(builder: (context) {
-    //     return Home(pindex: 1);
-    //   }));
-    // });
+    Workmanager().registerPeriodicTask(
+        "1", "simpleTask", //initialDelay: Duration(seconds: 10),
+        frequency: Duration(minutes: 15));
     search();
     randomColor = Colors.primaries[Random().nextInt(Colors.primaries.length)];
     // getfav = getFavouriteList();
