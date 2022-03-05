@@ -19,7 +19,7 @@ Container favourites(
           .collection("users")
           .doc(user!.uid)
           .collection('alert_list')
-          .doc(alert_list.crypto)
+          .doc(crypto.cryptonames)
           .delete();
       displayToastMessage('Your alert is deleted', context);
       // if (mounted) {
