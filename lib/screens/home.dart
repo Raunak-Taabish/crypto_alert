@@ -869,6 +869,7 @@ class _HomeState extends State<Home> {
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.grey,
         backgroundColor: const Color(0xFF151515),
         currentIndex: pageIndex,
         onTap: onTabTapped,
@@ -879,9 +880,9 @@ class _HomeState extends State<Home> {
               color: pageIndex == 0 ? Colors.white : Colors.grey,
               size: pageIndex == 0 ? 28 : 25,
             ),
-            label: 
-            // Text(
-              "Home",
+            label:
+                // Text(
+                "Home",
             //   style: TextStyle(color: Colors.white, fontFamily: 'Montserrat'),
             // ),
           ),
@@ -893,8 +894,8 @@ class _HomeState extends State<Home> {
               size: pageIndex == 1 ? 28 : 25,
             ),
             label:
-            //  Text(
-              "Alerts",
+                //  Text(
+                "Alerts",
             //   style: TextStyle(color: Colors.white, fontFamily: 'Montserrat'),
             // ),
           ),
@@ -904,9 +905,9 @@ class _HomeState extends State<Home> {
               color: pageIndex == 2 ? Colors.white : Colors.grey,
               size: pageIndex == 2 ? 28 : 25,
             ),
-            label: 
-            // Text(
-              "News",
+            label:
+                // Text(
+                "News",
             //   style: TextStyle(color: Colors.white, fontFamily: 'Montserrat'),
             // ),
           ),
@@ -916,9 +917,9 @@ class _HomeState extends State<Home> {
               color: pageIndex == 3 ? Colors.white : Colors.grey,
               size: pageIndex == 3 ? 28 : 25,
             ),
-            label: 
-            // Text(
-              "Menu",
+            label:
+                // Text(
+                "Menu",
             //   style: TextStyle(color: Colors.white, fontFamily: 'Montserrat'),
             // ),
           ),

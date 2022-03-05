@@ -25,7 +25,7 @@ class _MenuPageState extends State<MenuPage> {
         FirebaseDatabase.instance.reference().child('users');
     return Scaffold(
       backgroundColor: Color(0xFF151515),
-      body: Column(children: [
+      body: ListView(children: [
         GestureDetector(
           child: Container(
             decoration: BoxDecoration(

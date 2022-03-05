@@ -5,12 +5,6 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:crypto_alert/screens/onboarding/onboarding.dart';
 
-
-
-
-
-
-
 // import 'package:flutter/scheduler.dart';
 
 // import 'main.dart';
@@ -25,7 +19,9 @@ class Register extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(home: _RegisterPage(), routes: {
-      'homepage': (context) => Home(pindex: 0,),
+      'homepage': (context) => Home(
+            pindex: 0,
+          ),
       'login': (context) => Login(),
     });
   }
@@ -71,7 +67,7 @@ class _LoginDemoState extends State<_RegisterPage> {
             //   title: Text("Login Page", ),
             // ),
             body: Padding(
-              padding: const EdgeInsets.fromLTRB(25, 25, 25, 25),
+              padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
               child: SingleChildScrollView(
                 child: Form(
                   key: _formKey,
@@ -218,8 +214,7 @@ class _LoginDemoState extends State<_RegisterPage> {
                           ),
                           labelText: 'Confirm New Password',
                           labelStyle: TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'Montserrat'),
+                              color: Colors.white, fontFamily: 'Montserrat'),
                         ),
                       ),
                       SizedBox(
@@ -367,20 +362,18 @@ class _LoginDemoState extends State<_RegisterPage> {
               password: _userPasswordController1.text.trim()))
           .user!;
       // ignore: unnecessary_null_comparison
-        dbRef.child(currentuser.uid);
-        Map userDataMap = {
-          'name': _usernameController.text.trim(),
-          'email': _emailController.text.trim(),
-          'profile': 'default'
-        };
-        dbRef.child(currentuser.uid).set(userDataMap);
-        _formKey.currentState!.save();
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(
-                builder: (context) => OnBoarding()),
-            (Route<dynamic> route) => false);
-        displayToastMessage('Account Created', context);
-      
+      dbRef.child(currentuser.uid);
+      Map userDataMap = {
+        'name': _usernameController.text.trim(),
+        'email': _emailController.text.trim(),
+        'profile': 'default'
+      };
+      dbRef.child(currentuser.uid).set(userDataMap);
+      _formKey.currentState!.save();
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => OnBoarding()),
+          (Route<dynamic> route) => false);
+      displayToastMessage('Account Created', context);
     } catch (e) {
       setState(() {
         load();
@@ -395,6 +388,3 @@ class _LoginDemoState extends State<_RegisterPage> {
     visible = !visible;
   }
 }
-
-
-

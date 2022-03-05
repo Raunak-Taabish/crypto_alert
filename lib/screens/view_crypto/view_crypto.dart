@@ -943,7 +943,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
                 ),
                 padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                 width: MediaQuery.of(context).size.width * 0.9,
-                height: MediaQuery.of(context).size.height * 0.4,
+                height: MediaQuery.of(context).size.height * 0.5,
                 // margin: EdgeIN,
                 // color: Color(0xFF151515),
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start,

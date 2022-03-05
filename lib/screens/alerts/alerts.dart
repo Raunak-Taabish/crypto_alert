@@ -40,7 +40,7 @@ Container favourites(
   return Container(
       //color: Colors.amber,
       // alignment: Alignment.center,
-      //height: 50,
+      // height: MediaQuery.of(context).size.height * 0.4,
       padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
       margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
       child: Column(
