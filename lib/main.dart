@@ -13,18 +13,32 @@ import 'screens/authentication/login.dart';
 import 'package:http/http.dart' as http;
 import 'screens/home.dart';
 import 'package:workmanager/workmanager.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await isUserLoggedIn();
+  const AndroidInitializationSettings initializationSettingsAndroid =
+      AndroidInitializationSettings('app_icon');
 
-  // sleep(Duration(seconds: 10));
+  final InitializationSettings initializationSettings = InitializationSettings(
+    android: initializationSettingsAndroid,
+  );
+
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+      onSelectNotification: (String? payload) async {
+    if (payload != null) {
+      debugPrint('notification payload: $payload');
+    }
+  });
   Workmanager().initialize(
-      callbackDispatcher, // The top level function, aka callbackDispatcher
-      isInDebugMode:
-          true // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
-      );
+    callbackDispatcher, // The top level function, aka callbackDispatcher
+    // isInDebugMode:
+    //     true // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
+  );
   runApp(MyApp());
 
   // if (initialroute == 'homepage') {
@@ -36,12 +50,11 @@ void main() async {
 
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
-    late List<Crypto_Home> matchfav;
     await Firebase.initializeApp();
     final User? user = FirebaseAuth.instance.currentUser;
     final databaseReference = FirebaseFirestore.instance;
     Alert_List data;
-    List<Alert_List> dummy = [];
+    List<Alert_List> alertCrypto = [];
 
     try {
       print('Favourites working');
@@ -59,18 +72,18 @@ void callbackDispatcher() {
             crypto: element.get('crypto_name'),
             riseAbove: element.get('rise_above').toString(),
             fallBelow: element.get('fall_below').toString());
-        dummy.add(data);
+        alertCrypto.add(data);
         print(element.get('crypto_name'));
       });
 
       List names = [];
-      dummy.forEach((element) {
+      alertCrypto.forEach((element) {
         names.add(element.crypto);
       });
 
       // List names=[];
       String id;
-      List<Crypto_Home> matchfav = [];
+      List<Crypto_Home> liveCrypto = [];
       String key = 'aec925c7-3059-4a11-8592-b99deb474b47';
       // var key = '1a7e4376-d437-4aa1-929b-a9e04968d593';
 
@@ -93,15 +106,15 @@ void callbackDispatcher() {
                 daychange: element["quote"]["USD"]["percent_change_24h"],
                 logoId: element["id"]);
             // print(crypto_data.cryptoprices);
-            matchfav.add(crypto_data);
+            liveCrypto.add(crypto_data);
           }
         });
       }
 
-      if (dummy.isNotEmpty) {
-        for (int i = 0; i < matchfav.length; i++) {
+      if (alertCrypto.isNotEmpty) {
+        for (int i = 0; i < liveCrypto.length; i++) {
           cryptoid.forEach((element) {
-            if (element[0] == matchfav[i].cryptosymbols) {
+            if (element[0] == liveCrypto[i].cryptosymbols) {
               id = element[1];
               print(element[0]);
             }
@@ -111,9 +124,42 @@ void callbackDispatcher() {
       // crypto_fav = crypto_dummy;
 
       // print(crypto_dummy[0].cryptoprices);
+      bool setAlert = false;
+      List notifyAlerts = [];
+      int notifyID=0;
+      for (int i = 0; i < alertCrypto.length; i++,notifyID++) {
+        liveCrypto.forEach((element) {
+          if (element.cryptonames == alertCrypto[i].crypto) {
+            if (element.cryptoprices > double.parse(alertCrypto[i].riseAbove) ||
+                element.cryptoprices < double.parse(alertCrypto[i].fallBelow)) {
+              setAlert = true;
+              notifyAlerts.add([notifyID,element.cryptonames, element.cryptoprices]);
+            }
+          }
+        });
+      }
 
-      matchfav.forEach((element) =>
-          print(element.cryptonames + element.cryptoprices.toString()));
+      FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+          FlutterLocalNotificationsPlugin();
+      const AndroidNotificationDetails androidPlatformChannelSpecifics =
+          AndroidNotificationDetails('your channel id', 'your channel name',
+              channelDescription: 'your channel description',
+              importance: Importance.max,
+              priority: Priority.high,
+              ticker: 'ticker');
+      const NotificationDetails platformChannelSpecifics =
+          NotificationDetails(android: androidPlatformChannelSpecifics);
+      setAlert
+          ? notifyAlerts.forEach((element) async {
+              await flutterLocalNotificationsPlugin.show(
+                  element[0],
+                  'Alert for ${element[1]}',
+                  '\$${element[2]}',
+                  platformChannelSpecifics,
+                  payload: 'item x');
+                  print(element[0].toString()+element[1]);
+            })
+          : null;
       // return alert_list;
     } catch (e) {
       print(e.toString());
@@ -122,10 +168,6 @@ void callbackDispatcher() {
     } //simpleTask will be emitted here.
     return Future.value(true);
   });
-}
-
-Future<void> matchFav(List<Alert_List> snap) async {
-  print("Crypto data matched with DB");
 }
 
 late String initialroute;

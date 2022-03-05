@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto_alert/screens/menu/menu.dart';
 import 'package:crypto_alert/screens/news/article.dart';
@@ -11,7 +10,6 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:workmanager/workmanager.dart';
 import '../data/constant.dart';
-import '../main.dart';
 import 'alerts/alerts.dart';
 import 'view_crypto/view_crypto.dart';
 import 'package:crypto_alert/data/crypto_list.dart';
@@ -903,7 +901,6 @@ class _HomeState extends State<Home> {
   void dispose() {
     _pageController.dispose();
     searchController.dispose();
-    _pageController.dispose();
     super.dispose();
   }
 }
