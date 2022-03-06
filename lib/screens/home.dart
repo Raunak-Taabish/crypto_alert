@@ -826,11 +826,32 @@ class _HomeState extends State<Home> {
                                                   context,
                                                 ));
                                           })
-                                      : Center(
-                                          child: Text(
-                                              'Your list seems to be empty',
-                                              style: TextStyle(
-                                                  color: Colors.grey)),
+                                      : SizedBox(
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          height: MediaQuery.of(context)
+                                              .size
+                                              .height,
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                  'Your list seems to be empty',
+                                                  style: TextStyle(
+                                                      color: Colors.grey)),
+                                              TextButton(
+                                                  onPressed: () {},
+                                                  child: Text(
+                                                      "Add some crypto +",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          color: Colors.white)))
+                                            ],
+                                          ),
                                         );
                                 } else {
                                   return Center(

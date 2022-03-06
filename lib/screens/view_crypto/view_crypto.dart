@@ -926,14 +926,16 @@ class _ViewCrypto_State extends State<View_Crypto> {
     // showDialog(
     //     context: context,
     //     builder: (BuildContext context) {
+    double size = MediaQuery.of(context).size.width;
     return Container(
         color: Colors.black87,
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
+        // height: MediaQuery.of(context).size.height,
+        // width: MediaQuery.of(context).size.width,
         child: Center(
             child: AnimatedContainer(
                 duration: Duration(milliseconds: 300),
-                margin: EdgeInsets.only(bottom: 100),
+                margin:
+                    EdgeInsets.symmetric(horizontal: 30, vertical: size * 0.5),
                 decoration: BoxDecoration(
                   border: Border.all(
                     color: Color(0xFF2E2E2E),
@@ -941,9 +943,9 @@ class _ViewCrypto_State extends State<View_Crypto> {
                   borderRadius: BorderRadius.circular(20),
                   color: Color(0xFF151515),
                 ),
-                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                width: MediaQuery.of(context).size.width * 0.9,
-                height: MediaQuery.of(context).size.height * 0.5,
+                // padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                // width: MediaQuery.of(context).size.width * 0.9,
+                // height: MediaQuery.of(context).size.height * 0.5,
                 // margin: EdgeIN,
                 // color: Color(0xFF151515),
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start,
@@ -1128,10 +1130,10 @@ class _ViewCrypto_State extends State<View_Crypto> {
                                     height: 50,
                                     child: Text('Save',
                                         style: TextStyle(
-                                          color: Colors.black,
-                                          fontFamily: 'Montserrat',
-                                          fontSize: 17,
-                                        )),
+                                            color: Colors.black,
+                                            fontFamily: 'Montserrat',
+                                            fontSize: 17,
+                                            fontWeight: FontWeight.w600)),
                                     decoration: BoxDecoration(
                                         color: Colors.white,
                                         borderRadius:

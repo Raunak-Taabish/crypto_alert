@@ -2,6 +2,7 @@ import 'package:crypto_alert/screens/authentication/login_register.dart';
 import 'package:crypto_alert/screens/menu/about.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
 
@@ -121,7 +122,28 @@ class _MenuPageState extends State<MenuPage> {
                 ),
                 "Contact")),
         GestureDetector(
-            onTap: () {},
+            onTap: () {
+              showDialog<String>(
+                context: context,
+                builder: (BuildContext context) => AlertDialog(
+                  // backgroundColor: Colors.,
+                  title: const Text('Feedback'),
+                  content: const TextField(
+                    decoration: InputDecoration(hintText: "Add feedback here"),
+                  ),
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, 'Cancel'),
+                      child: const Text('Cancel'),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, 'OK'),
+                      child: const Text('Send'),
+                    ),
+                  ],
+                ),
+              );
+            },
             child: list(
                 Icon(
                   Icons.feedback,
