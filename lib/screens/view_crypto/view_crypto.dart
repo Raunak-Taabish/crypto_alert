@@ -926,7 +926,8 @@ class _ViewCrypto_State extends State<View_Crypto> {
     // showDialog(
     //     context: context,
     //     builder: (BuildContext context) {
-    double size = MediaQuery.of(context).size.width;
+    double mediaHeight = MediaQuery.of(context).size.height;
+    double mediaWidth = MediaQuery.of(context).size.width;
     return Container(
         color: Colors.black87,
         // height: MediaQuery.of(context).size.height,
@@ -934,8 +935,8 @@ class _ViewCrypto_State extends State<View_Crypto> {
         child: Center(
             child: AnimatedContainer(
                 duration: Duration(milliseconds: 300),
-                margin:
-                    EdgeInsets.symmetric(horizontal: 30, vertical: size * 0.5),
+                margin: EdgeInsets.symmetric(
+                    horizontal: 30, vertical: mediaHeight * 0.2),
                 decoration: BoxDecoration(
                   border: Border.all(
                     color: Color(0xFF2E2E2E),
@@ -967,7 +968,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
                         margin: EdgeInsets.only(top: 10),
                         color: Colors.transparent,
                         //width: MediaQuery.of(context).size.width / 1.4,
-                        //height: MediaQuery.of(context).size.height * 0.1,
+                        height: MediaQuery.of(context).size.height * 0.15,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           //mainAxisAlignment:MainAxisAlignment.spaceEvenly,
@@ -980,109 +981,91 @@ class _ViewCrypto_State extends State<View_Crypto> {
                                   fontFamily: 'Montserrat',
                                   fontWeight: FontWeight.w400),
                             ),
-                            Container(
-                              margin: EdgeInsets.fromLTRB(0, 10, 0, 20),
-                              //alignment: Alignment.centerLeft,
-                              child: Text(
-                                '\$ ' +
-                                    '${widget.cryptoprice.toStringAsFixed(2)}',
-                                style: const TextStyle(
-                                    color: Colors.white,
-                                    fontFamily: 'Montserrat',
-                                    fontSize: 35,
-                                    fontWeight: FontWeight.w500),
-                              ),
+                            SizedBox(
+                              height: mediaHeight * 0.01,
+                            ),
+                            Text(
+                              '\$ ' +
+                                  '${widget.cryptoprice.toStringAsFixed(2)}',
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontFamily: 'Montserrat',
+                                  fontSize: 35,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                            SizedBox(
+                              height: mediaHeight * 0.01,
                             ),
                           ],
                         ),
                       ),
                       Container(
+                        height: mediaHeight * 0.1,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             Container(
-                              margin: EdgeInsets.symmetric(
-                                  horizontal: 0, vertical: 20),
-                              child: Column(
-                                children: [
-                                  Container(
-                                    width:
-                                        MediaQuery.of(context).size.width / 3,
-                                    // margin: EdgeInsets.only(bottom: 10),
-                                    child: TextField(
-                                      onChanged: (value) {
-                                        String fallBelowtext = value;
-                                        print(fallBelowtext);
-                                      },
-                                      style: TextStyle(
-                                          fontSize: 15.0,
-                                          color: Color(0xFFbdc6cf)),
-                                      controller: _controllerFB,
-                                      decoration: InputDecoration(
-                                        filled: true,
-                                        fillColor: Color(0xFF202020),
-                                        labelText: "Fall below",
-                                        labelStyle:
-                                            TextStyle(color: Colors.redAccent),
-                                        focusedBorder: OutlineInputBorder(
-                                          borderSide:
-                                              BorderSide(color: Colors.white),
-                                        ),
-                                        enabledBorder: OutlineInputBorder(
-                                          borderSide:
-                                              BorderSide(color: Colors.white),
-                                        ),
-                                      ),
-                                    ),
+                              width: mediaWidth / 3,
+                              // margin: EdgeInsets.only(bottom: 10),
+                              child: TextField(
+                                onChanged: (value) {
+                                  String fallBelowtext = value;
+                                  print(fallBelowtext);
+                                },
+                                style: TextStyle(
+                                    fontSize: 15.0, color: Color(0xFFbdc6cf)),
+                                controller: _controllerFB,
+                                decoration: InputDecoration(
+                                  filled: true,
+                                  fillColor: Color(0xFF202020),
+                                  labelText: "Fall below",
+                                  labelStyle:
+                                      TextStyle(color: Colors.redAccent),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.white),
                                   ),
-                                ],
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.white),
+                                  ),
+                                ),
                               ),
                             ),
                             Container(
-                              child: Column(
-                                children: [
-                                  Container(
-                                    width:
-                                        MediaQuery.of(context).size.width / 3,
-                                    // margin: EdgeInsets.only(bottom: 10),
-                                    // decoration: BoxDecoration(
-                                    //     border: Border.all(
-                                    //         color: Color(0xFF2E2E2E)),
-                                    //     borderRadius: BorderRadius.circular(20),
-                                    //     color: Color(0xFF202020)),
-                                    child: TextField(
-                                      onChanged: (value) {
-                                        String riseAbovetext = value;
-                                        print(riseAbovetext);
-                                      },
-                                      style: TextStyle(
-                                          fontSize: 15.0,
-                                          color: Color(0xFFbdc6cf)),
-                                      controller: _controllerRA,
-                                      decoration: InputDecoration(
-                                        filled: true,
-                                        fillColor: Color(0xFF202020),
-                                        labelText: "Rise above",
-                                        //hintText: widget.cryptoprice.toString(),
-                                        labelStyle: TextStyle(
-                                            color: Colors.greenAccent),
-                                        focusedBorder: OutlineInputBorder(
-                                          borderSide:
-                                              BorderSide(color: Colors.white),
-                                        ),
-                                        enabledBorder: OutlineInputBorder(
-                                          borderSide:
-                                              BorderSide(color: Colors.white),
-                                        ),
-                                      ),
-                                    ),
+                              width: mediaWidth / 3,
+                              // margin: EdgeInsets.only(bottom: 10),
+                              // decoration: BoxDecoration(
+                              //     border: Border.all(
+                              //         color: Color(0xFF2E2E2E)),
+                              //     borderRadius: BorderRadius.circular(20),
+                              //     color: Color(0xFF202020)),
+                              child: TextField(
+                                onChanged: (value) {
+                                  String riseAbovetext = value;
+                                  print(riseAbovetext);
+                                },
+                                style: TextStyle(
+                                    fontSize: 15.0, color: Color(0xFFbdc6cf)),
+                                controller: _controllerRA,
+                                decoration: InputDecoration(
+                                  filled: true,
+                                  fillColor: Color(0xFF202020),
+                                  labelText: "Rise above",
+                                  //hintText: widget.cryptoprice.toString(),
+                                  labelStyle:
+                                      TextStyle(color: Colors.greenAccent),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.white),
                                   ),
-                                ],
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.white),
+                                  ),
+                                ),
                               ),
                             ),
                           ],
                         ),
                       ),
+                      SizedBox(height: mediaHeight * 0.05),
                       Container(
                         margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
                         child: Row(
@@ -1099,7 +1082,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
                                     alignment: Alignment.center,
                                     width:
                                         MediaQuery.of(context).size.width / 2.8,
-                                    height: 50,
+                                    height: mediaHeight * 0.08,
                                     decoration: BoxDecoration(
                                         color: Color(0xFF2E2E2E),
                                         borderRadius:
@@ -1127,7 +1110,7 @@ class _ViewCrypto_State extends State<View_Crypto> {
                                     alignment: Alignment.center,
                                     width:
                                         MediaQuery.of(context).size.width / 2.8,
-                                    height: 50,
+                                    height: mediaHeight * 0.08,
                                     child: Text('Save',
                                         style: TextStyle(
                                             color: Colors.black,

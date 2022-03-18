@@ -812,7 +812,13 @@ class _HomeState extends State<Home> {
                                                   style: TextStyle(
                                                       color: Colors.grey)),
                                               TextButton(
-                                                  onPressed: () {},
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      pageIndex = 0;
+                                                      onTabTapped(0);
+                                                      // print(index);
+                                                    });
+                                                  },
                                                   child: Text(
                                                       "Add some crypto +",
                                                       style: TextStyle(
