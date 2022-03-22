@@ -66,7 +66,7 @@ Container favourites(
                     //   width: MediaQuery.of(context).size.width * 0.03,
                     // ),
                     Text(
-                      crypto.cryptonames,
+                      alert_list.crypto,
                       //    + ' (' +
                       //     cryptosymbols[index] +
                       //     ')', // +cryptolist.length.toString(),

@@ -159,6 +159,10 @@ class _HomeState extends State<Home> {
         alert_list = dummy;
       });
       matchfav = matchFav(alert_list);
+      for (int i = 0; i < alert_list.length; i++) {
+        print('-----------'+alert_list[i].crypto+' '+alert_list[i].riseAbove+' '+alert_list[i].fallBelow);
+      }
+      // print(alert_list);
       return alert_list;
     } catch (e) {
       print(e.toString());
@@ -212,7 +216,7 @@ class _HomeState extends State<Home> {
           }
         });
       }
-      crypto_fav = crypto_dummy;
+      crypto_fav = List.from(crypto_dummy.reversed);
     });
 
     // print(crypto_dummy[0].cryptoprices);
